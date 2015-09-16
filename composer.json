@@ -1,0 +1,14 @@
+{
+    "name": "mwyatt/core",
+    "description": "core classes and methods for common patterns when creating a project",
+    "authors": [
+        {
+            "name": "Martin Wyatt",
+            "email": "martin.wyatt@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}
