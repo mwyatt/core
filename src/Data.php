@@ -1,6 +1,6 @@
 <?php
 
-namespace OriginalAppName;
+namespace Mwyatt\Core;
 
 /**
  * manipulates arrays of objects (usually entities)
@@ -8,7 +8,7 @@ namespace OriginalAppName;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Data implements \OriginalAppName\DataInterface
+class Data implements \Mwyatt\Core\DataInterface
 {
 
 
@@ -17,6 +17,56 @@ class Data implements \OriginalAppName\DataInterface
      * @var array
      */
     public $data = [];
+
+
+    /**
+     * get all data
+     * @param  string $key
+     * @return mixed
+     */
+    public function getData($key = null)
+    {
+
+        // key wanted, so pass value or nothing
+        if ($key) {
+            return empty($this->data[$key]) ? null : $this->data[$key];
+        }
+
+        // all data
+        return $this->data;
+    }
+
+
+    /**
+     * retrieves the first row of data, if there is any
+     * @return mixed
+     */
+    public function getDataFirst()
+    {
+        $data = $this->getData();
+        if (!$data) {
+            return;
+        }
+        return reset($data);
+    }
+
+
+    /**
+     * builds an array of {property} from the data property
+     * for ones which are objects
+     * @param  string $property
+     * @return array
+     */
+    public function getDataProperty($property)
+    {
+        $collection = [];
+        foreach ($this->getData() as $possibleObject) {
+            if (is_object($possibleObject) && property_exists($possibleObject, $property)) {
+                $collection[] = $possibleObject->$property;
+            }
+        }
+        return $collection;
+    }
     
     
     /**
@@ -43,75 +93,17 @@ class Data implements \OriginalAppName\DataInterface
 
 
     /**
-     * get all data
-     * @param  string $key
-     * @return any
-     */
-    public function getData($key = '')
-    {
-        $data = $this->data;
-
-        // specific key
-        if (isset($data[$key])) {
-            return $this->data[$key];
-        }
-
-        // key wanted, so pass nothing
-        if ($key) {
-            return;
-        }
-
-        // all data
-        return $this->data;
-    }
-
-
-    /**
-     * retrieves the first row of data, if there is any
-     * @return object, array, bool
-     */
-    public function getDataFirst()
-    {
-        $data = $this->getData();
-        if (! $data) {
-            return;
-        }
-        return reset($data);
-    }
-
-
-    /**
-     * builds an array of {property} from the data property
-     * @param  string $property
-     * @return array
-     */
-    public function getDataProperty($property)
-    {
-        if (! $data = $this->getData()) {
-            return [];
-        }
-        $collection = [];
-        foreach ($data as $entity) {
-            $collection[] = $entity->$property;
-        }
-        return $collection;
-    }
-
-
-    /**
      * append 1 to the data array
-     * @todo is this slow/ok?
-     * @param  any $dataRow
-     * @return object          instance
+     * @param  any $value
+     * @return object          
      */
-    public function appendData($dataRow)
+    public function appendData($value)
     {
-        if (! $dataRow) {
-            return $this;
-        }
         $data = $this->getData();
-        $data[] = $dataRow;
-        $this->setData($data);
+        if (is_array($data)) {
+            $data[] = $value;
+            $this->setData($data);
+        }
         return $this;
     }
 
@@ -136,18 +128,23 @@ class Data implements \OriginalAppName\DataInterface
      */
     public function keyDataByProperty($property)
     {
-        if (! $data = $this->getData()) {
-            return;
+        $collection = [];
+
+        // validation
+        if (!$data = $this->getData()) {
+            return $this;
         }
-        $newOrder = array();
-        $dataSample = current($data);
-        if (! property_exists($dataSample, $property)) {
-            return;
+        if (!count($data)) {
+            return $this;
         }
-        foreach ($data as $mold) {
-            $newOrder[$mold->$property] = $mold;
+
+        // storage
+        foreach ($data as $entity) {
+            if (is_object($entity) && property_exists($entity, $property)) {
+                $collection[$entity->$property] = $entity;
+            }
         }
-        $this->setData($newOrder);
+        $this->setData($collection);
         return $this;
     }
 
@@ -161,11 +158,11 @@ class Data implements \OriginalAppName\DataInterface
      */
     public function filterData($column, $value)
     {
-        if (! $data = $this->getData()) {
+        if (!$data = $this->getData()) {
             return $this;
         }
         $dataSample = current($data);
-        if (! property_exists($dataSample, $column)) {
+        if (!property_exists($dataSample, $column)) {
             return;
         }
         $dataFiltered = array();
@@ -194,9 +191,8 @@ class Data implements \OriginalAppName\DataInterface
 
     /**
      * order by a property
-     * @todo try and make more readable
-     * @param  string $property database table column name
-     * @param  string $order    asc|desc
+     * @param  string $property
+     * @param  string $order    asc else desc
      * @return object
      */
     public function orderByProperty($property, $order = 'asc')
@@ -205,9 +201,11 @@ class Data implements \OriginalAppName\DataInterface
             return $this;
         }
         $dataSingle = current($data);
-        if (! property_exists($dataSingle, $property)) {
-            return;
+        if (!is_object($dataSingle) || !property_exists($dataSingle, $property)) {
+            return $this;
         }
+
+        // guess type
         $sampleValue = $dataSingle->$property;
         $type = 'integer';
         if (is_string($sampleValue)) {
@@ -245,6 +243,8 @@ class Data implements \OriginalAppName\DataInterface
             }
 
         });
+
+        // store new order
         $this->setData($data);
         return $this;
     }
