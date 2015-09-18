@@ -19,13 +19,13 @@ interface UrlInterface
 
 
     /**
-     * @return string 
+     * @return string
      */
     public function getBase();
 
 
     /**
-     * @return string 
+     * @return string
      */
     public function getPath();
 

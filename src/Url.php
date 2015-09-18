@@ -46,17 +46,19 @@ class Url implements \Mwyatt\Core\UrlInterface
 
 
     /**
-     * @return string 
+     * @return string
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
 
 
     /**
-     * @return string 
+     * @return string
      */
-    public function getBase() {
+    public function getBase()
+    {
         return $this->base;
     }
 

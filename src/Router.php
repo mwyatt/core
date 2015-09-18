@@ -72,14 +72,13 @@ class Router implements \Mwyatt\Core\RouterInterface
     {
         $route = $this->mux->dispatch($path);
         $response = new \Mwyatt\Core\Response('');
-echo '<pre>';
-print_r($route);
-echo '</pre>';
-exit;
+        echo '<pre>';
+        print_r($route);
+        echo '</pre>';
+        exit;
 
         // found
         if ($route) {
-
             // do controller->method
             try {
                 $response = \Pux\Executor::execute($route);
