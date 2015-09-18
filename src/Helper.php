@@ -9,7 +9,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Helper
+class Helper implements HelperInterface
 {
 
 
@@ -83,7 +83,7 @@ class Helper
      * @param  array $group to count
      * @return string        's' | ''
      */
-    public function pluralise($group)
+    public static function pluralise($group)
     {
         return count($group) > 1 ? 's' : '';
     }
