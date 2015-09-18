@@ -1,6 +1,6 @@
 <?php
 
-namespace OriginalAppName;
+namespace Mwyatt\Core;
 
 /**
  * will act as an interface for any database connection soon
@@ -8,7 +8,7 @@ namespace OriginalAppName;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Database implements \OriginalAppName\DatabaseInterface
+class Database implements \Mwyatt\Core\DatabaseInterface
 {
 
 
@@ -46,7 +46,7 @@ class Database implements \OriginalAppName\DatabaseInterface
             'username',
             'password'
         ];
-        if (! \OriginalAppName\Helper::arrayKeyExists($expected, $this->getCredentials())) {
+        if (! \Mwyatt\Core\Helper::arrayKeyExists($expected, $this->getCredentials())) {
             throw new Exception('database credentials invalid', 3123890);
         }
     }
@@ -99,11 +99,5 @@ class Database implements \OriginalAppName\DatabaseInterface
             return false;
         }
         return $this->dbh;
-    }
-
-
-    public function getLastInsertId()
-    {
-        return $this->dbh->lastInsertId();
     }
 }
