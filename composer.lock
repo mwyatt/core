@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8745db4b00e634ba28dd98d414415720",
+    "hash": "47d163c712fcbf825149b3134ad049c8",
     "packages": [
         {
             "name": "corneltek/class-template",

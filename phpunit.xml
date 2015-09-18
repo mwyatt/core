@@ -5,6 +5,7 @@
 			<file>test/HelperTest.php</file>
 			<file>test/UrlTest.php</file>
 			<file>test/RouterTest.php</file>
+			<file>test/ResponseTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

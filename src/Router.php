@@ -72,35 +72,30 @@ class Router implements \Mwyatt\Core\RouterInterface
     {
         $route = $this->mux->dispatch($path);
         $response = new \Mwyatt\Core\Response('');
-        echo '<pre>';
-        print_r($route);
-        echo '</pre>';
-        exit;
+        $controller = new \Mwyatt\Core\Controller;
 
-        // found
+        // found route
         if ($route) {
             // do controller->method
             try {
                 $response = \Pux\Executor::execute($route);
 
-            // 500
-            } catch (\Framework\Route\Exception $exception) {
-                $controller = new \Mwyatt\Core\Controller;
+            // 500 - unexpected error
+            } catch (\Exception $exception) {
                 $response = $controller->e500($exception);
             }
 
-        // not found
+        // 404 - not found
         } else {
             $response->setStatusCode(404);
         }
 
-        // not found (could have been defined in controller)
-        if ($response->getStatusCode() == 404 && !$response->getContent()) {
-            $controller = new \Mwyatt\Core\Controller;
+        // 404 content, could have been defined in a found route
+        if ($response->getStatusCode() == 404) {
             $response = $controller->e404($response);
         }
 
-        // ResponseInterface
+        // the response
         return $response;
     }
 
