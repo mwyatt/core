@@ -8,22 +8,8 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Pdo implements \Mwyatt\Core\Database
+class Pdo extends \Mwyatt\Core\Database
 {
-
-
-    /**
-     * PDO object once connected
-     * @var object
-     */
-    public $dbh;
-
-    
-    /**
-     * connection credentials
-     * @var array
-     */
-    private $credentials;
 
 
     /**

@@ -13,7 +13,7 @@ class Database implements \Mwyatt\Core\DatabaseInterface
 
 
     /**
-     * PDO object once connected
+     * database handle
      * @var object
      */
     public $dbh;
@@ -23,7 +23,7 @@ class Database implements \Mwyatt\Core\DatabaseInterface
      * connection credentials
      * @var array
      */
-    private $credentials;
+    protected $credentials;
 
 
     /**

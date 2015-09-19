@@ -20,19 +20,22 @@ class Data implements \Mwyatt\Core\DataInterface
 
 
     /**
-     * get all data
+     * get date key
      * @param  string $key
      * @return mixed
      */
-    public function getData($key = null)
+    public function getDataKey($key)
     {
+        return empty($this->data[$key]) ? null : $this->data[$key];
+    }
 
-        // key wanted, so pass value or nothing
-        if ($key) {
-            return empty($this->data[$key]) ? null : $this->data[$key];
-        }
 
-        // all data
+    /**
+     * get all data
+     * @return mixed
+     */
+    public function getData()
+    {
         return $this->data;
     }
 

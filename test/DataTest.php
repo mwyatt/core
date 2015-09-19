@@ -14,6 +14,14 @@ class DataTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testGetSetKey()
+    {
+        $data = new \Mwyatt\Core\Data;
+        $data->setDataKey('foo', 'bar');
+        $this->assertEquals('bar', $data->getDataKey('foo'));
+    }
+
+
     public function testGetDataFirst()
     {
         $data = new \Mwyatt\Core\Data;

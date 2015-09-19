@@ -3,14 +3,21 @@ namespace Mwyatt\Core;
 
 interface DataInterface
 {
-	
+
 
     /**
-     * get all data
+     * get date key
      * @param  string $key
      * @return mixed
      */
-    public function getData($key = null);
+    public function getDataKey($key);
+    	
+
+    /**
+     * get all data
+     * @return mixed
+     */
+    public function getData();
 	
 
     /**
