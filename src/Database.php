@@ -37,27 +37,12 @@ class Database implements \Mwyatt\Core\DatabaseInterface
     }
     
 
-    private function validateCredentials()
+    protected function validateCredentials(array $expected)
     {
-        $expected = [
-            'host',
-            'port',
-            'basename',
-            'username',
-            'password'
-        ];
-        if (! \Mwyatt\Core\Helper::arrayKeyExists($expected, $this->getCredentials())) {
+        $expected = [];
+        if (! \Mwyatt\Core\Helper::arrayKeyExists($expected, $this->credentials)) {
             throw new Exception('database credentials invalid', 3123890);
         }
-    }
-
-
-    /**
-     * @return array
-     */
-    private function getCredentials()
-    {
-        return $this->credentials;
     }
     
     
@@ -73,12 +58,11 @@ class Database implements \Mwyatt\Core\DatabaseInterface
     
     public function connect()
     {
-        $credentials = $this->getCredentials();
         try {
             // set data source name
             $dataSourceName = [
-                'mysql:host' => $credentials['host'],
-                'dbname' => $credentials['basename'],
+                'mysql:host' => $this->credentials['host'],
+                'dbname' => $this->credentials['basename'],
                 'charset' => 'utf8'
             ];
             foreach ($dataSourceName as $key => $value) {
@@ -89,8 +73,8 @@ class Database implements \Mwyatt\Core\DatabaseInterface
             // connect
             $this->dbh = new \PDO(
                 $dataSourceName,
-                $credentials['username'],
-                $credentials['password']
+                $this->credentials['username'],
+                $this->credentials['password']
             );
         
             // set error mode
