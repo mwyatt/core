@@ -6,6 +6,7 @@
 			<file>test/UrlTest.php</file>
 			<file>test/RouterTest.php</file>
 			<file>test/ResponseTest.php</file>
+			<file>test/RegistryTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

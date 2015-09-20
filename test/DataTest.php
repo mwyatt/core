@@ -81,7 +81,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
     {
         $data = new \Mwyatt\Core\Data;
         $data->setDataKey('foo', 'bar');
-        $this->assertEquals('bar', $data->getData('foo'));
+        $this->assertEquals('bar', $data->getDataKey('foo'));
     }
 
 
