@@ -15,9 +15,10 @@ class Entity
      * on non writable fields. this can be applied to all other protected
      * fields in the future.
      * the fields will all need to be editable in the actual database
-     * @return int 
+     * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->Id;
     }
 }

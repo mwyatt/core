@@ -121,7 +121,7 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // query
         $sth = $this->database->dbh->prepare("
-			{$this->getSqlSelect()}
+            {$this->getSqlSelect()}
             where {$column} = :id
 		");
 
@@ -155,7 +155,7 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // query
         $sth = $this->database->dbh->prepare("
-			{$this->getSqlSelect()}
+            {$this->getSqlSelect()}
             where {$column} = :value
 		");
 
@@ -212,8 +212,8 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // query
         $sth = $this->database->dbh->prepare("
-			{$this->getSqlSelect()}
-	        where id != 0
+            {$this->getSqlSelect()}
+            where id != 0
 		");
 
         // mode
