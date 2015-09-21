@@ -13,14 +13,14 @@ interface DatabaseInterface
 
     /**
      * connects to the database
-     * @return bool success
+     * @param array $credentials key => value
      */
-    public function connect();
+    public function __construct($credentials);
 
 
     /**
-     * get id last inserted into the db
-     * @return int
+     * connects to the database
+     * @return bool success
      */
-    public function getLastInsertId();
+    public function connect();
 }

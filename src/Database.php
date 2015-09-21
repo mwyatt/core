@@ -8,7 +8,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Database implements \Mwyatt\Core\DatabaseInterface
+class Database
 {
 
 
@@ -24,17 +24,6 @@ class Database implements \Mwyatt\Core\DatabaseInterface
      * @var array
      */
     protected $credentials;
-
-
-    /**
-     * connects to the database
-     */
-    public function __construct($credentials)
-    {
-        $this->setCredentials($credentials);
-        $this->validateCredentials();
-        $this->connect();
-    }
     
 
     protected function validateCredentials(array $expected)
@@ -53,35 +42,5 @@ class Database implements \Mwyatt\Core\DatabaseInterface
     {
         $this->credentials = $credentials;
         return $this;
-    }
-    
-    
-    public function connect()
-    {
-        try {
-            // set data source name
-            $dataSourceName = [
-                'mysql:host' => $this->credentials['host'],
-                'dbname' => $this->credentials['basename'],
-                'charset' => 'utf8'
-            ];
-            foreach ($dataSourceName as $key => $value) {
-                $dataSourceNameStrings[] = $key . '=' . $value;
-            }
-            $dataSourceName = implode(';', $dataSourceNameStrings);
-            
-            // connect
-            $this->dbh = new \PDO(
-                $dataSourceName,
-                $this->credentials['username'],
-                $this->credentials['password']
-            );
-        
-            // set error mode
-            $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $error) {
-            return false;
-        }
-        return $this->dbh;
     }
 }

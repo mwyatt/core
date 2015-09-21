@@ -21,10 +21,24 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
+     * the database instance
+     * @var object
+     */
+    public $database;
+
+
+    /**
      * the name of table being read
      * @var string
      */
     public $tableName;
+
+
+    /**
+     * identifies which object to store results in from a read
+     * @var string
+     */
+    public $entity = '\\Mwyatt\\Core\\Entity\\Foo';
 
 
     /**
@@ -37,15 +51,6 @@ abstract class Model extends \Mwyatt\Core\Data
 
     /**
      * always array
-     * create
-     *     array of ids created [1, 5, 2]
-     * read
-     *     array of entities
-     * update
-     *     array of id => status [1 => 1, 2 => 0]
-     * delete
-     *     array of id => status [1 => 1, 2 => 0]
-     * where 0 is fail and 1 is success
      * @var array
      */
     public $data;
@@ -65,10 +70,10 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // if not in registry connect + create
         if (! $database = $registry->get('database')) {
-            $database = new \Mwyatt\Core\Database(include BASE_PATH . 'credentials' . EXT);
+            $database = new \Mwyatt\Core\Database\Pdo(include BASE_PATH . 'credentials' . EXT);
             $registry->set('database', $database);
         }
-        $this->setDatabase($database);
+        $this->database = $database;
     }
 
 
@@ -98,14 +103,66 @@ abstract class Model extends \Mwyatt\Core\Data
     {
         return $this->fields;
     }
-    
-    
+
+
     /**
-     * @param array $fields
+     * data = ids created [1, 5, 2]
+     * @param  array $entities
+     * @return object   
      */
-    public function setFields($fields)
+    public function create(Array $entities)
     {
-        $this->fields = $fields;
+
+        // statement
+        $statement = [];
+        $createdIds = [];
+        $statement[] = 'insert into';
+        $statement[] = $this->getTableName();
+        $statement[] = '(' . $this->getSqlFields() . ')';
+        $statement[] = 'values';
+        $statement[] = '(' . $this->getSqlPositionalPlaceholders() . ')';
+
+        // prepare
+        $sth = $this->database->dbh->prepare(implode(' ', $statement));
+
+        // execute
+        foreach ($entities as $entity) {
+            $sth->execute($this->getSthExecutePositional($entity));
+            if ($sth->rowCount()) {
+                $createdIds[] = intval($this->database->dbh->lastInsertId());
+            }
+        }
+
+        // return
+        $this->setData($createdIds);
+        return $this;
+    }
+
+
+    /**
+     * reads everything
+     * data = array of entities
+     * @return object 
+     */
+    public function read()
+    {
+
+        // query
+        $sth = $this->database->dbh->prepare("
+            {$this->getSqlSelect()}
+            where id != 0
+		");
+
+        // mode
+        $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
+
+        // execute
+        $sth->execute();
+
+        // fetch
+        $this->setData($sth->fetchAll());
+
+        // instance
         return $this;
     }
 
@@ -123,7 +180,7 @@ abstract class Model extends \Mwyatt\Core\Data
         $sth = $this->database->dbh->prepare("
             {$this->getSqlSelect()}
             where {$column} = :id
-		");
+        ");
 
         $entity = $this->getEntity();
 
@@ -157,7 +214,7 @@ abstract class Model extends \Mwyatt\Core\Data
         $sth = $this->database->dbh->prepare("
             {$this->getSqlSelect()}
             where {$column} = :value
-		");
+        ");
 
         // mode
         $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
@@ -171,68 +228,9 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
-     * @param  array $entities
-     * @return array    of insert ids
-     */
-    public function create(Array $entities)
-    {
-
-        // statement
-        $statement = [];
-        $lastInsertIds = [];
-        $statement[] = 'insert into';
-        $statement[] = $this->getTableName();
-        $statement[] = '(' . $this->getSqlFieldsWriteable() . ')';
-        $statement[] = 'values';
-        $statement[] = '(' . $this->getSqlPositionalPlaceholdersWriteable() . ')';
-
-        // prepare
-        $sth = $this->database->dbh->prepare(implode(' ', $statement));
-
-        // execute
-        foreach ($entities as $entity) {
-            $sth->execute($this->getSthExecutePositionalWriteable($entity));
-            if ($sth->rowCount()) {
-                $lastInsertIds[] = intval($this->database->dbh->lastInsertId());
-            }
-        }
-
-        // return
-        $this->setData($lastInsertIds);
-        return $this;
-    }
-
-
-    /**
-     * reads everything
-     * @return object
-     */
-    public function read()
-    {
-
-        // query
-        $sth = $this->database->dbh->prepare("
-            {$this->getSqlSelect()}
-            where id != 0
-		");
-
-        // mode
-        $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
-
-        // execute
-        $sth->execute();
-
-        // fetch
-        $this->setData($sth->fetchAll());
-
-        // instance
-        return $this;
-    }
-
-
-    /**
      * uses the passed properties to build named prepared statement
      * maintiaining this: public function update($mold, $where = [])
+     * data = array of id => status [1 => 1, 2 => 0]
      * @todo how to return a value which can mark success?
      * @param  array  $molds
      * @param  string $by    defines the column to update by
@@ -261,7 +259,7 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // execute
         foreach ($entities as $entity) {
-            foreach ($this->getSthExecuteNamedWriteable($entity) as $key => $value) {
+            foreach ($this->getSthExecuteNamed($entity) as $key => $value) {
                 $this->bindValue($sth, $key, $value);
             }
             $this->bindValue($sth, 'column', $entity->$column);
@@ -277,6 +275,7 @@ abstract class Model extends \Mwyatt\Core\Data
     /**
      * uses where property to build delete statement
      * improved to allow entities to be passed
+     * data = array of id => status [1 => 1, 2 => 0]
      * @param  array  $properties
      * @return int
      */
@@ -334,37 +333,9 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
-     * implodes list of sql fields excluding fields like 'id'
-     * column, column, column
-     * @return string
-     */
-    public function getSqlFieldsWriteable($append = '')
-    {
-        $writeable = [];
-        foreach ($this->fields as $field) {
-            $writeable[] = '`' . $field . '`' . $append;
-        }
-        return implode(', ', $writeable);
-    }
-
-
-    /**
      * @return string ?, ?, ? of all fields
      */
     public function getSqlPositionalPlaceholders()
-    {
-        $placeholders = [];
-        foreach ($this->fields as $field) {
-            $placeholders[] = '?';
-        }
-        return implode(', ', $placeholders);
-    }
-
-
-    /**
-     * @return string ?, ?, ? of all writable fields
-     */
-    public function getSqlPositionalPlaceholdersWriteable()
     {
         $placeholders = [];
         foreach ($this->fields as $field) {
@@ -391,33 +362,6 @@ abstract class Model extends \Mwyatt\Core\Data
     }
 
 
-    /**
-     * uses a entity to build sth execute data
-     * if 'time' involved assume that time needs to be inserted, could be
-     * a bad idea
-     * @param  object $entity instance of entity
-     * @return array
-     */
-    public function getSthExecutePositionalWriteable($entity)
-    {
-        $excecuteData = [];
-        foreach ($this->fields as $field) {
-            $excecuteData[] = $entity->$field;
-        }
-        return $excecuteData;
-    }
-
-
-    public function getSthExecuteNamedWriteable($mold)
-    {
-        $excecuteData = [];
-        foreach ($this->getFields() as $field) {
-            $excecuteData[':' . $field] = $mold->$field;
-        }
-        return $excecuteData;
-    }
-
-
     public function getSthExecuteNamed($mold)
     {
         $excecuteData = [];
@@ -429,48 +373,6 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
-     * builds sql where string using and
-     * @param  array  $where accepts ('column' => 'value') format
-     * @return string
-     */
-    public function getSqlWhere($where = [])
-    {
-        $statement = [];
-        foreach ($where as $key => $value) {
-            $statement[] = ($statement ? 'and' : 'where');
-
-            // array becomes in (1, 2, 3)
-            if (is_array($value)) {
-                $statement[] = $key . ' in (' . implode(', ', $value) . ')';
-                continue;
-            }
-
-            // normal key = val
-            $statement[] = $key . ' = :where' . ucfirst($key);
-        }
-        return implode(' ', $statement);
-    }
-
-
-    /**
-     * builds sql limit using array
-     * @param  array  $limit accepts ('key' => 'value', 'key' => 'value')
-     * @return string
-     */
-    public function getSqlLimit($limit = [])
-    {
-        $statement = [];
-        $limits = [];
-        $statement[] = 'limit';
-        foreach ($limit as $key => $value) {
-            $limits[] = ':limit_' . $key;
-        }
-        $statement[] = implode(', ', $limits);
-        return implode(' ', $statement);
-    }
-
-
-    /**
      * @return string
      */
     public function getTableName()
@@ -478,16 +380,6 @@ abstract class Model extends \Mwyatt\Core\Data
         if ($this->tableName) {
             return $this->tableName;
         }
-    }
-    
-    
-    /**
-     * @param string $tableName
-     */
-    public function setTableName($tableName)
-    {
-        $this->tableName = $tableName;
-        return $this;
     }
 
 
@@ -511,6 +403,7 @@ abstract class Model extends \Mwyatt\Core\Data
 
     /**
      * binds a single value and guesses the type
+     * good because it guesses the type
      * @param  object $sth
      * @param  int|string $key
      * @param  all $value
@@ -526,36 +419,5 @@ abstract class Model extends \Mwyatt\Core\Data
         } elseif (is_string($value)) {
             $sth->bindValue($key, $value, \PDO::PARAM_STR);
         }
-    }
-
-
-    /**
-     * attempts to execute, if problem found error code is shown
-     * @param  object $sth
-     * @param  string $errorCode
-     * @return object
-     */
-    public function tryExecute($errorCode, $sth, $sthData = [])
-    {
-        try {
-            if ($sthData) {
-                $sth->execute($sthData);
-            } else {
-                $sth->execute();
-            }
-        } catch (Exception $e) {
-            echo '<pre>';
-            print_r($e);
-            echo '</pre>';
-            exit;
-            
-            echo '<pre>';
-            print_r($sthData);
-            echo '</pre>';
-            exit('error trying to execute statement');
-            // $this->config->getObject('error')->handle('database', $errorCode, 'model.php', 'na');
-            return false;
-        }
-        return $sth;
     }
 }

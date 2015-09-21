@@ -8,12 +8,13 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Pdo extends \Mwyatt\Core\Database
+class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterface
 {
 
 
     /**
      * connects to the database
+     * @param array $credentials key => value
      */
     public function __construct($credentials)
     {
@@ -27,32 +28,7 @@ class Pdo extends \Mwyatt\Core\Database
         ]);
         $this->connect();
     }
-    
 
-    private function validateCredentials()
-    {
-        $expected = [
-            'host',
-            'port',
-            'basename',
-            'username',
-            'password'
-        ];
-        if (! \Mwyatt\Core\Helper::arrayKeyExists($expected, $this->credentials)) {
-            throw new Exception('database credentials invalid', 3123890);
-        }
-    }
-    
-    
-    /**
-     * @param array $credentials
-     */
-    private function setCredentials($credentials)
-    {
-        $this->credentials = $credentials;
-        return $this;
-    }
-    
     
     public function connect()
     {
@@ -77,8 +53,8 @@ class Pdo extends \Mwyatt\Core\Database
         
             // set error mode
             $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $error) {
-            return false;
+        } catch (\PDOException $error) {
+            throw new \Exception('unable to connect to database', 3123890);
         }
         return $this->dbh;
     }
