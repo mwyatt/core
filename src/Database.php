@@ -38,7 +38,7 @@ class Database
     /**
      * @param array $credentials
      */
-    private function setCredentials($credentials)
+    protected function setCredentials($credentials)
     {
         $this->credentials = $credentials;
         return $this;

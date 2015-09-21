@@ -9,6 +9,16 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 {
 
 
+    protected $view;
+
+
+    public function __construct()
+    {
+        $this->view = new \OriginalAppName\View;
+    }
+
+
+
     public function home()
     {
         return new Response(200);

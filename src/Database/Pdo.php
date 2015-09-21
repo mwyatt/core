@@ -1,6 +1,6 @@
 <?php
 
-namespace Mwyatt\Core;
+namespace Mwyatt\Core\Database;
 
 /**
  * will act as an interface for any database connection soon
@@ -53,8 +53,8 @@ class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterfac
         
             // set error mode
             $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $error) {
-            throw new \Exception('unable to connect to database', 3123890);
+        } catch (\PDOException $exception) {
+            throw new \Exception($exception->getMessage());
         }
         return $this->dbh;
     }

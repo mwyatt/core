@@ -1,12 +1,25 @@
 <?php
-namespace Mwyatt\Core;
+namespace Mwyatt\Core\Entity;
 
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Entity
+class Test
 {
+
+
+    /**
+     * protected so that it cant be set (auto incrementing)
+     * @var int
+     */
+    protected $id;
+
+
+    /**
+     * @var string
+     */
+    public $bar;
 
 
     /**

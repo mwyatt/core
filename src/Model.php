@@ -3,20 +3,11 @@
 namespace Mwyatt\Core;
 
 /**
- * responses
- *     create
- *         id from created row
- *     read
- *         the rows received
- *     update
- *         count of affected rows
- *     delete
- *         count of affected rows
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-abstract class Model extends \Mwyatt\Core\Data
+abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInterface
 {
 
 
@@ -24,21 +15,21 @@ abstract class Model extends \Mwyatt\Core\Data
      * the database instance
      * @var object
      */
-    public $database;
+    protected $database;
 
 
     /**
      * the name of table being read
      * @var string
      */
-    public $tableName;
+    protected $tableName = 'foo';
 
 
     /**
      * identifies which object to store results in from a read
      * @var string
      */
-    public $entity = '\\Mwyatt\\Core\\Entity\\Foo';
+    protected $entity = '\\Mwyatt\\Core\\Entity\\Foo';
 
 
     /**
@@ -46,34 +37,25 @@ abstract class Model extends \Mwyatt\Core\Data
      * lazily
      * @var array
      */
-    public $fields = [];
-
-
-    /**
-     * always array
-     * @var array
-     */
-    public $data;
+    protected $fields = [
+        'id',
+        'bar'
+    ];
 
 
     /**
      * inject dependencies
      */
-    public function __construct($database = null)
+    public function __construct()
     {
-
-        // already added
-        if ($database) {
-            return $this->setDatabase($database);
-        }
         $registry = \Mwyatt\Core\Registry::getInstance();
 
-        // if not in registry connect + create
-        if (! $database = $registry->get('database')) {
-            $database = new \Mwyatt\Core\Database\Pdo(include BASE_PATH . 'credentials' . EXT);
-            $registry->set('database', $database);
+        // already connected
+        if ($this->database = $registry->get('database')) {
+            return $this;
         }
-        $this->database = $database;
+
+        throw new \Exception('models require a database connection inside the registry');
     }
 
 
@@ -106,11 +88,22 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        if ($this->tableName) {
+            return $this->tableName;
+        }
+    }
+
+
+    /**
      * data = ids created [1, 5, 2]
      * @param  array $entities
      * @return object
      */
-    public function create(Array $entities)
+    public function create(array $entities)
     {
 
         // statement
@@ -168,77 +161,50 @@ abstract class Model extends \Mwyatt\Core\Data
 
 
     /**
-     * global read for ids
-     * extend this if more detail required
-     * @param  array $ids
-     * @return object
+     * read single column with multiple values
+     * @param  array  $values     
+     * @param  string $columnName 
+     * @return object             
      */
-    public function readId($ids, $column = 'id')
+    public function readColumn(array $values, $columnName = 'id')
     {
 
         // query
         $sth = $this->database->dbh->prepare("
             {$this->getSqlSelect()}
-            where {$column} = :id
+            where {$columnName} = :value
         ");
-
-        $entity = $this->getEntity();
 
         // mode
         $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
 
         // loop prepared statement
-        foreach ($ids as $id) {
-            $sth->bindValue(':id', $id, \PDO::PARAM_INT);
+        $results = [];
+        foreach ($values as $value) {
+            $this->bindValue($sth, ':value', $value);
             $sth->execute();
             while ($result = $sth->fetch()) {
-                $this->appendData($result);
+                $results[] = $result;
             }
         }
 
         // instance
-        return $this;
-    }
-
-
-    /**
-     * reads where column == value
-     * @param  string $column table column
-     * @param  any $value  to match
-     * @return object
-     */
-    public function readColumn($column, $value)
-    {
-
-        // query
-        $sth = $this->database->dbh->prepare("
-            {$this->getSqlSelect()}
-            where {$column} = :value
-        ");
-
-        // mode
-        $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
-        $this->bindValue($sth, ':value', $value);
-        $sth->execute();
-        $this->setData($sth->fetchAll());
-
-        // instance
+        $this->setData($results);
         return $this;
     }
 
 
     /**
      * uses the passed properties to build named prepared statement
-     * maintiaining this: public function update($mold, $where = [])
-     * data = array of id => status [1 => 1, 2 => 0]
-     * @todo how to return a value which can mark success?
+     * data = array of id => status [1, 0]
+     * struggling to use the id as it may not always be there..
      * @param  array  $molds
      * @param  string $by    defines the column to update by
      * @return int
      */
-    public function update(Array $entities, $column = 'id')
+    public function update(array $entities, $column = 'id')
     {
-        $updatedCount = 0;
+        $result = [];
 
         // statement
         $statement = [];
@@ -246,7 +212,7 @@ abstract class Model extends \Mwyatt\Core\Data
         $statement[] = $this->getTableName();
         $statement[] = 'set';
 
-        // must be writable columns
+        // getting field = :field, array
         $named = [];
         foreach ($this->getFields() as $field) {
             $named[] = $field . ' = :' . $field;
@@ -259,15 +225,16 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // execute
         foreach ($entities as $entity) {
+            $entityPropertyValue = $this->getEntityPropertyValue($entity, $column);
             foreach ($this->getSthExecuteNamed($entity) as $key => $value) {
                 $this->bindValue($sth, $key, $value);
             }
-            $this->bindValue($sth, 'column', $entity->$column);
+            $this->bindValue($sth, 'column', $entityPropertyValue);
             $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
             $sth->execute();
-            $updatedCount += $sth->rowCount();
+            $result[$entityPropertyValue] = $sth->rowCount();
         }
-        $this->setRowCount($updatedCount);
+        $this->setData($result);
         return $this;
     }
 
@@ -279,8 +246,9 @@ abstract class Model extends \Mwyatt\Core\Data
      * @param  array  $properties
      * @return int
      */
-    public function delete(Array $entities, $column = 'id')
+    public function delete(array $entities, $column = 'id')
     {
+        $result = [];
 
         // build
         $rowCount = 0;
@@ -294,13 +262,14 @@ abstract class Model extends \Mwyatt\Core\Data
 
         // bind
         foreach ($entities as $entity) {
-            $this->bindValue($sth, 1, $entity->$column);
+            $entityPropertyValue = $this->getEntityPropertyValue($entity, $column);
+            $this->bindValue($sth, 1, $entityPropertyValue);
             $sth->execute();
-            $rowCount += $sth->rowCount();
+            $result[$entityPropertyValue] = $sth->rowCount();
         }
 
         // return
-        $this->setRowCount($rowCount);
+        $this->setData($result);
         return $this;
     }
 
@@ -310,7 +279,7 @@ abstract class Model extends \Mwyatt\Core\Data
      * select (column, column) from (table_name)
      * @return string
      */
-    public function getSqlSelect()
+    protected function getSqlSelect()
     {
         $statement = [];
         $statement[] = 'select';
@@ -326,7 +295,7 @@ abstract class Model extends \Mwyatt\Core\Data
      * column, column, column
      * @return string
      */
-    public function getSqlFields()
+    protected function getSqlFields()
     {
         return implode(', ', $this->fields);
     }
@@ -335,7 +304,7 @@ abstract class Model extends \Mwyatt\Core\Data
     /**
      * @return string ?, ?, ? of all fields
      */
-    public function getSqlPositionalPlaceholders()
+    protected function getSqlPositionalPlaceholders()
     {
         $placeholders = [];
         foreach ($this->fields as $field) {
@@ -352,33 +321,46 @@ abstract class Model extends \Mwyatt\Core\Data
      * @param  object $entity instance of entity
      * @return array
      */
-    public function getSthExecutePositional($entity)
+    protected function getSthExecutePositional($entity)
     {
         $excecuteData = [];
-        foreach ($this->fields as $field) {
-            $excecuteData[] = $entity->$field;
-        }
-        return $excecuteData;
-    }
-
-
-    public function getSthExecuteNamed($mold)
-    {
-        $excecuteData = [];
-        foreach ($this->getFields() as $field) {
-            $excecuteData[':' . $field] = $mold->$field;
+        foreach ($this->fields as $property) {
+            $excecuteData[] = $this->getEntityPropertyValue($entity, $property);
         }
         return $excecuteData;
     }
 
 
     /**
-     * @return string
+     * get all properties and values with a named key
+     * @param  object $entity 
+     * @return array  array[:property] = value
      */
-    public function getTableName()
+    protected function getSthExecuteNamed($entity)
     {
-        if ($this->tableName) {
-            return $this->tableName;
+        $excecuteData = [];
+        foreach ($this->getFields() as $property) {
+            $excecuteData[':' . $property] = $this->getEntityPropertyValue($entity, $property);
+        }
+        return $excecuteData;
+    }
+
+
+    /**
+     * get a property from an entity
+     * some may be protected and would need to use the accessor
+     * method
+     * @param  object $entity   
+     * @param  string $property 
+     * @return mixed           
+     */
+    protected function getEntityPropertyValue($entity, $property)
+    {
+        $getMethod = 'get' . ucfirst($property);
+        if (method_exists($entity, $getMethod)) {
+            return $entity->{$getMethod}();
+        } else {
+            return $entity->$property;
         }
     }
 
@@ -389,7 +371,7 @@ abstract class Model extends \Mwyatt\Core\Data
      * @param  array $values basic array with values
      * @return bool | null         returns false if something goes wrong
      */
-    public function bindValues($sth, $values)
+    protected function bindValues($sth, $values)
     {
         if (! is_object($sth) || ! ($sth instanceof PDOStatement)) {
             return;
@@ -408,7 +390,7 @@ abstract class Model extends \Mwyatt\Core\Data
      * @param  int|string $key
      * @param  all $value
      */
-    public function bindValue($sth, $key, $value)
+    protected function bindValue($sth, $key, $value)
     {
         if (is_int($value)) {
             $sth->bindValue($key, $value, \PDO::PARAM_INT);

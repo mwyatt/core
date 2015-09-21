@@ -74,6 +74,10 @@ class Router implements \Mwyatt\Core\RouterInterface
         $response = new \Mwyatt\Core\Response('');
         $controller = new \Mwyatt\Core\Controller;
 
+        // store final routes
+        $registry = \Mwyatt\Core\Registry::getInstance();
+        $registry->set('routes', $this->routes);
+
         // found route
         if ($route) {
             // do controller->method
