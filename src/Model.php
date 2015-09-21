@@ -108,7 +108,7 @@ abstract class Model extends \Mwyatt\Core\Data
     /**
      * data = ids created [1, 5, 2]
      * @param  array $entities
-     * @return object   
+     * @return object
      */
     public function create(Array $entities)
     {
@@ -142,7 +142,7 @@ abstract class Model extends \Mwyatt\Core\Data
     /**
      * reads everything
      * data = array of entities
-     * @return object 
+     * @return object
      */
     public function read()
     {
