@@ -18,13 +18,13 @@ interface SessionInterface
 
 
     /**
-     * @return string 
+     * @return string
      */
     public function getScope();
     
     
     /**
-     * @param string $scope 
+     * @param string $scope
      */
     public function setScope($scope);
 
@@ -34,37 +34,37 @@ interface SessionInterface
 
     /**
      * excends getdata from parent
-     * @param  string $key 
-     * @return any      
+     * @param  string $key
+     * @return any
      */
     public function getData();
 
 
     /**
-     * @return any 
+     * @return any
      */
     public function getDataKey($key);
     
     
     /**
      * set a key value pair
-     * @param string $key   
-     * @param any $value 
+     * @param string $key
+     * @param any $value
      */
     public function setDataKey($key, $value);
 
 
     /**
      * pull and unset all data in scope
-     * @return mixed 
+     * @return mixed
      */
     public function pullData();
 
 
     /**
      * gets the value and unsets it
-     * @param  string $key 
-     * @return mixed      
+     * @param  string $key
+     * @return mixed
      */
     public function pullDataKey($key);
 }
