@@ -44,5 +44,5 @@ interface UrlInterface
      * @param  array $config key, value
      * @return string         url/path/
      */
-    public function generate($key = 'home', $config = [], $absolute = true);
+    public function generate($key = 'home', $config = []);
 }

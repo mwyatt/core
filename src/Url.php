@@ -142,7 +142,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      * @param  array $config key, value
      * @return string         url/path/
      */
-    public function generate($key = 'home', $config = [], $absolute = true)
+    public function generate($key = 'home', $config = [])
     {
         $route = $this->getRoute($key);
         $path = ltrim($route->path, '/');
@@ -150,5 +150,17 @@ class Url implements \Mwyatt\Core\UrlInterface
             $path = str_replace(':' . $key, $value, $path);
         }
         return $this->getProtocol() . $this->getBase() . $path;
+    }
+
+
+
+    /**
+     * returns an absolute url of the asset complete with asset version
+     * @param  string $append path to asset
+     * @return string         url of asset with modified time
+     */
+    public function generateVersioned($key = 'asset/single', $config = [])
+    {
+
     }
 }
