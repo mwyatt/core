@@ -8,7 +8,6 @@
         }
     ],
     "require": {
-        "intervention/image": "dev-master",
         "corneltek/pux": "~1.5",
         "swiftmailer/swiftmailer": "5.3.*@dev"
     },
