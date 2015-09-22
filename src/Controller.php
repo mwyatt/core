@@ -14,7 +14,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     public function __construct()
     {
-        $this->view = new \OriginalAppName\View;
+        $this->view = new \Mwyatt\Core\View;
     }
 
 

@@ -7,8 +7,9 @@
 			<file>test/RouterTest.php</file>
 			<file>test/ResponseTest.php</file>
 			<file>test/RegistryTest.php</file>
-			<file>test/DatabaseTest.php</file>
-			<file>test/ModelTest.php</file>
+			<!-- <file>test/DatabaseTest.php</file> -->
+			<!-- <file>test/ModelTest.php</file> -->
+			<file>test/ViewTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

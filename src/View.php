@@ -8,11 +8,14 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class View extends \Mwyatt\Core\Data
+class View extends \Mwyatt\Core\Data /*implements ViewInterface*/
 {
 
 
-    protected $url;
+    public $url;
+
+
+    protected $pathBase;
 
 
     /**
@@ -22,6 +25,7 @@ class View extends \Mwyatt\Core\Data
     {
         $registry = Registry::getInstance();
         $this->url = $registry->get('url');
+        $this->pathBase = (string) (__DIR__ . '/');
     }
 
     
@@ -43,15 +47,6 @@ class View extends \Mwyatt\Core\Data
 
         // push stored into method scope
         extract($this->getData());
-
-        // debugging
-        if (isset($_REQUEST['view'])) {
-            echo '<pre>';
-            print_r($this->getData());
-            echo '</pre>';
-            echo '<hr>';
-            exit;
-        }
 
         // start output buffer
         // @todo start this at the start of the app?
@@ -112,7 +107,7 @@ class View extends \Mwyatt\Core\Data
     public function getAssetPath($append)
     {
         $end = 'asset' . DS . $append;
-        $path = BASE_PATH . $end;
+        $path = $this->pathBase . $end;
         return $path;
     }
 
@@ -124,7 +119,7 @@ class View extends \Mwyatt\Core\Data
      */
     public function getPath($append)
     {
-        $path = BASE_PATH;
+        $path = $this->pathBase;
         return $path . $append;
     }
 
@@ -158,7 +153,7 @@ class View extends \Mwyatt\Core\Data
      */
     public function getPathMedia($append)
     {
-        return BASE_PATH . 'media' . US . SITE . US . $append;
+        return $this->pathBase . 'media' . US . SITE . US . $append;
     }
 
 
