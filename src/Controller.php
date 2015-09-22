@@ -35,4 +35,29 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     {
         return new Response(404, 404);
     }
+
+
+    /**
+     * redirects the user to another url and terminates
+     * utilising the generator from symfony
+     * could this be a static function?
+     * @param  string $key      routeKey
+     * @param  array $config if required
+     * @return null
+     */
+    public function redirect($key, $config = [])
+    {
+
+        // get url from registry and generate string
+        $registry = \Mwyatt\Core\Registry::getInstance();
+        $url = $registry->get('url');
+        $url = $url->generate($key, $config);
+
+        // redirect
+        header('location:' . $url);
+
+        // prevent continuation
+        // do you need this if you have structured the app correctly?
+        exit;
+    }
 }

@@ -10,7 +10,7 @@ namespace Mwyatt\Core;
  * @version	0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Session extends \Mwyatt\Core\Data
+class Session extends \Mwyatt\Core\Data implements SessionInterface
 {
 
 
@@ -20,7 +20,8 @@ class Session extends \Mwyatt\Core\Data
 	/**
 	 * extends the normal constructor to set the session data
 	 */
-	public function __construct($scope = '') {
+	public function __construct($scope = '')
+	{
 		if ($scope) {
 			$this->setScope($scope);
 		}
@@ -31,7 +32,8 @@ class Session extends \Mwyatt\Core\Data
 	/**
 	 * @return string 
 	 */
-	public function getScope() {
+	public function getScope()
+	{
 	    return $this->scope;
 	}
 	
@@ -39,7 +41,8 @@ class Session extends \Mwyatt\Core\Data
 	/**
 	 * @param string $scope 
 	 */
-	public function setScope($scope) {
+	public function setScope($scope)
+	{
 	    $this->scope = $scope;
 	    return $this;
 	}
@@ -49,24 +52,11 @@ class Session extends \Mwyatt\Core\Data
 	 * initialises the session data into the class data property
 	 * adds a empty session key array
 	 */
-	public function initialiseData()
+	private function initialiseData()
 	{
 		if (! array_key_exists($this->getScope(), $_SESSION)) {
 			$_SESSION[$this->getScope()] = [];
 		}
-	}
-
-
-	/**
-	 * sets the session variable with information and updates
-	 * the data packet
-	 * @param string $key   
-	 * @param any $value 
-	 */
-	public function setDataKey($key, $value)
-	{
-		$_SESSION[$this->getScope()][$key] = $value;
-		return $this;
 	}
 
 
@@ -88,11 +78,11 @@ class Session extends \Mwyatt\Core\Data
 	}	
 
 
-
 	/**
 	 * @return any 
 	 */
-	public function getDataKey($key) {
+	public function getDataKey($key)
+	{
 		if (isset($_SESSION[$this->getScope()][$key])) {
 		    return $_SESSION[$this->getScope()][$key];
 		}
@@ -104,31 +94,38 @@ class Session extends \Mwyatt\Core\Data
 	 * @param string $key   
 	 * @param any $value 
 	 */
-	public function setDataKey($key, $value) {
+	public function setDataKey($key, $value)
+	{
 	    $_SESSION[$this->getScope()][$key] = $value;
 	    return $this;
 	}
 
 
 	/**
-	 * gets the value and unsets it
-	 * @param  string $key 
-	 * @return array      
+	 * pull and unset all data in scope
+	 * @return mixed 
 	 */
-	public function pullDataKey($key) {
-		if (array_key_exists($key, $_SESSION[$this->getScope()])) {
-			unset($_SESSION[$this->getScope()][$key]);
-			return $_SESSION[$this->getScope()][$key];
+	public function pullData()
+	{	
+		if (!empty($_SESSION[$this->getScope()])) {
+			$data = $_SESSION[$this->getScope()];
+			unset($_SESSION[$this->getScope()]);
+			return $data;
 		}
-	}
+	}	
 
 
 	/**
-	 * just unsets the data
-	 * could just pull to nothing?
-	 * @param  boolean $key 
+	 * gets the value and unsets it
+	 * @param  string $key 
+	 * @return mixed      
 	 */
-	public function delete() {
-		unset($_SESSION[$this->getScope()]);
+	public function pullDataKey($key)
+	{
+		if (!empty($_SESSION[$this->getScope()][$key])) {
+			$data = $_SESSION[$this->getScope()][$key];
+			unset($_SESSION[$this->getScope()][$key]);
+			return $data;
+		}
 	}
 }
