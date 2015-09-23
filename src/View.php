@@ -74,8 +74,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
     /**
      * gets just the base file path
-     * @param  string $append 
-     * @return string         
+     * @param  string $append
+     * @return string
      */
     public function getPath($append = '')
     {
@@ -100,8 +100,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
     /**
      * gets absolute path of a single asset with cache busting
-     * @param  string $path 
-     * @return string       
+     * @param  string $path
+     * @return string
      */
     public function getUrlAssetCacheBusted($path)
     {
@@ -124,7 +124,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * header/footer
      * @param  string $type mustache|css|js
      * @param  string $path foo/bar
-     * @return object       
+     * @return object
      */
     public function appendAsset($type, $path)
     {
