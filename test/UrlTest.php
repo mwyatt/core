@@ -20,9 +20,16 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         $urlBase = '192.168.1.24/core/';
         $_SERVER['HTTP_HOST'] = '192.168.1.24';
+
+        // filled
         $_SERVER['REQUEST_URI'] = '/core/foo/bar/';
         $url = new \Mwyatt\Core\Url($urlBase);
         $this->assertEquals('foo/bar/', $url->getPath());
+        
+        // empty
+        $_SERVER['REQUEST_URI'] = '/core/';
+        $url = new \Mwyatt\Core\Url($urlBase);
+        $this->assertEquals('', $url->getPath());
     }
 
 
