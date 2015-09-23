@@ -31,6 +31,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testGetPath()
     {
         $view = new \Mwyatt\Core\View;
+        $registry = \Mwyatt\Core\Registry::getInstance();
+        $registry->set('pathBase', (string) (__DIR__ . '/../'));
         $this->assertEquals('/var/www/html/core/src/../', $view->getPath());
     }
 
@@ -38,6 +40,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testGetPathTemplate()
     {
         $view = new \Mwyatt\Core\View;
+        $registry = \Mwyatt\Core\Registry::getInstance();
+        $registry->set('pathBase', (string) (__DIR__ . '/../'));
         $this->assertEquals('/var/www/html/core/src/../template/test.php', $view->getPathTemplate('test'));
     }
 
@@ -62,6 +66,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
         // registry
         $registry = \Mwyatt\Core\Registry::getInstance();
         $registry->set('url', $url);
+        $registry->set('pathBase', (string) (__DIR__ . '/../'));
 
         // view
         $view = new \Mwyatt\Core\View;
