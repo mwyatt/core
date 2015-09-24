@@ -19,10 +19,17 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
 
     /**
-     * base path for filesystem
+     * base path for package
      * @var string
      */
     protected $pathBase;
+
+
+    /**
+     * base path for file dependant
+     * @var string
+     */
+    protected $pathDependantBase;
 
 
     /**
@@ -32,7 +39,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     {
         $registry = Registry::getInstance();
         $this->url = $registry->get('url');
-        $this->pathBase = $registry->get('pathBase');
+        $this->pathDependantBase = $registry->get('pathBase');
+        $this->pathBase = (string) (__DIR__ . '/');
     }
 
     
@@ -79,20 +87,25 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      */
     public function getPath($append = '')
     {
-        return $this->pathBase . $append;
+        return $this->pathDependantBase . $append;
     }
 
 
     /**
-     * finds a template
+     * finds a template in the dependant
+     * falls back to this package template
+     * else exception
      * @param  string $append    foo/bar
      * @return string            the path
      */
     public function getPathTemplate($append)
     {
-        $path = $this->pathBase . 'template/' . strtolower($append) . '.php';
-        if (file_exists($path)) {
-            return $path;
+        $end = 'template/' . strtolower($append) . '.php';
+        $paths = [$this->pathDependantBase . $end, $this->pathBase . $end];
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
         }
         throw new \Exception("unable to find template '$path'");
     }
