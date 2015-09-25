@@ -142,8 +142,13 @@ class Url implements \Mwyatt\Core\UrlInterface
      * @param  array $config key, value
      * @return string         url/path/
      */
-    public function generate($key = 'home', $config = [])
+    public function generate($key = '', $config = [])
     {
+
+        // home if no key
+        if (!$key) {
+            return $this->getBase();
+        }
         $route = $this->getRoute($key);
         $path = ltrim($route->path, '/');
         foreach ($config as $key => $value) {

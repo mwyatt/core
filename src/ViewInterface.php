@@ -45,7 +45,7 @@ interface ViewInterface
      * @param  string $path 
      * @return string       
      */
-    public function getUrlAssetCacheBusted($path);
+    public function getUrlCacheBusted($pathRelative);
 
 
     /**

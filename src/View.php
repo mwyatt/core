@@ -116,9 +116,9 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * @param  string $path
      * @return string
      */
-    public function getUrlAssetCacheBusted($path)
+    public function getUrlCacheBusted($pathRelative)
     {
-        $pathAbs = $this->pathBase . 'asset/' . $path;
+        $pathAbs = $this->pathBase . $pathRelative;
         if (!file_exists($pathAbs)) {
             throw new \Exception("cannot get cache busting path for file '$pathAbs'");
         }
@@ -127,7 +127,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
         $timeModified = filemtime($pathAbs);
 
         // return url to asset with modified time as query var
-        return $this->url->generate('asset/single', ['path' => $path]) . '?' . $timeModified;
+        return $this->url->generate() . $pathRelative . '?' . $timeModified;
     }
 
 
