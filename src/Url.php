@@ -147,7 +147,7 @@ class Url implements \Mwyatt\Core\UrlInterface
 
         // home if no key
         if (!$key) {
-            return $this->getBase();
+            return $this->getProtocol() . $this->getBase();
         }
         $route = $this->getRoute($key);
         $path = ltrim($route->path, '/');
