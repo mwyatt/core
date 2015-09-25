@@ -118,7 +118,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      */
     public function getUrlCacheBusted($pathRelative)
     {
-        $pathAbs = $this->pathBase . $pathRelative;
+        $pathAbs = $this->pathDependantBase . $pathRelative;
         if (!file_exists($pathAbs)) {
             throw new \Exception("cannot get cache busting path for file '$pathAbs'");
         }
