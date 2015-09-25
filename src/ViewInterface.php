@@ -26,8 +26,8 @@ interface ViewInterface
 
     /**
      * gets just the base file path
-     * @param  string $append 
-     * @return string         
+     * @param  string $append
+     * @return string
      */
     public function getPath($append = '');
 
@@ -42,8 +42,8 @@ interface ViewInterface
 
     /**
      * gets absolute path of a single asset with cache busting
-     * @param  string $path 
-     * @return string       
+     * @param  string $path
+     * @return string
      */
     public function getUrlCacheBusted($pathRelative);
 
@@ -54,7 +54,7 @@ interface ViewInterface
      * header/footer
      * @param  string $type mustache|css|js
      * @param  string $path foo/bar
-     * @return object       
+     * @return object
      */
     public function appendAsset($type, $path);
 }
