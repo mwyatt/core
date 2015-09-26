@@ -41,14 +41,6 @@ interface ViewInterface
 
 
     /**
-     * gets absolute path of a single asset with cache busting
-     * @param  string $path
-     * @return string
-     */
-    public function getUrlCacheBusted($pathRelative);
-
-
-    /**
      * allows easy registering of additional asset paths
      * these can be then added in order inside the skin
      * header/footer

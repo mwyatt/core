@@ -54,4 +54,22 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         // test
         $this->assertEquals('http://192.168.1.24/core/foo/1/', $url->generate('foo/bar', ['bar' => 1]));
     }
+
+
+    public function testGenerateVersioned()
+    {
+        define('PATH_BASE', (string) (__DIR__ . '/'));
+
+        // url
+        $urlBase = '192.168.1.24/core/';
+        $_SERVER['HTTP_HOST'] = '192.168.1.24';
+        $_SERVER['REQUEST_URI'] = '/core/foo/bar/';
+        $url = new \Mwyatt\Core\Url($urlBase);
+
+        // registry
+        $registry = \Mwyatt\Core\Registry::getInstance();
+
+        // view
+        $this->assertContains('../asset/test.css', $url->getUrlCacheBusted('../asset/test.css'));
+    }
 }
