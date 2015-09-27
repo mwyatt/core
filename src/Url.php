@@ -174,6 +174,6 @@ class Url implements \Mwyatt\Core\UrlInterface
         $timeModified = filemtime($pathAbsolute);
 
         // return url to asset with modified time as query var
-        return $this->url->generate() . $pathRelative . '?' . $timeModified;
+        return $this->generate() . $pathRelative . '?' . $timeModified;
     }
 }

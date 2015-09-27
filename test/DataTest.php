@@ -6,6 +6,15 @@ class DataTest extends \PHPUnit_Framework_TestCase
 {
 
 
+    /**
+     * seems to be set throughout all tests when put here?
+     */
+    public function testConstants()
+    {
+        define('PATH_BASE', (string) (__DIR__ . '/../'));
+    }
+
+
     public function testGetSet()
     {
         $data = new \Mwyatt\Core\Data;

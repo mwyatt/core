@@ -58,7 +58,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateVersioned()
     {
-        define('PATH_BASE', (string) (__DIR__ . '/'));
 
         // url
         $urlBase = '192.168.1.24/core/';
@@ -66,10 +65,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/core/foo/bar/';
         $url = new \Mwyatt\Core\Url($urlBase);
 
-        // registry
-        $registry = \Mwyatt\Core\Registry::getInstance();
-
         // view
-        $this->assertContains('../asset/test.css', $url->getUrlCacheBusted('../asset/test.css'));
+        $this->assertContains('asset/test.css', $url->generateVersioned('asset/test.css'));
     }
 }
