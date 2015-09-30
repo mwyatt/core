@@ -45,4 +45,12 @@ interface UrlInterface
      * @return string         url/path/
      */
     public function generate($key = 'home', $config = []);
+
+
+    /**
+     * gets absolute path of a single file with cache busting powers!
+     * @param  string $path
+     * @return string
+     */
+    public function generateVersioned($pathRelative);
 }

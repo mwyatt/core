@@ -142,8 +142,13 @@ class Url implements \Mwyatt\Core\UrlInterface
      * @param  array $config key, value
      * @return string         url/path/
      */
-    public function generate($key = 'home', $config = [])
+    public function generate($key = '', $config = [])
     {
+
+        // home if no key
+        if (!$key) {
+            return $this->getProtocol() . $this->getBase();
+        }
         $route = $this->getRoute($key);
         $path = ltrim($route->path, '/');
         foreach ($config as $key => $value) {
@@ -153,14 +158,22 @@ class Url implements \Mwyatt\Core\UrlInterface
     }
 
 
-
     /**
-     * returns an absolute url of the asset complete with asset version
-     * @param  string $append path to asset
-     * @return string         url of asset with modified time
+     * gets absolute path of a single file with cache busting powers!
+     * @param  string $path
+     * @return string
      */
-    public function generateVersioned($key = 'asset/single', $config = [])
+    public function generateVersioned($pathRelative)
     {
+        $pathAbsolute = PATH_BASE . $pathRelative;
+        if (!file_exists($pathAbsolute)) {
+            throw new \Exception("cannot get cache busting path for file '$pathAbsolute'");
+        }
 
+        // get mod time
+        $timeModified = filemtime($pathAbsolute);
+
+        // return url to asset with modified time as query var
+        return $this->generate() . $pathRelative . '?' . $timeModified;
     }
 }

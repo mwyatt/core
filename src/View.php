@@ -39,7 +39,6 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     {
         $registry = Registry::getInstance();
         $this->url = $registry->get('url');
-        $this->pathDependantBase = $registry->get('pathBase');
         $this->pathBase = (string) (__DIR__ . '/');
     }
 
@@ -87,7 +86,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      */
     public function getPath($append = '')
     {
-        return $this->pathDependantBase . $append;
+        return PATH_BASE . $append;
     }
 
 
@@ -101,33 +100,13 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     public function getPathTemplate($append, $ext = 'php')
     {
         $end = 'template/' . strtolower($append) . '.' . $ext;
-        $paths = [$this->pathDependantBase . $end, $this->pathBase . $end];
+        $paths = [$this->getPath($end), $this->pathBase . $end];
         foreach ($paths as $path) {
             if (file_exists($path)) {
                 return $path;
             }
         }
         throw new \Exception("unable to find template '$path'");
-    }
-
-
-    /**
-     * gets absolute path of a single asset with cache busting
-     * @param  string $path
-     * @return string
-     */
-    public function getUrlAssetCacheBusted($path)
-    {
-        $pathAbs = $this->pathBase . 'asset/' . $path;
-        if (!file_exists($pathAbs)) {
-            throw new \Exception("cannot get cache busting path for file '$pathAbs'");
-        }
-
-        // get mod time
-        $timeModified = filemtime($pathAbs);
-
-        // return url to asset with modified time as query var
-        return $this->url->generate('asset/single', ['path' => $path]) . '?' . $timeModified;
     }
 
 
