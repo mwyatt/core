@@ -37,7 +37,7 @@ interface ViewInterface
      * @param  string $append    foo/bar
      * @return string            the path
      */
-    public function getPathTemplate($append);
+    public function getPathTemplate($append, $ext = 'php');
 
 
     /**

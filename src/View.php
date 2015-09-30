@@ -98,9 +98,9 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * @param  string $append    foo/bar
      * @return string            the path
      */
-    public function getPathTemplate($append)
+    public function getPathTemplate($append, $ext = 'php')
     {
-        $end = 'template/' . strtolower($append) . '.php';
+        $end = 'template/' . strtolower($append) . '.' . $ext;
         $paths = [$this->pathDependantBase . $end, $this->pathBase . $end];
         foreach ($paths as $path) {
             if (file_exists($path)) {
