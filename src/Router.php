@@ -16,6 +16,9 @@ class Router implements \Mwyatt\Core\RouterInterface
     public $mux;
 
 
+    public $rootControllerName = '\\Mwyatt\\Core\\Controller';
+
+
     /**
      * \Framework\Route\Definition
      * @var array
@@ -66,13 +69,15 @@ class Router implements \Mwyatt\Core\RouterInterface
 
     /**
      * obtain response
+     * perhaps store a base controller so that you are able to control
+     * the 404 and 500 responses?
      * @return object Response
      */
     private function readResponse($path)
     {
         $route = $this->mux->dispatch($path);
         $response = new \Mwyatt\Core\Response('');
-        $controller = new \Mwyatt\Core\Controller;
+        $controller = new $this->rootControllerName;
 
         // store final routes
         $registry = \Mwyatt\Core\Registry::getInstance();
