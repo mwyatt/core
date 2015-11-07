@@ -39,7 +39,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     {
         $registry = Registry::getInstance();
         $this->url = $registry->get('url');
-        $this->pathBase = (string) (__DIR__ . '/');
+        $this->pathBase = (string) (__DIR__ . '../');
     }
 
     
