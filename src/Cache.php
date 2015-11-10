@@ -1,5 +1,6 @@
 <?php
 
+namespace Mwyatt\Core;
 
 /**
  * will concern itself with large collections of objects and or arrays
@@ -19,7 +20,10 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	protected $path = 'cache/';
 
 
-	protected $keyCurrent = '';
+	protected $key = '';
+
+
+	protected $pathBase;
 
 
 	/**
@@ -29,13 +33,19 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	protected $extension = '';
 
 
+	public function __construct()
+	{
+        $this->pathBase = (string) (__DIR__ . '/../');
+	}
+
+
 	/**
 	 * returns the full path for a cached item regardless if it exists
 	 * @param  string $key this-delimiter-space
 	 * @return string      
 	 */
 	protected function getPath($key) {
-		return BASE_PATH . $this->path . $key . $this->extension;
+		return $this->pathBase . $this->path . $key . $this->extension;
 	}
 
 
@@ -66,7 +76,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 
 	protected function getKey()
 	{
-		return $this->keyCurrent;
+		return $this->key;
 	}
 
 
@@ -80,7 +90,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	{
 
 		// store attempted key for create function
-		$this->keyCurrent = $key;
+		$this->key = $key;
 
 		// quickly check if a file exists
 		if (! file_exists($this->getPath($key))) {
@@ -110,5 +120,11 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 		if (unlink($this->getPath($key))) {
 			return true;
 		}
+	}
+
+
+	public function setKey($key)
+	{
+		return $this->key = $key;
 	}
 } 
