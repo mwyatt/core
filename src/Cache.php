@@ -56,8 +56,11 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @param  array $data 
 	 * @return bool       
 	 */
-	public function create($data)
+	public function create($data, $key = '')
 	{
+		if ($key) {
+			$this->setKey($key);
+		}
 
 		// file must not already exist
 		if (file_exists($this->getPath($this->getKey()))) {

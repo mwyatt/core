@@ -59,10 +59,8 @@ class Router implements \Mwyatt\Core\RouterInterface
         // append to mux and collection array
         // must be instances of the correct entity
         foreach ($routes as $route) {
-            if (get_class($route) == 'Mwyatt\\Core\\Entity\\Route') {
-                $this->mux->{$route->type}($route->path, [$route->controller, $route->method], $route->options);
-                $this->routes[] = $route;
-            }
+            $this->mux->{$route->type}($route->path, [$route->controller, $route->method], $route->options);
+            $this->routes[] = $route;
         }
     }
 
