@@ -20,9 +20,17 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	protected $path = 'cache/';
 
 
+	/**
+	 * the filepath and name for the file of focus
+	 * @var string
+	 */
 	protected $key = '';
 
 
+	/**
+	 * the base path for this package
+	 * @var string
+	 */
 	protected $pathBase;
 
 
@@ -33,9 +41,14 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	protected $extension = '';
 
 
-	public function __construct()
+	/**
+	 * set the key to work with when caching data
+	 * @param string $key path/foo-bar
+	 */
+	public function __construct($key)
 	{
         $this->pathBase = (string) (__DIR__ . '/../');
+        $this->setKey($key);
 	}
 
 
@@ -44,8 +57,8 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @param  string $key this-delimiter-space
 	 * @return string      
 	 */
-	protected function getPath($key) {
-		return $this->pathBase . $this->path . $key . $this->extension;
+	protected function getFilePath($key) {
+		return $this->pathBase . $this->path . $this->getKey() . $this->extension;
 	}
 
 
@@ -56,14 +69,13 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @param  array $data 
 	 * @return bool       
 	 */
-	public function create($data, $key = '')
+	public function create($data)
 	{
-		if ($key) {
-			$this->setKey($key);
-		}
+		$key = $this->getKey();
+		$path = $this->getFilePath();
 
 		// file must not already exist
-		if (file_exists($this->getPath($this->getKey()))) {
+		if (file_exists($path)) {
 			return;
 		}
 
@@ -71,13 +83,13 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 		$data = serialize($data);
 
 		// write to file
-		if (file_put_contents($this->getPath($this->getKey()), $data)) {
+		if (file_put_contents($path, $data)) {
 			return true;
 		}
 	}
 
 
-	protected function getKey()
+	public function getKey()
 	{
 		return $this->key;
 	}
@@ -89,19 +101,18 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @param  string $key example-file-name
 	 * @return bool      
 	 */
-	public function read($key)
+	public function read()
 	{
-
-		// store attempted key for create function
-		$this->key = $key;
+		$key = $this->getKey();
+		$path = $this->getFilePath();
 
 		// quickly check if a file exists
-		if (! file_exists($this->getPath($key))) {
+		if (! file_exists($path)) {
 			return;
 		}
 
 		// load in
-		$data = file_get_contents($this->getPath($key));
+		$data = file_get_contents($path);
 		return $this->setData(unserialize($data));
 	}
 
@@ -111,18 +122,30 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @param  string $key 
 	 * @return bool      
 	 */
-	public function delete($key)
+	public function delete()
 	{
-		
+		$key = $this->getKey();
+		$path = $this->getFilePath();
+
 		// nothing to delete
-		if (! file_exists($this->getPath($key))) {
+		if (! file_exists($this->getFilePath())) {
 			return;
 		}
 
 		// remove
-		if (unlink($this->getPath($key))) {
+		if (unlink($this->getFilePath())) {
 			return true;
 		}
+	}
+
+
+	/**
+	 * empty entire cache directory
+	 * @return bool 
+	 */
+	public function flush()
+	{
+		// glob(pattern)
 	}
 
 
@@ -130,4 +153,4 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	{
 		return $this->key = $key;
 	}
-} 
+}
