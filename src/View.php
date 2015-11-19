@@ -18,28 +18,55 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     public $url;
 
 
-    /**
-     * base path for package
-     * @var string
-     */
-    protected $pathBase;
+    protected $templatePaths = [];
+
+
+    protected $assetTypes = ['mustache', 'css', 'js'];
 
 
     /**
-     * base path for file dependant
-     * @var string
+     * while searching for templates it will look through an array
+     * of paths
+     * throws exception if the path does not exist or is not a directory
+     * @param  string $path 
+     * @return object       
      */
-    protected $pathDependantBase;
+    public function prependTemplatePath($path)
+    {
+        if (!is_dir($path)) {
+            throw new \Exception('path does not exist');
+        }
+        array_unshift($this->templatePaths, $path);
+        return $this;
+    }
+
+
+    /**
+     * while searching for templates it will look through an array
+     * of paths
+     * throws exception if the path does not exist or is not a directory
+     * @param  string $path 
+     * @return object       
+     */
+    public function appendTemplatePath($path)
+    {
+        if (!is_dir($path)) {
+            throw new \Exception('path does not exist');
+        }
+        $this->templatePaths[] = $path;
+        return $this;
+    }
 
 
     /**
      * must store the routes found in the registry for building urls
+     * always prepend this package template path
      */
     public function __construct()
     {
         $registry = Registry::getInstance();
         $this->url = $registry->get('url');
-        $this->pathBase = (string) (__DIR__ . '../');
+        $this->prependTemplatePath((string) (__DIR__ . '../template/'));
     }
 
     
@@ -52,7 +79,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
         // obtain path
         $path = $this->getPathTemplate($templatePath);
-        if (! $path) {
+        if (!$path) {
             return;
         }
 
@@ -99,9 +126,9 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      */
     public function getPathTemplate($append, $ext = 'php')
     {
-        $end = 'template/' . strtolower($append) . '.' . $ext;
-        $paths = [$this->getPath($end), $this->pathBase . $end];
-        foreach ($paths as $path) {
+        $end = strtolower($append) . '.' . $ext;
+        foreach ($this->templatePaths as $path) {
+            $path .= $end;
             if (file_exists($path)) {
                 return $path;
             }
@@ -122,16 +149,16 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     {
 
         // validate
-        if (! in_array($type, ['mustache', 'css', 'js'])) {
+        if (!in_array($type, $this->assetTypes)) {
             return $this;
         }
 
         // set
         $rootKey = 'asset';
-        if (! isset($this->data[$rootKey])) {
+        if (!isset($this->data[$rootKey])) {
             $this->data[$rootKey] = [];
         }
-        if (! isset($this->data[$rootKey][$type])) {
+        if (!isset($this->data[$rootKey][$type])) {
             $this->data[$rootKey][$type] = [];
         }
         $this->data[$rootKey][$type][] = $path;

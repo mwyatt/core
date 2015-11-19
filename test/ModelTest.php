@@ -12,23 +12,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructFail()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
-    }
-
-
-    /**
-     * not a test just needs to be in the registry for the following tests
-     */
-    public function testStore()
-    {
-        $registry = \Mwyatt\Core\Registry::getInstance();
-        $registry->set('database', new \Mwyatt\Core\Database\Pdo([
-            'host' => '',
-            'port' => '',
-            'basename' => 'phpunit_1',
-            'username' => 'root',
-            'password' => '123'
-        ]));
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
     }
 
 
@@ -37,13 +21,13 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
     }
 
 
     public function testCreate()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
         $entityTest = new \Mwyatt\Core\Entity\Test;
         $entityTest->bar = 'test';
 
@@ -59,7 +43,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
         $modelTest->read();
         $this->assertGreaterThan(0, $modelTest->getData());
     }
@@ -71,7 +55,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadColumn()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
 
         // string
         $modelTest->readColumn(['test'], 'bar');
@@ -91,7 +75,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
         $modelTest->read();
         $dataCount = count($modelTest->getData());
         foreach ($modelTest->getData() as $entityTest) {
@@ -107,7 +91,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test;
+        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
         $modelTest->read();
         $dataCount = count($modelTest->getData());
         $modelTest->delete($modelTest->getData());

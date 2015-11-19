@@ -46,16 +46,10 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
     /**
      * inject dependencies
      */
-    public function __construct()
+    public function __construct(\Mwyatt\Core\Database $database)
     {
-        $registry = \Mwyatt\Core\Registry::getInstance();
-
-        // already connected
-        if ($this->database = $registry->get('database')) {
-            return $this;
-        }
-
-        throw new \Exception('models require a database connection inside the registry');
+        $this->database = $database;
+        return $this;
     }
 
 

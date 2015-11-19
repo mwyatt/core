@@ -16,6 +16,26 @@ interface ViewInterface
      */
     public function __construct();
 
+
+    /**
+     * while searching for templates it will look through an array
+     * of paths
+     * throws exception if the path does not exist or is not a directory
+     * @param  string $path 
+     * @return object       
+     */
+    public function prependTemplatePath($path);
+
+
+    /**
+     * while searching for templates it will look through an array
+     * of paths
+     * throws exception if the path does not exist or is not a directory
+     * @param  string $path 
+     * @return object       
+     */
+    public function appendTemplatePath($path);
+
     
     /**
      * load template file and prepare all objects for output
