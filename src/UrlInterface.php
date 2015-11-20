@@ -13,15 +13,11 @@ interface UrlInterface
 
 
     /**
-     * @param string $base host.com/install/directory/
+     * @param string $host             usually from $_SERVER['HTTP_HOST']
+     * @param string $request          usually from $_SERVER['REQUEST_URI']
+     * @param string $installDirectory foo/bar/
      */
-    public function __construct($base);
-
-
-    /**
-     * @return string
-     */
-    public function getBase();
+    public function __construct($host, $request, $installDirectory = '');
 
 
     /**

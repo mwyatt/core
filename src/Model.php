@@ -49,7 +49,6 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
     public function __construct(\Mwyatt\Core\Database $database)
     {
         $this->database = $database;
-        return $this;
     }
 
 

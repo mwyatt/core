@@ -13,8 +13,9 @@ interface ViewInterface
 
     /**
      * must store the routes found in the registry for building urls
+     * always prepend this package template path
      */
-    public function __construct();
+    public function __construct(\Mwyatt\Core\Url $url);
 
 
     /**

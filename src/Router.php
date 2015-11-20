@@ -26,12 +26,25 @@ class Router implements \Mwyatt\Core\RouterInterface
     public $routes = [];
 
 
+    public $routeSources = [];
+
+
     /**
      * init mux
      */
     public function __construct()
     {
         $this->mux = new \Pux\Mux;
+    }
+
+
+    public function appendRouteSource($path)
+    {
+        if (!is_file($path)) {
+            throw new \Exception('path does not exist');
+        }
+        $this->routeSources[] = $path;
+        return $this;
     }
 
 

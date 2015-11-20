@@ -12,4 +12,12 @@ namespace Mwyatt\Core;
 class Service extends \Mwyatt\Core\Data
 {
 
+
+	protected $database;
+
+
+	public function __construct(\Mwyatt\Core\Database $database)
+	{
+	    $this->database = $database;
+	}
 }

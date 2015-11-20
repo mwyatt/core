@@ -13,7 +13,7 @@ class Url implements \Mwyatt\Core\UrlInterface
 
 
     /**
-     * foo.co.uk/install/directory/
+     * /install/directory/
      * static string set in config somewhere
      * @var string
      */
@@ -36,12 +36,19 @@ class Url implements \Mwyatt\Core\UrlInterface
 
 
     /**
-     * @param string $base host.com/install/directory/
+     * @param string $host             usually from $_SERVER['HTTP_HOST']
+     * @param string $request          usually from $_SERVER['REQUEST_URI']
+     * @param string $installDirectory foo/bar/
      */
-    public function __construct($base)
+    public function __construct($host, $request, $installDirectory = '')
     {
+        $urlServer = strtolower($host . $request);
+        $urlParts = explode($installDirectory, $urlServer);
+        $base = reset($urlParts);
+        $path = end($urlParts);
         $this->base = $base;
-        $this->setPath();
+        $this->path = $path;
+        return $this;
     }
 
 
@@ -57,21 +64,9 @@ class Url implements \Mwyatt\Core\UrlInterface
     /**
      * @return string
      */
-    public function getBase()
+    private function getBase()
     {
         return $this->base;
-    }
-
-
-    private function setPath()
-    {
-        foreach (['HTTP_HOST', 'REQUEST_URI'] as $key) {
-            if (empty($_SERVER[$key])) {
-                throw new \Exception('class url requires "_SERVER" key "$key" to be accessible and filled');
-            }
-        }
-        $this->path = str_replace($this->base, '', strtolower($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
-        return $this;
     }
 
 

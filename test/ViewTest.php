@@ -8,39 +8,32 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructUrl()
     {
-
-        // url
-        $urlBase = '192.168.1.24/core/';
-        $_SERVER['HTTP_HOST'] = '192.168.1.24';
-        $_SERVER['REQUEST_URI'] = '/core/foo/bar/';
-        $registry = \Mwyatt\Core\Registry::getInstance();
-        $registry->set('url', new \Mwyatt\Core\Url($urlBase));
-
-        $view = new \Mwyatt\Core\View;
+        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+        $view = new \Mwyatt\Core\View($url);
         $this->assertInstanceOf('\\Mwyatt\\Core\\Url', $view->url);
     }
 
 
     public function testGetTemplate()
     {
-        // define('PATH_BASE', (string) (__DIR__ . '/'));
-        $view = new \Mwyatt\Core\View;
+        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+        $view = new \Mwyatt\Core\View($url);
         $this->assertEquals('Test', $view->getTemplate('test'));
     }
 
 
     public function testGetPath()
     {
-        // define('PATH_BASE', (string) (__DIR__ . '/'));
-        $view = new \Mwyatt\Core\View;
+        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+        $view = new \Mwyatt\Core\View($url);
         $this->assertEquals('/var/www/html/core/test/../', $view->getPath());
     }
 
 
     public function testGetPathTemplate()
     {
-        // define('PATH_BASE', (string) (__DIR__ . '/'));
-        $view = new \Mwyatt\Core\View;
+        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+        $view = new \Mwyatt\Core\View($url);
         $this->assertEquals('/var/www/html/core/test/../template/test.php', $view->getPathTemplate('test'));
         $this->assertEquals('/var/www/html/core/test/../template/mst/test.mst', $view->getPathTemplate('mst/test', 'mst'));
     }
@@ -48,7 +41,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testAppendAsset()
     {
-        $view = new \Mwyatt\Core\View;
+        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+        $view = new \Mwyatt\Core\View($url);
         $view->appendAsset('css', 'foo/bar');
         $data = $view->getData();
         $this->assertContains('foo/bar', reset($data['asset']['css']));

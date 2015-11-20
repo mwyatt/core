@@ -1,4 +1,5 @@
 <?php
+
 namespace Mwyatt\Core;
 
 /**
@@ -9,31 +10,24 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 {
 
 
+    protected $url;
+
+
+    protected $database;
+
+
     protected $view;
 
 
-    public function __construct()
+    public function __construct(
+        \Mwyatt\Core\Database $database,
+        \Mwyatt\Core\View $view,
+        \Mwyatt\Core\Url $url
+    )
     {
-        $this->view = new \Mwyatt\Core\View;
-    }
-
-
-
-    public function home()
-    {
-        return new Response(200);
-    }
-
-
-    public function e500(\Exception $exception)
-    {
-        return new Response(500, 500);
-    }
-
-
-    public function e404(\Mwyatt\Core\ResponseInterface $response)
-    {
-        return new Response(404, 404);
+        $this->database = $database;
+        $this->view = $view;
+        $this->url = $url;
     }
 
 
@@ -48,16 +42,11 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     public function redirect($key, $config = [])
     {
 
-        // get url from registry and generate string
-        $registry = \Mwyatt\Core\Registry::getInstance();
-        $url = $registry->get('url');
-        $url = $url->generate($key, $config);
-
+        // generate string to redirect to from url
         // redirect
-        header('location:' . $url);
+        header('location:' . $this->url->generate($key, $config));
 
-        // prevent continuation
-        // do you need this if you have structured the app correctly?
+        // always prevent continuation
         exit;
     }
 }

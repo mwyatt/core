@@ -72,7 +72,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	public function create($data)
 	{
 		$key = $this->getKey();
-		$path = $this->getFilePath();
+		$path = $this->getFilePath($key);
 
 		// file must not already exist
 		if (file_exists($path)) {
@@ -104,7 +104,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	public function read()
 	{
 		$key = $this->getKey();
-		$path = $this->getFilePath();
+		$path = $this->getFilePath($key);
 
 		// quickly check if a file exists
 		if (! file_exists($path)) {
@@ -125,7 +125,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	public function delete()
 	{
 		$key = $this->getKey();
-		$path = $this->getFilePath();
+		$path = $this->getFilePath($key);
 
 		// nothing to delete
 		if (! file_exists($this->getFilePath())) {
