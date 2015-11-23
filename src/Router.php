@@ -16,34 +16,28 @@ class Router implements \Mwyatt\Core\RouterInterface
     public $mux;
 
 
-    public $rootControllerName = '\\Mwyatt\\Core\\Controller';
-
-
     /**
-     * \Framework\Route\Definition
+     * paths to files containing routes
      * @var array
      */
-    public $routes = [];
-
-
     public $routeSources = [];
 
 
     /**
      * init mux
      */
-    public function __construct()
+    public function __construct(\Pux\Mux $mux)
     {
-        $this->mux = new \Pux\Mux;
+        $this->mux = $mux;
     }
 
 
-    public function appendRouteSource($path)
+    public function appendRouteSource($filePath)
     {
-        if (!is_file($path)) {
-            throw new \Exception('path does not exist');
+        if (!is_file($filePath)) {
+            throw new \Exception('filePath does not exist');
         }
-        $this->routeSources[] = $path;
+        $this->routeSources[] = $filePath;
         return $this;
     }
 
@@ -53,7 +47,7 @@ class Router implements \Mwyatt\Core\RouterInterface
      * falls back to 404, or hits 500
      * echos the response content
      */
-    public function getResponse($path)
+    public function matchRoute($path)
     {
         $response = $this->readResponse($path);
         $this->setHeaders($response);
@@ -61,20 +55,13 @@ class Router implements \Mwyatt\Core\RouterInterface
     }
 
 
-    /**
-     * add to the definition registry
-     * @param  string $path to the new routes array
-     * @return null
-     */
-    public function appendRoutes(array $routes)
+    public function getUrlRoutes()
     {
-
-        // append to mux and collection array
-        // must be instances of the correct entity
-        foreach ($routes as $route) {
-            $this->mux->{$route->type}($route->path, [$route->controller, $route->method], empty($route->options) ? [] : $route->options);
-            $this->routes[] = $route;
+        $response = [];
+        foreach ($mux->getRoutes() as $route) {
+            $response[$route[3]['id']] = empty($route[3]['pattern']) ? $route[1] : $route[3]['pattern'];
         }
+        return $response;
     }
 
 
@@ -84,15 +71,10 @@ class Router implements \Mwyatt\Core\RouterInterface
      * the 404 and 500 responses?
      * @return object Response
      */
-    private function readResponse($path)
+    private function dispatchRoute($route)
     {
         $route = $this->mux->dispatch($path);
         $response = new \Mwyatt\Core\Response('');
-        $controller = new $this->rootControllerName;
-
-        // store final routes
-        $registry = \Mwyatt\Core\Registry::getInstance();
-        $registry->set('routes', $this->routes);
 
         // found route
         if ($route) {

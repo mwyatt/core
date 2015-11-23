@@ -87,14 +87,14 @@ class Url implements \Mwyatt\Core\UrlInterface
     
     /**
      * store routes in the class for use with generate
-     * keys all by key
+     * keys all by key so each one must have a key?
      * @param array $routes
      */
     public function setRoutes(array $routes)
     {
         $routesByKey = [];
-        foreach ($routes as $route) {
-            $routesByKey[$route->key] = $route;
+        foreach ($routes as $id => $route) {
+            $routesByKey[$id] = $route;
         }
         $this->routes = $routesByKey;
         return $this;
@@ -145,7 +145,7 @@ class Url implements \Mwyatt\Core\UrlInterface
             return $this->getProtocol() . $this->getBase();
         }
         $route = $this->getRoute($key);
-        $path = ltrim($route->path, '/');
+        $path = ltrim($route['path'], '/');
         foreach ($config as $key => $value) {
             $path = str_replace(':' . $key, $value, $path);
         }

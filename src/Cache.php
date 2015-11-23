@@ -128,12 +128,12 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 		$path = $this->getFilePath($key);
 
 		// nothing to delete
-		if (! file_exists($this->getFilePath())) {
+		if (! file_exists($this->getFilePath($key))) {
 			return;
 		}
 
 		// remove
-		if (unlink($this->getFilePath())) {
+		if (unlink($this->getFilePath($key))) {
 			return true;
 		}
 	}

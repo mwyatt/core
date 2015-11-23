@@ -4,7 +4,7 @@ return [
 	'foo.bar' => [
 		'type' => 'get',
 		'path' => 'foo/:bar/',
-		'controller' => '\\Mwyatt\\Core\\Controller\\Foo',
+		'controller' => 'Foo',
 		'method' => 'Bar'
 	],
 ];
