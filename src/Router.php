@@ -30,8 +30,8 @@ class Router //implements \Mwyatt\Core\RouterInterface
 
     /**
      * allows you to store routes in mux from external files
-     * @param  array  $filePaths 
-     * @return object            
+     * @param  array  $filePaths
+     * @return object
      */
     public function appendMuxRoutes(array $filePaths)
     {
@@ -70,7 +70,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
     /**
      * return a key > path pair for use when generating urls
      * \Mwyatt\Core\Url
-     * @return array 
+     * @return array
      */
     public function getUrlRoutes()
     {
