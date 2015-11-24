@@ -5,80 +5,53 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public function testGetResponse()
+    public function testGetResponseSimple()
     {
-        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/product/name/1/', 'core/');
+        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/', 'core/');
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
-        $router->appendMuxRoutes(['routes.php']);
-        echo '<pre>';
-        print_r($router->mux);
-        print_r('/' . $url->getPath());
-        echo '</pre>';
-        exit;
-        
-        $route = $router->getRoute('/' . $url->getPath());
-        if (!$route) {
-            echo '<pre>';
-            print_r('404');
-            echo '</pre>';
-            exit;
-            
-        }
+        $router->appendMuxRoutes(
+            ['routes.php'],
+            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\View($url),
+            $url
+        );
+        $route = $router->getRoute($url->getPath());
         $response = $router->executeRoute($route);
-
-
-
-
-
-
-
-
-
-        $expectedCode = 200;
-
-        // build routes
-        $route = new \Mwyatt\Core\Entity\Route;
-        $route->type = 'any';
-        $route->key = 'home';
-        $route->path = '/';
-        $route->controller = 'Mwyatt\\Core\\Controller';
-        $route->method = 'home';
-
-        // get response
-        $router = new \Mwyatt\Core\Router;
-        $router->appendRoutes([$route]);
-        $response = $router->getResponse('/');
-
-        // test
-        $this->assertEquals($expectedCode, $response->getContent());
-        $this->assertEquals($expectedCode, $response->getStatusCode());
+        $this->assertEquals('testSimple', $response->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 
-    public function test404()
+    public function testGetResponseParams()
     {
-        $expectedCode = 404;
-
-        // get response
-        $router = new \Mwyatt\Core\Router;
-        $response = $router->getResponse('/');
-
-        // test
-        $this->assertEquals($expectedCode, $response->getContent());
-        $this->assertEquals($expectedCode, $response->getStatusCode());
+        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/product/foo-bar/1/', 'core/');
+        $router = new \Mwyatt\Core\Router(new \Pux\Mux);
+        $router->appendMuxRoutes(
+            ['routes.php'],
+            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\View($url),
+            $url
+        );
+        $route = $router->getRoute($url->getPath());
+        $response = $router->executeRoute($route);
+        $this->assertEquals('testParams, foo-bar, 1', $response->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 
-    public function test500()
+    public function testErrorNotFound()
     {
-        // $expectedCode = 500;
-
-        // // get response
-        // $router = new \Mwyatt\Core\Router;
-        // $response = $router->getResponse('/');
-
-        // // test
-        // $this->assertEquals($expectedCode, $response->getContent());
-        // $this->assertEquals($expectedCode, $response->getStatusCode());
+        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/not-found/', 'core/');
+        $router = new \Mwyatt\Core\Router(new \Pux\Mux);
+        $router->appendMuxRoutes(
+            ['routes.php'],
+            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\View($url),
+            $url
+        );
+        $route = $router->getRoute($url->getPath());
+        $response = $router->executeRoute($route);
+        $this->assertEquals('testErrorNotFound', $response->getContent());
+        $this->assertEquals(404, $response->getStatusCode());
     }
 }

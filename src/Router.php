@@ -33,7 +33,12 @@ class Router //implements \Mwyatt\Core\RouterInterface
      * @param  array  $filePaths
      * @return object
      */
-    public function appendMuxRoutes(array $filePaths)
+    public function appendMuxRoutes(
+        array $filePaths,
+        \Mwyatt\Core\Database $database,
+        \Mwyatt\Core\View $view,
+        \Mwyatt\Core\Url $url
+    )
     {
 
         // could this be created somewhere first?
@@ -48,21 +53,17 @@ class Router //implements \Mwyatt\Core\RouterInterface
     /**
      * obtains response object from matched controller
      * falls back to 404, or hits 500
+     * needs to prepend '/' to match the routes correctly
      * echos the response content
      */
     public function getRoute($path)
     {
-        return $this->mux->dispatch($path);
+        return $this->mux->dispatch('/' . $path);
     }
 
 
-    public function executeRoute($route)
+    public function executeRoute(array $route)
     {
-        echo '<pre>';
-        print_r($route);
-        echo '</pre>';
-        exit;
-        
         return \Pux\Executor::execute($route);
     }
 

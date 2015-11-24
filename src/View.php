@@ -25,6 +25,17 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
 
     /**
+     * must store the routes found in the registry for building urls
+     * always prepend this package template path
+     */
+    public function __construct(\Mwyatt\Core\Url $url)
+    {
+        $this->url = $url;
+        $this->prependTemplatePath((string) (__DIR__ . '../template/'));
+    }
+    
+
+    /**
      * while searching for templates it will look through an array
      * of paths
      * throws exception if the path does not exist or is not a directory
@@ -55,17 +66,6 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
         }
         $this->templatePaths[] = $path;
         return $this;
-    }
-
-
-    /**
-     * must store the routes found in the registry for building urls
-     * always prepend this package template path
-     */
-    public function __construct(\Mwyatt\Core\Url $url)
-    {
-        $this->url = $url;
-        $this->prependTemplatePath((string) (__DIR__ . '../template/'));
     }
 
     

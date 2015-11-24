@@ -20,4 +20,16 @@ class Test extends \Mwyatt\Core\Controller
     {
         return new \Mwyatt\Core\Response("testParams, $name, $id", 200);
     }
+
+
+    public function testServerError()
+    {
+    	
+    }
+
+
+    public function testErrorNotFound()
+    {
+        return new \Mwyatt\Core\Response('testErrorNotFound', 404);
+    }
 }

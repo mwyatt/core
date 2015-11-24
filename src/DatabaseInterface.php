@@ -13,14 +13,7 @@ interface DatabaseInterface
 
     /**
      * connects to the database
-     * @param array $credentials key => value
-     */
-    public function __construct($credentials);
-
-
-    /**
-     * connects to the database
      * @return bool success
      */
-    public function connect();
+    public function connect(array $credentials);
 }

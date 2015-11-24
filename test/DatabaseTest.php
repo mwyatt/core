@@ -8,7 +8,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
     public function testConnectPdo()
     {
-        $database = new \Mwyatt\Core\Database\Pdo([
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect([
             'host' => '',
             'port' => '',
             'basename' => 'phpunit_1',
@@ -23,7 +24,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testConnectFailPdo()
     {
-        $database = new \Mwyatt\Core\Database\Pdo([
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect([
             'host' => '',
             'port' => '',
             'basename' => 'phpunit_1',

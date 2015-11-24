@@ -11,12 +11,8 @@ namespace Mwyatt\Core\Database;
 class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterface
 {
 
-
-    /**
-     * connects to the database
-     * @param array $credentials key => value
-     */
-    public function __construct($credentials)
+    
+    public function connect(array $credentials)
     {
         $this->setCredentials($credentials);
         $this->validateCredentials([
@@ -26,12 +22,6 @@ class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterfac
             'username',
             'password'
         ]);
-        $this->connect();
-    }
-
-    
-    public function connect()
-    {
         try {
             // set data source name
             $dataSourceName = [

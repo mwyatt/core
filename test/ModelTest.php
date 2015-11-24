@@ -10,24 +10,30 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * must be before registry filled
      * @expectedException Exception
      */
-    public function testConstructFail()
+    public function testConnectFail()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => '', 'username' => '', 'password' => '']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
     }
 
 
     /**
      * should not throw exception
      */
-    public function testConstruct()
+    public function testConnect()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
     }
 
 
     public function testCreate()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
         $entityTest = new \Mwyatt\Core\Entity\Test;
         $entityTest->bar = 'test';
 
@@ -43,7 +49,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $this->assertGreaterThan(0, $modelTest->getData());
     }
@@ -55,7 +63,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadColumn()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
 
         // string
         $modelTest->readColumn(['test'], 'bar');
@@ -75,7 +85,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $dataCount = count($modelTest->getData());
         foreach ($modelTest->getData() as $entityTest) {
@@ -91,7 +103,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $modelTest = new \Mwyatt\Core\Model\Test(new \Mwyatt\Core\Database\Pdo(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']));
+        $database = new \Mwyatt\Core\Database\Pdo;
+        $database->connect(['host' => '', 'port' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
+        $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $dataCount = count($modelTest->getData());
         $modelTest->delete($modelTest->getData());
