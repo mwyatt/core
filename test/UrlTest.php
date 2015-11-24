@@ -25,8 +25,8 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     public function testGenerate()
     {
         $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $url->setRoutes(include 'routes.php');
-        $this->assertEquals('http://192.168.1.24/core/foo/1/', $url->generate('foo.bar', ['bar' => 1]));
+        $url->setRoutes(['key' => '/path/:id/']);
+        $this->assertEquals('http://192.168.1.24/core/path/1/', $url->generate('key', ['id' => 1]));
     }
 
 

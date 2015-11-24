@@ -92,11 +92,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      */
     public function setRoutes(array $routes)
     {
-        $routesByKey = [];
-        foreach ($routes as $id => $route) {
-            $routesByKey[$id] = $route;
-        }
-        $this->routes = $routesByKey;
+        $this->routes = $routes;
         return $this;
     }
 
@@ -144,8 +140,8 @@ class Url implements \Mwyatt\Core\UrlInterface
         if (!$key) {
             return $this->getProtocol() . $this->getBase();
         }
-        $route = $this->getRoute($key);
-        $path = ltrim($route['path'], '/');
+        $route = $this->routes[$key];
+        $path = ltrim($route, '/');
         foreach ($config as $key => $value) {
             $path = str_replace(':' . $key, $value, $path);
         }

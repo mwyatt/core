@@ -5,8 +5,11 @@ namespace Mwyatt\Core;
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Router implements \Mwyatt\Core\RouterInterface
+class Router //implements \Mwyatt\Core\RouterInterface
 {
+
+
+    private $controllerNamespace = '\\Mwyatt\\Core\\Controller\\';
 
 
     /**
@@ -14,13 +17,6 @@ class Router implements \Mwyatt\Core\RouterInterface
      * @var object
      */
     public $mux;
-
-
-    /**
-     * paths to files containing routes
-     * @var array
-     */
-    public $routeSources = [];
 
 
     /**
@@ -32,12 +28,19 @@ class Router implements \Mwyatt\Core\RouterInterface
     }
 
 
-    public function appendRouteSource($filePath)
+    /**
+     * allows you to store routes in mux from external files
+     * @param  array  $filePaths 
+     * @return object            
+     */
+    public function appendMuxRoutes(array $filePaths)
     {
-        if (!is_file($filePath)) {
-            throw new \Exception('filePath does not exist');
+
+        // could this be created somewhere first?
+        $base = (string) (__DIR__ . '/../');
+        foreach ($filePaths as $filePath) {
+            include $base . $filePath;
         }
-        $this->routeSources[] = $filePath;
         return $this;
     }
 
@@ -47,14 +50,28 @@ class Router implements \Mwyatt\Core\RouterInterface
      * falls back to 404, or hits 500
      * echos the response content
      */
-    public function matchRoute($path)
+    public function getRoute($path)
     {
-        $response = $this->readResponse($path);
-        $this->setHeaders($response);
-        return $response;
+        return $this->mux->dispatch($path);
     }
 
 
+    public function executeRoute($route)
+    {
+        echo '<pre>';
+        print_r($route);
+        echo '</pre>';
+        exit;
+        
+        return \Pux\Executor::execute($route);
+    }
+
+
+    /**
+     * return a key > path pair for use when generating urls
+     * \Mwyatt\Core\Url
+     * @return array 
+     */
     public function getUrlRoutes()
     {
         $response = [];
