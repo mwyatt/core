@@ -38,8 +38,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
         \Mwyatt\Core\Database $database,
         \Mwyatt\Core\View $view,
         \Mwyatt\Core\Url $url
-    )
-    {
+    ) {
 
         // could this be created somewhere first?
         $base = (string) (__DIR__ . '/../');

@@ -43,8 +43,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * while searching for templates it will look through an array
      * of paths
      * throws exception if the path does not exist or is not a directory
-     * @param  string $path 
-     * @return object       
+     * @param  string $path
+     * @return object
      */
     public function prependTemplatePath($path)
     {
@@ -60,8 +60,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * while searching for templates it will look through an array
      * of paths
      * throws exception if the path does not exist or is not a directory
-     * @param  string $path 
-     * @return object       
+     * @param  string $path
+     * @return object
      */
     public function appendTemplatePath($path)
     {
