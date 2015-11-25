@@ -89,7 +89,7 @@ class Mail implements \Mwyatt\Core\MailInterface
         $config['body'] = $this->getInlinedHtml($config['body']);
 
         // resource
-        $mailer = $this->getSwiftMailer();
+        $mailer = $this->swiftMailer;
         $message = \Swift_Message::newInstance($config['subject'])
             ->setFrom($config['from'])
             ->setTo($config['to'])

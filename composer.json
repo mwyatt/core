@@ -9,7 +9,8 @@
     ],
     "require": {
         "corneltek/pux": "~1.5",
-        "swiftmailer/swiftmailer": "5.3.*@dev"
+        "swiftmailer/swiftmailer": "5.3.*@dev",
+        "tijsverkoyen/css-to-inline-styles": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8",
