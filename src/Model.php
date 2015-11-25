@@ -44,10 +44,14 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
 
 
     /**
-     * inject dependencies
+     * must connect to the database on first model build if not already
+     * any other database access classes?
      */
     public function __construct(\Mwyatt\Core\Database $database)
     {
+        if (!$database->dbh) {
+            $database->connect(include (string) (__DIR__ . '/../config.php'));
+        }
         $this->database = $database;
     }
 

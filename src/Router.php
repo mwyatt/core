@@ -39,11 +39,8 @@ class Router //implements \Mwyatt\Core\RouterInterface
         \Mwyatt\Core\View $view,
         \Mwyatt\Core\Url $url
     ) {
-
-        // could this be created somewhere first?
-        $base = (string) (__DIR__ . '/../');
         foreach ($filePaths as $filePath) {
-            include $base . $filePath;
+            include $filePath;
         }
         return $this;
     }
@@ -75,7 +72,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
     public function getUrlRoutes()
     {
         $response = [];
-        foreach ($mux->getRoutes() as $route) {
+        foreach ($this->mux->getRoutes() as $route) {
             $response[$route[3]['id']] = empty($route[3]['pattern']) ? $route[1] : $route[3]['pattern'];
         }
         return $response;
@@ -123,7 +120,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
     /**
      * just response code for now
      */
-    private function setHeaders(\Mwyatt\Core\ResponseInterface $response)
+    public function setHeaders(\Mwyatt\Core\ResponseInterface $response)
     {
         http_response_code($response->getStatusCode());
     }

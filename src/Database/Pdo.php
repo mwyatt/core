@@ -12,15 +12,14 @@ class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterfac
 {
 
     
-    public function connect(array $credentials)
+    public function connect()
     {
-        $this->setCredentials($credentials);
         $this->validateCredentials([
-            'host',
-            'port',
-            'basename',
-            'username',
-            'password'
+            'database.host',
+            'database.port',
+            'database.basename',
+            'database.username',
+            'database.password'
         ]);
         try {
             // set data source name

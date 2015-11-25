@@ -10,7 +10,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/', 'core/');
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
-            ['routes.php'],
+            [(string) __DIR__ . '/../routes.php'],
             new \Mwyatt\Core\Database,
             new \Mwyatt\Core\View($url),
             $url
@@ -27,7 +27,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/product/foo-bar/1/', 'core/');
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
-            ['routes.php'],
+            [(string) __DIR__ . '/../routes.php'],
             new \Mwyatt\Core\Database,
             new \Mwyatt\Core\View($url),
             $url
@@ -44,7 +44,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/not-found/', 'core/');
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
-            ['routes.php'],
+            [(string) __DIR__ . '/../routes.php'],
             new \Mwyatt\Core\Database,
             new \Mwyatt\Core\View($url),
             $url

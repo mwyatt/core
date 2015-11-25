@@ -8,7 +8,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Database
+abstract class Database
 {
 
 
@@ -26,21 +26,21 @@ class Database
     protected $credentials;
     
 
-    protected function validateCredentials(array $expected)
-    {
-        $expected = [];
-        if (! \Mwyatt\Core\Helper::arrayKeyExists($expected, $this->credentials)) {
-            throw new Exception('database credentials invalid', 3123890);
-        }
-    }
-    
-    
     /**
      * @param array $credentials
      */
-    protected function setCredentials($credentials)
+    public function setCredentials(array $credentials)
     {
         $this->credentials = $credentials;
         return $this;
+    }
+
+
+    protected function validateCredentials(array $expected)
+    {
+        $expected = [];
+        if (!$this->credentials || !\Mwyatt\Core\Helper::arrayKeyExists($expected, $this->credentials)) {
+            throw new \Exception('database credentials invalid');
+        }
     }
 }
