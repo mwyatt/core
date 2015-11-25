@@ -50,8 +50,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             $url
         );
         $route = $router->getRoute($url->getPath());
-        $response = $router->executeRoute($route);
-        $this->assertEquals('testErrorNotFound', $response->getContent());
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(null, $route);
     }
 }

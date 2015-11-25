@@ -21,6 +21,9 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     protected $templatePaths = [];
 
 
+    protected $path;
+
+
     protected $assetTypes = ['mustache', 'css', 'js'];
 
 
@@ -31,7 +34,8 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     public function __construct(\Mwyatt\Core\Url $url)
     {
         $this->url = $url;
-        $this->prependTemplatePath((string) (__DIR__ . '../template/'));
+        $this->path = (string) (__DIR__ . '/../');
+        $this->prependTemplatePath($this->path . 'template/');
     }
     
 
@@ -112,7 +116,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      */
     public function getPath($append = '')
     {
-        return PATH_BASE . $append;
+        return $this->path . $append;
     }
 
 

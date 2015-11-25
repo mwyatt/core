@@ -87,6 +87,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
      * obtain response
      * perhaps store a base controller so that you are able to control
      * the 404 and 500 responses?
+     * currently unused here, will be used in a abstracted dispatch file
      * @return object Response
      */
     private function dispatchRoute($route)

@@ -26,7 +26,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
         $view = new \Mwyatt\Core\View($url);
-        $this->assertEquals('/var/www/html/core/test/../', $view->getPath());
+        $this->assertEquals('/var/www/html/core/src/../', $view->getPath());
     }
 
 
@@ -34,8 +34,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     {
         $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
         $view = new \Mwyatt\Core\View($url);
-        $this->assertEquals('/var/www/html/core/test/../template/test.php', $view->getPathTemplate('test'));
-        $this->assertEquals('/var/www/html/core/test/../template/mst/test.mst', $view->getPathTemplate('mst/test', 'mst'));
+        $this->assertEquals('/var/www/html/core/src/../template/test.php', $view->getPathTemplate('test'));
+        $this->assertEquals('/var/www/html/core/src/../template/mst/test.mst', $view->getPathTemplate('mst/test', 'mst'));
     }
 
 
