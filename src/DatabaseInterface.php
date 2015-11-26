@@ -11,9 +11,15 @@ interface DatabaseInterface
 {
 
 
+	/**
+	 * @param array $credentials
+	 */
+	public function setCredentials(array $credentials);
+
+
     /**
      * connects to the database
      * @return bool success
      */
-    public function connect(array $credentials);
+    public function connect();
 }

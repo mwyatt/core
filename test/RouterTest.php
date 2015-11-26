@@ -11,7 +11,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
             [(string) __DIR__ . '/../routes.php'],
-            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\Database\Pdo,
             new \Mwyatt\Core\View($url),
             $url
         );
@@ -28,7 +28,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
             [(string) __DIR__ . '/../routes.php'],
-            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\Database\Pdo,
             new \Mwyatt\Core\View($url),
             $url
         );
@@ -45,7 +45,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $router->appendMuxRoutes(
             [(string) __DIR__ . '/../routes.php'],
-            new \Mwyatt\Core\Database,
+            new \Mwyatt\Core\Database\Pdo,
             new \Mwyatt\Core\View($url),
             $url
         );

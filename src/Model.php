@@ -22,14 +22,15 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
      * the name of table being read
      * @var string
      */
-    protected $tableName = 'foo';
+    protected $tableName;
 
 
     /**
      * identifies which object to store results in from a read
+     * '\\Mwyatt\\Core\\Entity\\Foo'
      * @var string
      */
-    protected $entity = '\\Mwyatt\\Core\\Entity\\Foo';
+    protected $entity;
 
 
     /**
@@ -37,10 +38,7 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
      * lazily
      * @var array
      */
-    protected $fields = [
-        'id',
-        'bar'
-    ];
+    protected $fields;
 
 
     /**
@@ -53,45 +51,6 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
             $database->connect(include (string) (__DIR__ . '/../config.php'));
         }
         $this->database = $database;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-    
-    
-    /**
-     * @param string $entity
-     */
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-        return $this;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        if ($this->tableName) {
-            return $this->tableName;
-        }
     }
 
 
@@ -397,6 +356,45 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
             $sth->bindValue($key, $value, \PDO::PARAM_NULL);
         } elseif (is_string($value)) {
             $sth->bindValue($key, $value, \PDO::PARAM_STR);
+        }
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+    
+    
+    /**
+     * @param string $entity
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+        return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        if ($this->tableName) {
+            return $this->tableName;
         }
     }
 }
