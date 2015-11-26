@@ -118,9 +118,9 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
 
     /**
      * read single column with multiple values
-     * @param  array  $values     
-     * @param  string $columnName 
-     * @return object             
+     * @param  array  $values
+     * @param  string $columnName
+     * @return object
      */
     public function readColumn(array $values, $columnName = 'id')
     {
@@ -289,7 +289,7 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
 
     /**
      * get all properties and values with a named key
-     * @param  object $entity 
+     * @param  object $entity
      * @return array  array[:property] = value
      */
     protected function getSthExecuteNamed($entity)
@@ -306,9 +306,9 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
      * get a property from an entity
      * some may be protected and would need to use the accessor
      * method
-     * @param  object $entity   
-     * @param  string $property 
-     * @return mixed           
+     * @param  object $entity
+     * @param  string $property
+     * @return mixed
      */
     protected function getEntityPropertyValue($entity, $property)
     {

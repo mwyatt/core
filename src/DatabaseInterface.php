@@ -11,10 +11,10 @@ interface DatabaseInterface
 {
 
 
-	/**
-	 * @param array $credentials
-	 */
-	public function setCredentials(array $credentials);
+    /**
+     * @param array $credentials
+     */
+    public function setCredentials(array $credentials);
 
 
     /**
