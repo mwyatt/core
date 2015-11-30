@@ -20,9 +20,9 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
 
     public function __construct(
-        \Mwyatt\Core\Database $database,
-        \Mwyatt\Core\View $view,
-        \Mwyatt\Core\Url $url
+        \Mwyatt\Core\DatabaseInterface $database,
+        \Mwyatt\Core\ViewInterface $view,
+        \Mwyatt\Core\UrlInterface $url
     )
     {
         $this->database = $database;

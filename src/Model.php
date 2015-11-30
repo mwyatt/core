@@ -47,9 +47,13 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
      */
     public function __construct(\Mwyatt\Core\Database $database)
     {
+
+        // connect if not
         if (!$database->dbh) {
-            $database->connect(include (string) (__DIR__ . '/../config.php'));
+            $database->connect();
         }
+
+        // use already connected
         $this->database = $database;
     }
 

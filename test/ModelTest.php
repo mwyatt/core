@@ -13,6 +13,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testConnectFail()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $credentials = include (string) __DIR__ . '/../config.php';
+        $credentials['database.password'] = null;
+        $database->setCredentials($credentials);
         $modelTest = new \Mwyatt\Core\Model\Test($database);
     }
 
@@ -23,6 +26,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testConnect()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
     }
 
@@ -30,6 +34,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
         $entityTest = new \Mwyatt\Core\Entity\Test;
         $entityTest->bar = 'test';
@@ -47,6 +52,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testRead()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $this->assertGreaterThan(0, $modelTest->getData());
@@ -60,6 +66,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testReadColumn()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
 
         // string
@@ -81,6 +88,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testUpdate()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $dataCount = count($modelTest->getData());
@@ -98,6 +106,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
         $modelTest = new \Mwyatt\Core\Model\Test($database);
         $modelTest->read();
         $dataCount = count($modelTest->getData());

@@ -9,13 +9,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testConnectPdo()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
-        $database->connect([
-            'host' => '',
-            'port' => '',
-            'basename' => 'phpunit_1',
-            'username' => 'root',
-            'password' => '123'
-        ]);
+        $database->setCredentials(include (string) __DIR__ . '/../config.php');
+        $database->connect();
     }
 
 
@@ -25,13 +20,9 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testConnectFailPdo()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
-        $database->connect([
-            'host' => '',
-            'port' => '',
-            'basename' => 'phpunit_1',
-            'username' => 'root',
-            'password' => ''
-        ]);
-        
+        $credentials = include (string) __DIR__ . '/../config.php';
+        $credentials['database.password'] = null;
+        $database->setCredentials($credentials);
+        $database->connect();
     }
 }

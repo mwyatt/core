@@ -12,7 +12,7 @@
 			<file>test/ModelTest.php</file>
 			<file>test/ViewTest.php</file>
 			<file>test/SessionTest.php</file>
-			<file>test/MailTest.php</file>
+			<!-- <file>test/MailTest.php</file> -->
 		</testsuite>
 	</testsuites>
 </phpunit>
