@@ -21,7 +21,10 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     protected $templatePaths = [];
 
 
-    protected $path;
+    protected $pathProject;
+
+
+    protected $pathPackage;
 
 
     protected $assetTypes = ['mustache', 'css', 'js'];
@@ -31,13 +34,58 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * must store the routes found in the registry for building urls
      * always prepend this package template path
      */
-    public function __construct(\Mwyatt\Core\Url $url)
+    public function __construct(\Mwyatt\Core\UrlInterface $url)
     {
         $this->url = $url;
-        $this->path = (string) (__DIR__ . '/../');
-        $this->prependTemplatePath($this->path . 'template/');
+        $this->storePathPackage();
     }
-    
+
+
+    /**
+     * stores the path for the project which is utilising this
+     * composer package
+     * @param string $path 
+     */
+    public function setPathProject($path)
+    {
+        $this->pathProject = $path;
+        $this->prependTemplatePath($path);
+    }
+
+
+    /**
+     * gets just the base file path
+     * named nicer for templates but does this make sense?
+     * @param  string $append
+     * @return string
+     */
+    public function getPath($append = '')
+    {
+        return $this->pathProject . $append;
+    }
+
+
+    /**
+     * constructor storage of the package path
+     * @return null 
+     */
+    protected function storePathPackage()
+    {
+        $this->pathPackage = (string) (__DIR__ . '/../');
+        $this->prependTemplatePath($this->pathPackage . 'template/');
+    }
+
+
+    /**
+     * base path for the package
+     * @param  string $append 
+     * @return string         
+     */
+    public function getPathPackage($append = '')
+    {
+        return $this->pathPackage . $append;
+    }
+
 
     /**
      * while searching for templates it will look through an array
@@ -106,17 +154,6 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
 
         // return just loaded template result
         return $content;
-    }
-
-
-    /**
-     * gets just the base file path
-     * @param  string $append
-     * @return string
-     */
-    public function getPath($append = '')
-    {
-        return $this->path . $append;
     }
 
 

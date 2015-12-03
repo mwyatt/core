@@ -5,13 +5,30 @@ namespace Mwyatt\Core;
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
 
+    // public function __construct(\Mwyatt\Core\Url $url);
+    // public function prependTemplatePath($path);
+    // public function appendTemplatePath($path);
+    // public function getTemplate($templatePath);
+    // public function setPathProject($path)
+    // public function getPath($append = '');
+    // public function getPathTemplate($append, $ext = 'php');
+    // public function appendAsset($type, $path);
 
-    public function testConstructUrl()
-    {
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $view = new \Mwyatt\Core\View($url);
-        $this->assertInstanceOf('\\Mwyatt\\Core\\Url', $view->url);
-    }
+
+    // public function testPrependTemplatePath()
+    // {
+    //     $url = new \Mwyatt\Core\Url;
+    //     $view = new \Mwyatt\Core\View($url);
+    //     $view->prependTemplatePath('foo/bar/');
+    // }
+
+
+    // public function testConstructUrl()
+    // {
+    //     $view = new \Mwyatt\Core\View(new \Mwyatt\Core\Url);
+    //     $view->prependTemplatePath('foo/bar/');
+    //     $this->assertInstanceOf('\\Mwyatt\\Core\\Url', $view->url);
+    // }
 
 
     public function testGetTemplate()
@@ -22,12 +39,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetPath()
-    {
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $view = new \Mwyatt\Core\View($url);
-        $this->assertEquals('/var/www/html/core/src/../', $view->getPath());
-    }
+    // public function testGetPath()
+    // {
+    //     $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
+    //     $view = new \Mwyatt\Core\View($url);
+    //     $this->assertEquals('/var/www/html/core/src/../', $view->getPath());
+    // }
 
 
     public function testGetPathTemplate()

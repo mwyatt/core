@@ -15,7 +15,7 @@ interface ViewInterface
      * must store the routes found in the registry for building urls
      * always prepend this package template path
      */
-    public function __construct(\Mwyatt\Core\Url $url);
+    public function __construct(\Mwyatt\Core\UrlInterface $url);
 
 
     /**
@@ -46,7 +46,15 @@ interface ViewInterface
 
 
     /**
-     * gets just the base file path
+     * stores the path for the project which is utilising this
+     * composer package
+     * @param string $path 
+     */
+    public function setPathProject($path);
+
+
+    /**
+     * gets just the base file path for the project
      * @param  string $append
      * @return string
      */

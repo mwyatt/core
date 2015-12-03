@@ -33,7 +33,7 @@ interface SessionInterface
 
 
     /**
-     * excends getdata from parent
+     * extends getdata from parent
      * @param  string $key
      * @return any
      */

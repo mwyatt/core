@@ -9,7 +9,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Session extends \Mwyatt\Core\Data implements SessionInterface
+class Session extends \Mwyatt\Core\Data implements \Mwyatt\Core\SessionInterface
 {
 
 
@@ -67,7 +67,7 @@ class Session extends \Mwyatt\Core\Data implements SessionInterface
 
 
     /**
-     * excends getdata from parent
+     * extends getdata from parent
      * @param  string $key
      * @return any
      */

@@ -36,11 +36,23 @@ class Url implements \Mwyatt\Core\UrlInterface
 
 
     /**
+     * cached representation of the protocol
+     * js will review this object so will need to know
+     * @var string 'http://'
+     */
+    public $protocol;
+
+
+    /**
      * @param string $host             usually from $_SERVER['HTTP_HOST']
      * @param string $request          usually from $_SERVER['REQUEST_URI']
      * @param string $installDirectory foo/bar/
      */
-    public function __construct($host, $request, $installDirectory = '')
+    public function __construct(
+        $host = '',
+        $request = '',
+        $installDirectory = ''
+    )
     {
         $urlServer = strtolower($host . $request);
         $urlParts = explode($installDirectory, $urlServer);
@@ -48,6 +60,7 @@ class Url implements \Mwyatt\Core\UrlInterface
         $path = end($urlParts);
         $this->base = $base;
         $this->path = $path;
+        $this->protocol = $this->getProtocol();
         return $this;
     }
 
