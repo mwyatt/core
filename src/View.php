@@ -18,7 +18,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     public $url;
 
 
-    protected $templatePaths = [];
+    public $templatePaths = [];
 
 
     protected $pathProject;
@@ -34,7 +34,7 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * must store the routes found in the registry for building urls
      * always prepend this package template path
      */
-    public function __construct(\Mwyatt\Core\UrlInterface $url)
+    public function __construct(\Mwyatt\Core\UrlInterface $url = null)
     {
         $this->url = $url;
         $this->storePathPackage();
