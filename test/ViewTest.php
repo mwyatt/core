@@ -15,7 +15,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     public function testPathProject() {
         $view = new \Mwyatt\Core\View;
         $view->setPathProject('foo/bar/');
-        $this->assertEquals('foo/bar/append/', $view->getPath('append/'))
+        $this->assertEquals('foo/bar/append/', $view->getPath('append/'));
     }
 
 
@@ -42,11 +42,15 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
 
     public function testGetPathTemplate() {
-        
+        $view = new \Mwyatt\Core\View;
+        $this->assertEquals('/var/www/html/core/src/../template/test.php', $view->getPathTemplate('test'));
     }
 
 
     public function testAppendAsset() {
-
+        $view = new \Mwyatt\Core\View;
+        $view->appendAsset('mustache', 'foo/bar');
+        $data = $view->getData();
+        $this->assertEquals($data['mustache'][0], 'foo/bar');
     }
 }
