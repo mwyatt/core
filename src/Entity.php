@@ -9,6 +9,9 @@ class Entity
 {
 
 
+    protected $id;
+
+
     /**
      * any entities with protected ids need to use this method
      * to obtain. this was introduced to prevent the setting of ids

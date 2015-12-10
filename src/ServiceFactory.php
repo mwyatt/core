@@ -9,7 +9,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-abstract class Service extends \Mwyatt\Core\Data
+class ServiceFactory extends \Mwyatt\Core\Factory
 {
 
 
@@ -21,10 +21,20 @@ abstract class Service extends \Mwyatt\Core\Data
 
 	public function __construct(
 		\Mwyatt\Core\DataMapperFactory $dataMapperFactory,
-		\Mwyatt\Core\DomainObjectFactory $domainObjectFactory,
+		\Mwyatt\Core\DomainObjectFactory $domainObjectFactory
 	)
 	{
 	    $this->dataMapperFactory = $dataMapperFactory;
 	    $this->domainObjectFactory = $domainObjectFactory;
+	}
+
+
+	public function get($name)
+	{
+		$namespace = $this->defaultNamespace . $name;
+		return new $namespace(
+			$this->dataMapperFactory,
+			$this->domainObjectFactory
+		);
 	}
 }

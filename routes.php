@@ -1,7 +1,7 @@
 <?php
 
-$this->mux->any('/', [$this->controllerNamespace . 'Test', 'testSimple'], ['id' => 'test.simple', 'constructor_args' => [$database, $view, $url]]);
-$this->mux->any('/product/:name/:id/', [$this->controllerNamespace . 'Test', 'testParams'], ['id' => 'test.params', 'constructor_args' => [$database, $view, $url]]);
+$this->mux->any('/', [$this->controllerNamespace . 'People', 'all'], ['id' => 'people.all', 'view' => 'Person']);
+$this->mux->any('/product/:name/:id/', [$this->controllerNamespace . 'Test', 'testParams'], ['id' => 'test.params']);
 
 // example submux
 // $subMux = new \Pux\Mux;

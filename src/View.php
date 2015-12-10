@@ -34,10 +34,9 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
      * must store the routes found in the registry for building urls
      * always prepend this package template path
      */
-    public function __construct(\Mwyatt\Core\UrlInterface $url = null)
+    public function __construct(\Mwyatt\Core\ServiceFactory $serviceFactory)
     {
-        $this->url = $url;
-        $this->storePathPackage();
+        $this->serviceFactory = $serviceFactory;
     }
 
 

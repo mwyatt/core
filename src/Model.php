@@ -45,7 +45,7 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
      * must connect to the database on first model build if not already
      * any other database access classes?
      */
-    public function __construct(\Mwyatt\Core\Database $database)
+    public function __construct(\Mwyatt\Core\DatabaseInterface $database)
     {
 
         // connect if not

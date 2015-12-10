@@ -10,24 +10,31 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 {
 
 
-    protected $url;
-
-
-    protected $database;
+    protected $serviceFactory;
 
 
     protected $view;
 
 
     public function __construct(
-        \Mwyatt\Core\DatabaseInterface $database,
-        \Mwyatt\Core\ViewInterface $view,
-        \Mwyatt\Core\UrlInterface $url
+        \Mwyatt\Core\ServiceFactory $serviceFactory,
+        \Mwyatt\Core\ViewInterface $view
     )
     {
-        $this->database = $database;
+        $this->serviceFactory = $serviceFactory;
         $this->view = $view;
-        $this->url = $url;
+    }
+
+
+    public function respond($content = '', $statusCode = 200)
+    {
+        return new \Mwyatt\Core\Response($content, $statusCode);
+    }
+
+
+    public function getService($name)
+    {
+        $this->serviceFactory->get($name);
     }
 
 

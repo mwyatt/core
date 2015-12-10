@@ -33,12 +33,7 @@ class Router //implements \Mwyatt\Core\RouterInterface
      * @param  array  $filePaths
      * @return object
      */
-    public function appendMuxRoutes(
-        array $filePaths,
-        \Mwyatt\Core\Database $database,
-        \Mwyatt\Core\View $view,
-        \Mwyatt\Core\Url $url
-    ) {
+    public function appendMuxRoutes(array $filePaths) {
         foreach ($filePaths as $filePath) {
             include $filePath;
         }
