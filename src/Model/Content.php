@@ -3,19 +3,25 @@ namespace Mwyatt\Core\Model;
 
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Person
+class Content
 {
 
 
-	public $nameFirst;
+	public $id;
 
 
-	public $nameLast;
+	public $title;
 
 
-	public $addresses;
+	public $user;
+
+
+	public $content;
+
+
+	public $timeCreated;
+	
 
 
     public function getName()

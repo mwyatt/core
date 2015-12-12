@@ -7,7 +7,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInterface
+abstract class Mapper extends \Mwyatt\Core\Data // implements \Mwyatt\Core\ModelInterface
 {
 
 
@@ -389,6 +389,16 @@ abstract class Model extends \Mwyatt\Core\Data implements \Mwyatt\Core\ModelInte
     public function getFields()
     {
         return $this->fields;
+    }
+
+
+    /**
+     * get the entity properties
+     * @return array [id, name]
+     */
+    public function getEntityProperties()
+    {
+        return array_keys(get_class_vars($this->getEntity()));
     }
 
 

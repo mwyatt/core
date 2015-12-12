@@ -18,7 +18,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     public function __construct(
         \Mwyatt\Core\ServiceFactory $serviceFactory,
-        \Mwyatt\Core\ViewInterface $view
+        \Mwyatt\Core\View $view
     )
     {
         $this->serviceFactory = $serviceFactory;
@@ -34,7 +34,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     public function getService($name)
     {
-        $this->serviceFactory->get($name);
+        return $this->serviceFactory->get($name);
     }
 
 

@@ -11,8 +11,11 @@ class Person extends \Mwyatt\Core\Service
 
 	public function getAll()
 	{
-		$mapperPerson = $this->dataMapperFactory->get('Person');
-		$mapperPerson->read();
-		$this->domainObjectFactory->get('Person')
+		$mapperPerson = $this->mapperFactory->get('Person');
+		$people = $mapperPerson->read();
+		$modelPerson = $this->modelFactory->get('Person');
+		
+		$modelPerson->setNameFirst($);
+		return $people;
 	}
 }

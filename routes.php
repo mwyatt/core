@@ -1,6 +1,6 @@
 <?php
 
-$this->mux->any('/', [$this->controllerNamespace . 'People', 'all'], ['id' => 'people.all', 'view' => 'Person']);
+$this->mux->any('/', [$this->controllerNamespace . 'Person', 'all'], ['id' => 'people.all', 'view' => 'Person']);
 $this->mux->any('/product/:name/:id/', [$this->controllerNamespace . 'Test', 'testParams'], ['id' => 'test.params']);
 
 // example submux

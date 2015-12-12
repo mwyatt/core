@@ -6,11 +6,17 @@ $basePath = (string) __DIR__ . '/';
 $database = new \Mwyatt\Core\Database\Pdo;
 $database->setCredentials(include $basePath . 'config.php');
 
+$mapperFactory = new \Mwyatt\Core\MapperFactory($database);
+$mapperFactory->setDefaultNamespace('\\Mwyatt\\Core\\Mapper\\');
+
+$modelFactory = new \Mwyatt\Core\ModelFactory;
+$modelFactory->setDefaultNamespace('\\Mwyatt\\Core\\DomainObject');
+
 $serviceFactory = new \Mwyatt\Core\ServiceFactory(
-    new \Mwyatt\Core\DataMapperFactory($database),
-    new \Mwyatt\Core\DomainObjectFactory
+    $mapperFactory,
+    $modelFactory
 );
-$serviceFactory->setDefaultNamespace('\\Mwyatt\\Core\\Service');
+$serviceFactory->setDefaultNamespace('\\Mwyatt\\Core\\Service\\');
 
 $router = new \Mwyatt\Core\Router(new \Pux\Mux);
 $router->appendMuxRoutes([$basePath . 'routes.php']);
@@ -20,21 +26,14 @@ $route = $router->getRoute($url->getPath());
 
 $class = '\\Mwyatt\\Core\\View\\' . $route[3]['view'];
 $view = new $class($serviceFactory);
-$view->setDefaultTemplateLocation(__DIR__ . '/templates');
+$view->prependTemplatePath((string) (__DIR__ . '/template/'));
 
-/*
- * Initialization of Controller
- */
-$class = '\\Application\\Controller\\' . $request->getResourceName();
+$class = $route[2][0];
 $controller = new $class($serviceFactory, $view);
 
-/*
- * Execute the necessary command on the controller
- */
-$command = $request->getCommand();
+$request = [];
+
+$command = $route[2][1];
 $controller->{$command}($request);
 
-/*
- * Produces the response
- */
 echo $view->render();

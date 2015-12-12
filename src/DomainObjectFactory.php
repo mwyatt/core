@@ -9,12 +9,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class DomainObjectFactory extends \Mwyatt\Core\Factory
+class ModelFactory extends \Mwyatt\Core\Factory
 {
 
-
-	public function __construct()
-	{
-		$this->setDefaultNamespace('\\Mwyatt\\Core\\DomainObject');
-	}
 }

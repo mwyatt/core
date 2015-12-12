@@ -14,6 +14,11 @@ class Person extends \Mwyatt\Core\Controller
     {
         $servicePerson = $this->getService('Person');
         $people = $servicePerson->getAll();
+        echo '<pre>';
+        print_r($people);
+        echo '</pre>';
+        exit;
+        
         return $this->respond();
     }
 

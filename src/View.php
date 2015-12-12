@@ -7,7 +7,7 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class View extends \Mwyatt\Core\Data implements ViewInterface
+class View extends \Mwyatt\Core\Data // implements ViewInterface
 {
 
 
@@ -61,17 +61,6 @@ class View extends \Mwyatt\Core\Data implements ViewInterface
     public function getPath($append = '')
     {
         return $this->pathProject . $append;
-    }
-
-
-    /**
-     * constructor storage of the package path
-     * @return null 
-     */
-    protected function storePathPackage()
-    {
-        $this->pathPackage = (string) (__DIR__ . '/../');
-        $this->prependTemplatePath($this->pathPackage . 'template/');
     }
 
 
