@@ -10,6 +10,20 @@ namespace Mwyatt\Core\Mapper;
  */
 class Person extends \Mwyatt\Core\Mapper
 {
+    
+
     public $tableName = 'person';
+
+
     public $entity = '\\Mwyatt\\Core\\Entity\\Person';
+
+
+    public $fields = [
+    	'id',
+    	'name',
+    	'telephoneLandline'
+	];
+
+
+	public $fieldsWriteProtected = ['id'];
 }

@@ -18,4 +18,7 @@ class Address
      * @var string
      */
     public $postCode;
+
+
+    public $personId;
 }

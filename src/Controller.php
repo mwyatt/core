@@ -26,7 +26,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     }
 
 
-    public function respond($content = '', $statusCode = 200)
+    public function response($content = '', $statusCode = 200)
     {
         return new \Mwyatt\Core\Response($content, $statusCode);
     }

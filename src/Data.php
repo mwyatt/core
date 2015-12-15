@@ -126,6 +126,7 @@ class Data implements \Mwyatt\Core\DataInterface
 
     /**
      * arranges this->data by a specified property
+     * what if there are two, make array?
      * @param  string $property
      * @return array
      */
@@ -146,6 +147,27 @@ class Data implements \Mwyatt\Core\DataInterface
             if (is_object($entity) && property_exists($entity, $property)) {
                 $collection[$entity->$property] = $entity;
             }
+        }
+        $this->setData($collection);
+        return $this;
+    }
+
+
+    public function keyDataByPropertyMulti($property)
+    {
+        $collection = [];
+
+        // validation
+        if (!$data = $this->getData()) {
+            return $this;
+        }
+
+        // storage
+        foreach ($data as $entity) {
+            if (empty($collection[$entity->$property])) {
+                $collection[$entity->$property] = [];
+            }
+            $collection[$entity->$property][] = $entity;
         }
         $this->setData($collection);
         return $this;

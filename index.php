@@ -10,7 +10,7 @@ $mapperFactory = new \Mwyatt\Core\MapperFactory($database);
 $mapperFactory->setDefaultNamespace('\\Mwyatt\\Core\\Mapper\\');
 
 $modelFactory = new \Mwyatt\Core\ModelFactory;
-$modelFactory->setDefaultNamespace('\\Mwyatt\\Core\\DomainObject');
+$modelFactory->setDefaultNamespace('\\Mwyatt\\Core\\Model\\');
 
 $serviceFactory = new \Mwyatt\Core\ServiceFactory(
     $mapperFactory,
@@ -31,9 +31,9 @@ $view->prependTemplatePath((string) (__DIR__ . '/template/'));
 $class = $route[2][0];
 $controller = new $class($serviceFactory, $view);
 
-$request = [];
+$request = new \Mwyatt\Core\Request;
 
 $command = $route[2][1];
-$controller->{$command}($request);
+$response = $controller->{$command}($request);
 
-echo $view->render();
+echo $response->getContent();

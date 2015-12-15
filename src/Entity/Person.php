@@ -8,6 +8,9 @@ namespace Mwyatt\Core\Entity;
 class Person
 {
 
+    
+    public $id;
+
 
     /**
      * @var string
@@ -19,5 +22,4 @@ class Person
      * @var int
      */
     public $telephoneLandline;
-
 }

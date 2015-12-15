@@ -10,22 +10,17 @@ class Person extends \Mwyatt\Core\Controller
 {
 
 
-    public function all()
+    public function all($request)
     {
         $servicePerson = $this->getService('Person');
-        $people = $servicePerson->getAll();
-        echo '<pre>';
-        print_r($people);
-        echo '</pre>';
-        exit;
-        
-        return $this->respond();
+        $this->view->setDataKey('people', $servicePerson->getAll());
+        return $this->response($this->view->all());
     }
 
 
-    public function single($request)
+    public function create($request)
     {
-
-        return new \Mwyatt\Core\Response('testSimple', 200);
+        $servicePerson = $this->getService('Person');
+        $servicePerson->create($request->get('name'), $request->get('telephoneLandline'));
     }
 }

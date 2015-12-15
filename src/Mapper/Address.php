@@ -12,4 +12,5 @@ class Address extends \Mwyatt\Core\Mapper
 {
     public $tableName = 'address';
     public $entity = '\\Mwyatt\\Core\\Entity\\Address';
+    public $fields = ['id', 'postCode', 'personId'];
 }

@@ -13,19 +13,19 @@ class ServiceFactory extends \Mwyatt\Core\Factory
 {
 
 
-	protected $dataMapperFactory;
+	protected $mapperFactory;
 
 
-	protected $domainObjectFactory;
+	protected $modelFactory;
 
 
 	public function __construct(
-		\Mwyatt\Core\DataMapperFactory $dataMapperFactory,
-		\Mwyatt\Core\DomainObjectFactory $domainObjectFactory
+		\Mwyatt\Core\MapperFactory $mapperFactory,
+		\Mwyatt\Core\ModelFactory $modelFactory
 	)
 	{
-	    $this->dataMapperFactory = $dataMapperFactory;
-	    $this->domainObjectFactory = $domainObjectFactory;
+	    $this->mapperFactory = $mapperFactory;
+	    $this->modelFactory = $modelFactory;
 	}
 
 
@@ -33,8 +33,8 @@ class ServiceFactory extends \Mwyatt\Core\Factory
 	{
 		$namespace = $this->defaultNamespace . $name;
 		return new $namespace(
-			$this->dataMapperFactory,
-			$this->domainObjectFactory
+			$this->mapperFactory,
+			$this->modelFactory
 		);
 	}
 }

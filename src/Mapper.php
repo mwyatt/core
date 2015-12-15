@@ -101,10 +101,7 @@ abstract class Mapper extends \Mwyatt\Core\Data // implements \Mwyatt\Core\Model
     {
 
         // query
-        $sth = $this->database->dbh->prepare("
-            {$this->getSqlSelect()}
-            where id != 0
-		");
+        $sth = $this->database->dbh->prepare("{$this->getSqlSelect()}");
 
         // mode
         $sth->setFetchMode(\PDO::FETCH_CLASS, $this->getEntity());
@@ -116,7 +113,7 @@ abstract class Mapper extends \Mwyatt\Core\Data // implements \Mwyatt\Core\Model
         $this->setData($sth->fetchAll());
 
         // instance
-        return $this;
+        return $this->getData();
     }
 
 
@@ -150,7 +147,7 @@ abstract class Mapper extends \Mwyatt\Core\Data // implements \Mwyatt\Core\Model
 
         // instance
         $this->setData($results);
-        return $this;
+        return $this->getData();
     }
 
 
@@ -370,6 +367,12 @@ abstract class Mapper extends \Mwyatt\Core\Data // implements \Mwyatt\Core\Model
     public function getEntity()
     {
         return $this->entity;
+    }
+
+
+    public function getEntityObject()
+    {
+        return new $this->entity;
     }
     
     

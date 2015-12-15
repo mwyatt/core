@@ -9,6 +9,9 @@ class Person
 {
 
 
+	public $id;
+
+
 	public $nameFirst;
 
 
@@ -21,5 +24,26 @@ class Person
     public function getName()
     {
     	return $this->nameFirst . ' ' . $this->nameLast;
+    }
+
+
+    public function setName($name)
+    {
+    	$names = explode(' ', $name);
+        if (count($names) < 2) {
+            throw new \Exception;
+        }
+    	$this->nameFirst = reset($names);
+    	$this->nameLast = end($names);
+    }
+
+
+    public function getEntities($people)
+    {
+        $entities = [];
+        foreach ($people as $person) {
+            $entity = $
+            $entities[] = $person->getName()
+        }
     }
 }
