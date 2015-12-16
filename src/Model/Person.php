@@ -21,6 +21,9 @@ class Person
 	public $addresses;
 
 
+    public $actions;
+
+
     public function getName()
     {
     	return $this->nameFirst . ' ' . $this->nameLast;

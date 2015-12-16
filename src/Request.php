@@ -108,4 +108,14 @@ class Request // implements \Mwyatt\Core\RequestInterface
         }
         return $this->body;
     }
+
+
+    public function getType()
+    {
+        if ($_POST) {
+            return 'post';
+        } elseif ($_GET) {
+            return 'get';
+        }
+    }
 }
