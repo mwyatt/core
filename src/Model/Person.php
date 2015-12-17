@@ -39,14 +39,4 @@ class Person
     	$this->nameFirst = reset($names);
     	$this->nameLast = end($names);
     }
-
-
-    public function getEntities($people)
-    {
-        $entities = [];
-        foreach ($people as $person) {
-            $entity = $
-            $entities[] = $person->getName()
-        }
-    }
 }

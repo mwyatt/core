@@ -27,10 +27,4 @@ abstract class Service extends \Mwyatt\Core\Data
 	    $this->mapperFactory = $mapperFactory;
 	    $this->modelFactory = $modelFactory;
 	}
-
-
-	public function getTransform()
-	{
-		return new \Mwyatt\Core\Data;
-	}
 }

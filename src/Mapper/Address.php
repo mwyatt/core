@@ -10,7 +10,35 @@ namespace Mwyatt\Core\Mapper;
  */
 class Address extends \Mwyatt\Core\Mapper
 {
+
+
     public $tableName = 'address';
-    public $entity = '\\Mwyatt\\Core\\Entity\\Address';
-    public $fields = ['id', 'postCode', 'personId'];
+
+
+    protected function getEntity(array $row) {
+        return new \Mwyatt\Core\Model\Address(
+            $row['id'],
+            $row['postCode'],
+            $row['personId']
+        );
+    }
+
+    
+    public function insert(\Mwyatt\Core\Model\Address $add) {
+        $person->id = $this->database->insert(
+            $this->getTableName(),
+            [
+                "title" => $person->title,
+                "content" => $person->content
+            ]);
+        return $person->id;
+    }
+
+
+    public function delete($id) {
+        if ($id instanceof \Mwyatt\Core\Model\Address) {
+            $id = $id->id;
+        }
+        return $this->database->delete($this->getTableName(), "id = $id");
+    }
 }

@@ -35,6 +35,9 @@ class Request // implements \Mwyatt\Core\RequestInterface
         $this->post = $_POST;
         $this->cookie = $_COOKIE;
         $this->server = $_SERVER;
+
+        // here?
+        $this->session = $_SESSION;
         $this->files = $this->setFiles($_FILES);
     }
 

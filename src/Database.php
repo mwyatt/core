@@ -13,17 +13,17 @@ abstract class Database
 
 
     /**
-     * database handle
-     * @var object
-     */
-    public $dbh;
-
-    
-    /**
      * connection credentials
      * @var array
      */
     protected $credentials;
+
+
+    /**
+     * database handle
+     * @var object
+     */
+    protected $connection;
     
 
     /**
