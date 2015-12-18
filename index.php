@@ -1,15 +1,63 @@
 <?php
 
 include 'vendor/autoload.php';
-$basePath = (string) __DIR__ . '/';
 
-$database = new \Mwyatt\Core\Database\Pdo(include $basePath . 'config.php');
+$container = new \Pimple\Container;
+
+$container['path.base'] = (string) __DIR__ . '/';
+$container['ns.mapper'] = '\\Mwyatt\\Core\\Mapper\\';
+$container['ns.model'] = '\\Mwyatt\\Core\\Model\\';
+
+$container['database'] = function($container) {
+	return new \Mwyatt\Core\Database\Pdo(include $container['path.base'] . 'config.php');
+};
+
+$container['cache'] = function($container) {
+	return new \Mwyatt\Core\Cache('example-name');
+};
+
+$cache = $container['cache'];
+$cache->setKey('ok');
+
+echo '<pre>';
+print_r($cache);
+print_r($container['cache']);
+echo '</pre>';
+
+$cache->setKey('nar');
+
+echo '<pre>';
+print_r($container['cache']);
+echo '</pre>';
+exit;
+
+
+
+try {
+	$database = $container['database'];
+} catch (Exception $e) {
+	echo '<pre>';
+	print_r($e);
+	echo '</pre>';
+	exit;
+	
+}
+
+echo '<pre>';
+print_r($database);
+echo '</pre>';
+exit;
+
+
+
+
+
 
 $mapperFactory = new \Mwyatt\Core\MapperFactory($database);
-$mapperFactory->setDefaultNamespace('\\Mwyatt\\Core\\Mapper\\');
+$mapperFactory->setDefaultNamespace($container['ns.mapper']);
 
 $modelFactory = new \Mwyatt\Core\ModelFactory;
-$modelFactory->setDefaultNamespace('\\Mwyatt\\Core\\Model\\');
+$modelFactory->setDefaultNamespace($container['ns.model']);
 
 $serviceFactory = new \Mwyatt\Core\ServiceFactory(
     $mapperFactory,

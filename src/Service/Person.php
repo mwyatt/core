@@ -10,14 +10,6 @@ class Person extends \Mwyatt\Core\Service
 {
 
 
-	public function getAllWithAddress()
-	{
-		$people = $this->getAll();
-		$people = $this->bindAddresses($people);
-		return $people;
-	}
-
-
 	public function getById($ids)
 	{
 		$mapperPerson = $this->mapperFactory->get('Person');
@@ -32,7 +24,9 @@ class Person extends \Mwyatt\Core\Service
 
 	public function getAll()
 	{
-		$mapperPerson = $this->mapperFactory->get('Person');
+		$mapperPerson = $this->container['mapperFactory']->get('Person');
+
+
 		$people = $mapperPerson->read();
 		$people = $this->bindBasics($people);
 		return $people;
@@ -44,7 +38,7 @@ class Person extends \Mwyatt\Core\Service
 		$models = [];
 		foreach ($people as $person) {
 			$model = $this->modelFactory->get('Person');
-			$names = explode(' ', $person->name)
+			$names = explode(' ', $person->name);
 			$model->nameFirst = reset($names);
 			$model->nameLast = end($names);
 		}

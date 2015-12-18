@@ -8,7 +8,7 @@ namespace Mwyatt\Core\Database;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterface
+class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterface
 {
 
 
@@ -92,11 +92,9 @@ class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterfac
     {
         $this->connect();
         try {
-            $this->statement = $this->connection->prepare($sql, 
-                $options);
+            $this->statement = $this->connection->prepare($sql, $options);
             return $this;
-        }
-        catch (\PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw new \RunTimeException($exception->getMessage());
         }
     }
@@ -225,6 +223,7 @@ class Pdo extends \Mwyatt\Core\Database implements \Mwyatt\Core\DatabaseInterfac
             ->countAffectedRows();
     }
     
+
     public function delete($table, $where = "")
     {
         $sql = "DELETE FROM " . $table . (($where) ? " WHERE " . $where : " ");
