@@ -9,7 +9,7 @@ namespace Mwyatt\Core;
  * @version	0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
+class Cache implements \Mwyatt\Core\CacheInterface
 {
 
 
@@ -39,6 +39,9 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	 * @var string
 	 */
 	protected $extension = '';
+
+
+	protected $data;
 
 
 	/**
@@ -113,7 +116,7 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 
 		// load in
 		$data = file_get_contents($path);
-		return $this->setData(unserialize($data));
+		return $this->data = unserialize($data);
 	}
 
 
@@ -152,5 +155,11 @@ class Cache extends \Mwyatt\Core\Data implements \Mwyatt\Core\CacheInterface
 	public function setKey($key)
 	{
 		return $this->key = $key;
+	}
+
+
+	public function getData()
+	{
+		return $this->data;
 	}
 }

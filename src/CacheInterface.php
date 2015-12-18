@@ -5,6 +5,7 @@ interface CacheInterface
 {
 	public function getKey();
 	public function setKey($key);
+	public function getData();
 
 
 	/**

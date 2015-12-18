@@ -4,13 +4,6 @@ include 'vendor/autoload.php';
 $basePath = (string) __DIR__ . '/';
 
 $database = new \Mwyatt\Core\Database\Pdo(include $basePath . 'config.php');
-$database->select('address');
-
-echo '<pre>';
-print_r($database->fetchAll());
-echo '</pre>';
-exit;
-
 
 $mapperFactory = new \Mwyatt\Core\MapperFactory($database);
 $mapperFactory->setDefaultNamespace('\\Mwyatt\\Core\\Mapper\\');
