@@ -8,12 +8,12 @@ $container['path.base'] = (string) __DIR__ . '/';
 $container['ns.mapper'] = '\\Mwyatt\\Core\\Mapper\\';
 $container['ns.model'] = '\\Mwyatt\\Core\\Model\\';
 
-$container['database'] = function($container) {
-	return new \Mwyatt\Core\Database\Pdo(include $container['path.base'] . 'config.php');
+$container['database'] = function ($container) {
+    return new \Mwyatt\Core\Database\Pdo(include $container['path.base'] . 'config.php');
 };
 
-$container['cache'] = function($container) {
-	return new \Mwyatt\Core\Cache('example-name');
+$container['cache'] = function ($container) {
+    return new \Mwyatt\Core\Cache('example-name');
 };
 
 $cache = $container['cache'];
@@ -34,13 +34,13 @@ exit;
 
 
 try {
-	$database = $container['database'];
+    $database = $container['database'];
 } catch (Exception $e) {
-	echo '<pre>';
-	print_r($e);
-	echo '</pre>';
-	exit;
-	
+    echo '<pre>';
+    print_r($e);
+    echo '</pre>';
+    exit;
+    
 }
 
 echo '<pre>';

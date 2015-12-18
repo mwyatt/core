@@ -14,7 +14,7 @@ class ObjectIterator implements \ArrayIterator
 
     /**
      * unset all iterator and return a copy
-     * @return array 
+     * @return array
      */
     private function unsetGetCopy()
     {
@@ -34,8 +34,8 @@ class ObjectIterator implements \ArrayIterator
     /**
      * key the iterator by the specified property
      * only 1 level deep
-     * @param  string $property 
-     * @return null           
+     * @param  string $property
+     * @return null
      */
     public function keyByProperty($property)
     {
@@ -49,8 +49,8 @@ class ObjectIterator implements \ArrayIterator
     /**
      * key the iterator by the specified property
      * but go 2 levels
-     * @param  string $property 
-     * @return null           
+     * @param  string $property
+     * @return null
      */
     public function keyByPropertyMulti($property)
     {
@@ -66,9 +66,9 @@ class ObjectIterator implements \ArrayIterator
 
     /**
      * remove entries where property == value
-     * @param  string $property 
-     * @param  mixed $value    
-     * @return null           
+     * @param  string $property
+     * @param  mixed $value
+     * @return null
      */
     public function filterOutByProperty($property, $value)
     {
@@ -82,8 +82,8 @@ class ObjectIterator implements \ArrayIterator
 
     /**
      * get a collection of values from property
-     * @param  string $property 
-     * @return array           
+     * @param  string $property
+     * @return array
      */
     public function extractProperty($property)
     {

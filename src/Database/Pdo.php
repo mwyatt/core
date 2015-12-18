@@ -83,7 +83,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
     {
         if ($this->statement === null) {
             throw new \PDOException("There is no PDOStatement object for use.");
-        } 
+        }
         return $this->statement;
     }
 
@@ -105,8 +105,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
         try {
             $this->getStatement()->execute($parameters);
             return $this;
-        }
-        catch (\PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw new \RunTimeException($exception->getMessage());
         }
     }
@@ -116,8 +115,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
     {
         try {
             return $this->getStatement()->rowCount();
-        }
-        catch (\PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw new \RunTimeException($exception->getMessage());
         }
     }
@@ -134,17 +132,19 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
         $fetchStyle = null,
         $cursorOrientation = null,
         $cursorOffset = null
-    )
-    {
+    ) {
+    
         if ($fetchStyle === null) {
             $fetchStyle = $this->fetchMode;
         }
  
         try {
-            return $this->getStatement()->fetch($fetchStyle, 
-                $cursorOrientation, $cursorOffset);
-        }
-        catch (\PDOException $exception) {
+            return $this->getStatement()->fetch(
+                $fetchStyle,
+                $cursorOrientation,
+                $cursorOffset
+            );
+        } catch (\PDOException $exception) {
             throw new \RunTimeException($exception->getMessage());
         }
     }
@@ -160,8 +160,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
             return $fetchStyle === \PDO::FETCH_COLUMN
                ? $this->getStatement()->fetchAll($fetchStyle, $column)
                : $this->getStatement()->fetchAll($fetchStyle);
-        }
-        catch (\PDOException $exception) {
+        } catch (\PDOException $exception) {
             throw new \RunTimeException($exception->getMessage());
         }
     }

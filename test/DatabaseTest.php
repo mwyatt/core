@@ -13,7 +13,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $this->container = new \Pimple\Container;
         $this->container['path.base'] = (string) __DIR__ . '/../';
-        $this->container['database'] = function($container) {
+        $this->container['database'] = function ($container) {
             return new \Mwyatt\Core\Database\Pdo(include $container['path.base'] . 'config.php');
         };
     }
@@ -57,7 +57,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testConnectFailPdo()
     {
-        $this->container['database'] = function($container) {
+        $this->container['database'] = function ($container) {
             $credentials = include $container['path.base'] . 'config.php';
             $credentials['database.password'] = null;
             return new \Mwyatt\Core\Database\Pdo($credentials);
@@ -65,5 +65,4 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $database = $this->container['database'];
         $database->connect();
     }
-
 }

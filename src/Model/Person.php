@@ -10,16 +10,16 @@ class Person
 {
 
 
-	public $id;
+    public $id;
 
 
-	public $nameFirst;
+    public $nameFirst;
 
 
-	public $nameLast;
+    public $nameLast;
 
 
-	public $addresses;
+    public $addresses;
 
 
     public $actions;
@@ -27,17 +27,17 @@ class Person
 
     public function getName()
     {
-    	return $this->nameFirst . ' ' . $this->nameLast;
+        return $this->nameFirst . ' ' . $this->nameLast;
     }
 
 
     public function setName($name)
     {
-    	$names = explode(' ', $name);
+        $names = explode(' ', $name);
         if (count($names) < 2) {
             throw new \Exception;
         }
-    	$this->nameFirst = reset($names);
-    	$this->nameLast = end($names);
+        $this->nameFirst = reset($names);
+        $this->nameLast = end($names);
     }
 }
