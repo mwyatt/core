@@ -132,8 +132,8 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
         $fetchStyle = null,
         $cursorOrientation = null,
         $cursorOffset = null
-    ) {
-    
+    )
+    {
         if ($fetchStyle === null) {
             $fetchStyle = $this->fetchMode;
         }
@@ -170,7 +170,8 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
         $table,
         $bind = [],
         $boolOperator = "AND"
-    ) {
+    )
+    {
         if ($bind) {
             $where = [];
             foreach ($bind as $col => $value) {

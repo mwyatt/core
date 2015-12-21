@@ -2,6 +2,10 @@
 
 namespace Mwyatt\Core;
 
+
+/**
+ * currently reliant on there being an actual database
+ */
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -47,8 +51,30 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testPrepare()
     {
         $database = $this->container['database'];
-        $database->prepare('select * from test');
-        $database->getStatement();
+        $database->prepare('select * from person');
+    }
+
+
+    public function testExecute()
+    {
+        $database = $this->container['database'];
+        $database->prepare('select * from person');
+        $database->execute();
+    }
+
+
+    public function testInsert()
+    {
+        $database = $this->container['database'];
+        $data = [
+            ['name' => 'Foo Bar', 'telephoneLandline' => '2147483647'],
+            ['name' => 'David Smith', 'telephoneLandline' => '239473209'],
+            ['name' => 'Peter Parker', 'telephoneLandline' => '91237298371']
+        ];
+        foreach ($data as $row) {
+            $insertId = $database->insert('person', $row);
+            $this->assertGreaterThan(0, $insertId);
+        }
     }
 
 
@@ -64,5 +90,34 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         };
         $database = $this->container['database'];
         $database->connect();
+    }
+
+
+    public function testSelect()
+    {
+        $database = $this->container['database'];
+        $database->select('person', ['name' => 'Foo Bar']);
+        foreach ($database->fetchAll() as $row) {
+            $this->assertEquals($row['telephoneLandline'], '2147483647');
+        }
+    }
+
+
+    public function testUpdate()
+    {
+        $database = $this->container['database'];
+        $database->update('person', ['telephoneLandline' => '123'], 'telephoneLandline > 0');
+        $database->select('person');
+        foreach ($database->fetchAll() as $row) {
+            $this->assertEquals($row['telephoneLandline'], '123');
+        }
+    }
+
+
+    public function testDelete()
+    {
+        $database = $this->container['database'];
+        $affected = $database->delete('person', 'id > 0');
+        $this->assertGreaterThan(2, $affected);
     }
 }
