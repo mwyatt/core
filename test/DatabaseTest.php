@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core;
 
-
 /**
  * currently reliant on there being an actual database
  */
