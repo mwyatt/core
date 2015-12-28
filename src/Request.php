@@ -62,15 +62,13 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     public function get($key)
     {
-        $type = 'get';
-        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+        return $this->getPropKey('get', $key);
     }
 
 
     public function getUrlVar($key)
     {
-        $type = 'urlVars';
-        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+        return $this->getPropKey('urlVars', $key);
     }
 
 
@@ -82,21 +80,19 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     public function getPost($key)
     {
-        $type = 'post';
-        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+        return $this->getPropKey('post', $key);
     }
 
 
     public function getCookie($key)
     {
-        $type = 'cookie';
-        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+        return $this->getPropKey('cookie', $key);
     }
+
 
     public function getServer($key)
     {
-        $type = 'server';
-        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+        return $this->getPropKey('server', $key);
     }
 
 
@@ -115,12 +111,18 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
-    public function getType()
+    private function getPropKey($type, $key)
     {
-        if ($_POST) {
-            return 'post';
-        } elseif ($_GET) {
-            return 'get';
-        }
+        return empty($this->{$type}[$key]) ? null : $this->{$type}[$key];
+    }
+
+
+    /**
+     * is this a post request?
+     * @return boolean 
+     */
+    public function isPost()
+    {
+        return $_POST;
     }
 }
