@@ -167,9 +167,9 @@ class Url implements \Mwyatt\Core\UrlInterface
      * @param  string $path
      * @return string
      */
-    public function generateVersioned($pathRelative)
+    public function generateVersioned($pathBase, $pathAppend)
     {
-        $pathAbsolute = 'PATH_BASE' . $pathRelative;
+        $pathAbsolute = $pathBase . $pathAppend;
         if (!file_exists($pathAbsolute)) {
             throw new \Exception("cannot get cache busting path for file '$pathAbsolute'");
         }
@@ -178,6 +178,6 @@ class Url implements \Mwyatt\Core\UrlInterface
         $timeModified = filemtime($pathAbsolute);
 
         // return url to asset with modified time as query var
-        return $this->generate() . $pathRelative . '?' . $timeModified;
+        return $this->generate() . $pathAppend . '?' . $timeModified;
     }
 }

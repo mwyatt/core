@@ -48,5 +48,5 @@ interface UrlInterface
      * @param  string $path
      * @return string
      */
-    public function generateVersioned($pathRelative);
+    public function generateVersioned($pathBase, $pathAppend);
 }

@@ -6,38 +6,48 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 {
 
 
+    public $host = '192.168.1.24';
+
+
+    public $path = '/core/foo/bar/?foo=bar';
+
+
+    public $pathInstall = 'core/';
+
+
+    public function __construct()
+    {
+        $this->url = new \Mwyatt\Core\Url($this->host, $this->path, $this->pathInstall);
+    }
+
+
     public function testConstruct()
     {
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $this->assertEquals('foo/bar/?foo=bar', $url->getPath());
+        $this->assertEquals('foo/bar/?foo=bar', $this->url->getPath());
     }
 
 
     public function testGetPath()
     {
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $this->assertEquals('foo/bar/?foo=bar', $url->getPath());
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/', 'core/');
-        $this->assertEquals('', $url->getPath());
+        $this->assertEquals('foo/bar/?foo=bar', $this->url->getPath());
+        $urlAlt = new \Mwyatt\Core\Url($this->host, '/core/', $this->pathInstall);
+        $this->assertEquals('', $urlAlt->getPath());
     }
 
 
     public function testGenerate()
     {
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-        $url->setRoutes(['key' => '/path/:id/']);
-        $this->assertEquals('http://192.168.1.24/core/path/1/', $url->generate('key', ['id' => 1]));
+        $this->url->setRoutes(['key' => '/path/:id/']);
+        $this->assertEquals('http://192.168.1.24/core/path/1/', $this->url->generate('key', ['id' => 1]));
     }
 
 
+    /**
+     * accepts a base path then a relative end
+     * too convoluted?
+     */
     public function testGenerateVersioned()
     {
-        return;
-
-        // url
-        $url = new \Mwyatt\Core\Url('192.168.1.24', '/core/foo/bar/?foo=bar', 'core/');
-
-        // view
-        $this->assertContains('asset/test.css', $url->generateVersioned('asset/test.css'));
+        $this->assertContains('http://' . $this->host . '/' . $this->pathInstall . 'asset/test.css', $this->url->generateVersioned((string) __DIR__ . '/../', 'asset/test.css'));
     }
 }

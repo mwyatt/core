@@ -11,33 +11,21 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
 {
 
 
-    /**
-     * reference to url to allow building urls in templates
-     * @var object  \Mwyatt\Core\Url
-     */
-    public $url;
-
-
     public $templatePaths = [];
 
 
     protected $pathProject;
 
 
+// pathBasePackage = this
+// pathBase = user
+
+
+
     protected $pathPackage;
 
 
     protected $assetTypes = ['mustache', 'css', 'js'];
-
-
-    /**
-     * must store the routes found in the registry for building urls
-     * always prepend this package template path
-     */
-    public function __construct(\Mwyatt\Core\ServiceFactory $serviceFactory)
-    {
-        $this->serviceFactory = $serviceFactory;
-    }
 
 
     /**
@@ -162,6 +150,12 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
             }
         }
         throw new \Exception("unable to find template '$path'");
+    }
+
+
+    public function getPath()
+    {
+        // gimme the path which is the base, can be passed to other functions
     }
 
 

@@ -6,6 +6,13 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 {
 
 
+
+    public function __construct()
+    {
+        
+    }
+
+
     public function testConstruct() {
         $view = new \Mwyatt\Core\View(new \Mwyatt\Core\Url);
         $this->assertTrue($view->url);
