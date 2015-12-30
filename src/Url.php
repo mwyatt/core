@@ -169,7 +169,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      */
     public function generateVersioned($pathRelative)
     {
-        $pathAbsolute = PATH_BASE . $pathRelative;
+        $pathAbsolute = 'PATH_BASE' . $pathRelative;
         if (!file_exists($pathAbsolute)) {
             throw new \Exception("cannot get cache busting path for file '$pathAbsolute'");
         }

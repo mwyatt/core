@@ -1,11 +1,11 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
 		<testsuite name="misc">
-			<file>test/DatabaseTest.php</file>
+			<file>test/UrlTest.php</file>
+			<!-- <file>test/DatabaseTest.php</file> -->
 <!-- 			<file>test/UtilityObjectIteratorTest.php</file>
 			<file>test/CacheTest.php</file>
 			<file>test/HelperTest.php</file>
-			<file>test/UrlTest.php</file>
 			<file>test/RouterTest.php</file>
 			<file>test/RequestTest.php</file>
 			<file>test/ResponseTest.php</file>
