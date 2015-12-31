@@ -19,6 +19,9 @@ class Router //implements \Mwyatt\Core\RouterInterface
     public $mux;
 
 
+    private $muxRouteCurrent;
+
+
     /**
      * init mux
      */
@@ -28,28 +31,56 @@ class Router //implements \Mwyatt\Core\RouterInterface
     }
 
 
-    /**
-     * allows you to store routes in mux from external files
-     * @param  array  $filePaths
-     * @return object
-     */
-    public function appendMuxRoutes(array $filePaths) {
-        foreach ($filePaths as $filePath) {
-            include $filePath;
-        }
-        return $this;
+    public function getMux()
+    {
+        return $this->mux;
     }
 
 
     /**
-     * obtains response object from matched controller
-     * falls back to 404, or hits 500
-     * needs to prepend '/' to match the routes correctly
-     * echos the response content
+     * stores array of routes into mux, must match this format
+     * 0 - request type e.g. get
+     * 1 - relative url path to match
+     * 2 - controller namespace
+     * 3 - controller method name
+     * 4 - options
+     * @param  array  $routes
      */
-    public function getRoute($path)
+    public function appendMuxRoutes(array $routes)
     {
-        return $this->mux->dispatch('/' . $path);
+        foreach ($routes as $route) {
+            $this->mux->$route[0]($route[1], [$route[2], $route[3]], $route[4]);
+        }
+    }
+
+
+    /**
+     * find the right route using the path 'foo/bar/'
+     * store as current one
+     */
+    public function getMuxRouteCurrent($path)
+    {
+        $route = $this->mux->dispatch($path);
+        $this->setMuxRouteCurrent($route);
+        return $route;
+    }
+
+
+    public function setMuxRouteCurrent($route)
+    {
+        $this->muxRouteCurrent = $route;
+    }
+
+
+    public function getMuxRouteCurrentController()
+    {
+        return $this->muxRouteCurrent[2][0];
+    }
+
+
+    public function getMuxRouteCurrentControllerMethod()
+    {
+        return $this->muxRouteCurrent[2][1];
     }
 
 

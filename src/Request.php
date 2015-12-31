@@ -4,7 +4,7 @@ namespace Mwyatt\Core;
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  */
-class Request implements \Mwyatt\Core\RequestInterface
+class Request // implements \Mwyatt\Core\RequestInterface
 {
 
 
@@ -78,6 +78,19 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
+    public function setMuxUrlVars(array $route)
+    {
+        if (empty($route[3]['vars'])) {
+            return;
+        }
+        foreach ($route[3]['vars'] as $key => $value) {
+            if (!is_int($key)) {
+                $this->setUrlVar($key, $value);
+            }
+        }
+    }
+
+
     public function getPost($key)
     {
         return $this->getPropKey('post', $key);
@@ -93,6 +106,12 @@ class Request implements \Mwyatt\Core\RequestInterface
     public function getServer($key)
     {
         return $this->getPropKey('server', $key);
+    }
+
+
+    public function getSession($key)
+    {
+        return $this->getPropKey('session', $key);
     }
 
 

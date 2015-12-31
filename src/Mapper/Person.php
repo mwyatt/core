@@ -18,7 +18,8 @@ class Person extends \Mwyatt\Core\MapperAbstract
 	protected $addressMapper;
 
 
-	protected function getEntity(array $row) {
+	protected function getEntity(array $row)
+	{
 	    $comments = $this->addressMapper->findAll(
 	        array("post_id" => $row["id"]));
 	    return new Post($row["title"], $row["content"], $comments);
@@ -35,7 +36,8 @@ class Person extends \Mwyatt\Core\MapperAbstract
 	}
 
 
-	public function insert(\Mwyatt\Core\Model\Person $person) {
+	public function insert(\Mwyatt\Core\Model\Person $person)
+	{
 	    $person->id = $this->database->insert(
 	    	$this->getTableName(),
 	        [
@@ -46,7 +48,8 @@ class Person extends \Mwyatt\Core\MapperAbstract
 	}
 
 
-	public function delete($id) {
+	public function delete($id)
+	{
 	    if ($id instanceof \Mwyatt\Core\Model\Person) {
 	        $id = $id->id;
 	    }

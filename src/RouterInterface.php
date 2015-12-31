@@ -7,21 +7,14 @@ namespace Mwyatt\Core;
  */
 interface RouterInterface
 {
-
-
-    /**
-     * obtains response object from matched controller
-     * falls back to 404, or hits 500
-     * @param  string $path
-     * @return string       response content
-     */
-    public function getResponse($path);
-
-
-    /**
-     * add to the definition registry
-     * @param  string $path to the new definitions array
-     * @return null
-     */
-    public function appendRoutes(array $routes);
+    public function __construct(\Pux\Mux $mux);
+    public function getMux();
+    public function appendMuxRoutes(array $routes);
+    public function getMuxRouteCurrent($path);
+    public function setMuxRouteCurrent($route);
+    public function getMuxRouteCurrentController();
+    public function getMuxRouteCurrentControllerMethod();
+    public function executeRoute(array $route);
+    public function getUrlRoutes();
+    public function setHeaders(\Mwyatt\Core\ResponseInterface $response);
 }

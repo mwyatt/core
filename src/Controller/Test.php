@@ -12,24 +12,12 @@ class Test extends \Mwyatt\Core\Controller
 
     public function testSimple()
     {
-        return new \Mwyatt\Core\Response('testSimple', 200);
+        return new \Mwyatt\Core\Response('testSimpleContent', 200);
     }
 
 
-    public function testParams($name, $id)
+    public function testParams($request)
     {
-        return new \Mwyatt\Core\Response("testParams, $name, $id", 200);
-    }
-
-
-    public function testServerError()
-    {
-    	
-    }
-
-
-    public function testErrorNotFound()
-    {
-        return new \Mwyatt\Core\Response('testErrorNotFound', 404);
+        return new \Mwyatt\Core\Response("testParamsContent, {$request->getUrlVar('name')}, {$request->getUrlVar('id')}", 500);
     }
 }

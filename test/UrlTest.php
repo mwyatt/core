@@ -37,8 +37,21 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerate()
     {
-        $this->url->setRoutes(['key' => '/path/:id/']);
-        $this->assertEquals('http://192.168.1.24/core/path/1/', $this->url->generate('key', ['id' => 1]));
+        $this->testSetRoutes();
+        $this->assertEquals('http://192.168.1.24/core/foo/bar/1/', $this->url->generate('test.params', ['name' => 'bar', 'id' => 1]));
+        $this->assertEquals('http://192.168.1.24/core/', $this->url->generate('test.simple'));
+    }
+
+
+    public function testSetRoutes()
+    {
+        $router = new \Mwyatt\Core\Router(new \Pux\Mux);
+        $view = new \Mwyatt\Core\View;
+        $routes = array_merge(
+            include $view->getPathBasePackage('routes.php')
+        );
+        $router->appendMuxRoutes($routes);
+        $this->url->setRoutes($router->getMux());
     }
 
 

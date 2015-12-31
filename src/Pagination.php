@@ -65,7 +65,8 @@ class Pagination extends \Mwyatt\Core\Data implements \Mwyatt\Core\PaginationInt
 	/**
 	 * inject dependencies
 	 */
-	public function __construct(\Mwyatt\Core\UrlInterface $url) {
+	public function __construct(\Mwyatt\Core\UrlInterface $url)
+	{
 		$this->url = $url;
 	}
 

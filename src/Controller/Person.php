@@ -13,7 +13,7 @@ class Person extends \Mwyatt\Core\Controller
     public function all($request)
     {
         $servicePerson = $this->getService('Person');
-        $this->view->setDataKey('people', $servicePerson->getAll());
+        $this->view->data->offsetSet('people', $servicePerson->getAll());
         return $this->response($this->view->all());
     }
 

@@ -7,36 +7,82 @@ namespace Mwyatt\Core;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class View extends \Mwyatt\Core\Data // implements ViewInterface
+class View implements \Mwyatt\Core\ViewInterface
 {
 
 
-    public $templatePaths = [];
-
-
-    protected $pathProject;
-
-
-// pathBasePackage = this
-// pathBase = user
-
-
-
-    protected $pathPackage;
-
-
-    protected $assetTypes = ['mustache', 'css', 'js'];
+    /**
+     * the main data store for view information
+     * @var object \ArrayIterator
+     */
+    public $data;
 
 
     /**
-     * stores the path for the project which is utilising this
-     * composer package
+     * the paths which will be cycled through when looking for a template
+     * @var array
+     */
+    protected $templatePaths = [];
+
+
+    /**
+     * the base path for this package
+     * @var string
+     */
+    protected $pathBasePackage;
+
+
+    /**
+     * the base path for the dependee
+     * @var string
+     */
+    protected $pathBase;
+
+
+    /**
+     * the types of asset allowed
+     * @var array
+     */
+    protected $assetTypes = ['mst', 'css', 'js'];
+
+
+    /**
+     * define data and pathbasepackage
+     */
+    public function __construct()
+    {
+        $this->data = new \ArrayIterator;
+        $this->pathBasePackage = (string) __DIR__ . '/../';
+        $this->setupDataAsset();
+    }
+
+
+    /**
+     * stores data['asset.mustache'] = []
+     * @return null 
+     */
+    protected function setupDataAsset()
+    {
+        foreach ($this->assetTypes as $assetType) {
+            $this->data->offsetSet($this->getDataAssetKey($assetType), []);
+        }
+    }
+
+
+    protected function getDataAssetKey($type)
+    {
+        return 'asset' . ucfirst($type);
+    }
+
+
+    /**
+     * stores the path for the dependee
      * @param string $path 
      */
-    public function setPathProject($path)
+    public function setPathBase($path)
     {
-        $this->pathProject = $path;
-        $this->prependTemplatePath($path);
+        $this->pathBase = $path;
+        $this->appendTemplatePath($path);
     }
 
 
@@ -46,9 +92,9 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
      * @param  string $append
      * @return string
      */
-    public function getPath($append = '')
+    public function getPathBase($append = '')
     {
-        return $this->pathProject . $append;
+        return $this->pathBase . $append;
     }
 
 
@@ -57,26 +103,22 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
      * @param  string $append 
      * @return string         
      */
-    public function getPathPackage($append = '')
+    public function getPathBasePackage($append = '')
     {
-        return $this->pathPackage . $append;
+        return $this->pathBasePackage . $append;
     }
 
 
     /**
-     * while searching for templates it will look through an array
-     * of paths
-     * throws exception if the path does not exist or is not a directory
-     * @param  string $path
-     * @return object
+     * ensures that the path is a directory
+     * @param  string $path 
+     * @return null       may throw exception
      */
-    public function prependTemplatePath($path)
+    protected function testTemplatePath($path)
     {
         if (!is_dir($path)) {
-            throw new \Exception('path does not exist');
+            throw new \Exception("path '$path' does not exist");
         }
-        array_unshift($this->templatePaths, $path);
-        return $this;
     }
 
 
@@ -89,9 +131,7 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
      */
     public function appendTemplatePath($path)
     {
-        if (!is_dir($path)) {
-            throw new \Exception('path does not exist');
-        }
+        $this->testTemplatePath($path);
         $this->templatePaths[] = $path;
         return $this;
     }
@@ -111,24 +151,20 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
         }
 
         // push stored into method scope
-        extract($this->getData());
+        extract($this->data->getArrayCopy());
 
         // start output buffer
         // @todo start this at the start of the app?
         ob_start();
 
         // render template using extracted variables
-        include($path);
+        include $path;
         $content = ob_get_contents();
 
         // destroy output buffer
-        // @todo convert to ob_clean
         ob_end_clean();
 
-        // add this data to existing
-        $this->setData($content);
-
-        // return just loaded template result
+        // return render codes
         return $content;
     }
 
@@ -143,19 +179,14 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
     public function getPathTemplate($append, $ext = 'php')
     {
         $end = strtolower($append) . '.' . $ext;
+        $path = '';
         foreach ($this->templatePaths as $path) {
             $path .= $end;
             if (file_exists($path)) {
                 return $path;
             }
         }
-        throw new \Exception("unable to find template '$path'");
-    }
-
-
-    public function getPath()
-    {
-        // gimme the path which is the base, can be passed to other functions
+        throw new \Exception("template file '$path' does not exist");
     }
 
 
@@ -163,27 +194,18 @@ class View extends \Mwyatt\Core\Data // implements ViewInterface
      * allows easy registering of additional asset paths
      * these can be then added in order inside the skin
      * header/footer
-     * @param  string $type mustache|css|js
-     * @param  string $path foo/bar
-     * @return object
+     * @param  string $type must be in assetTypes
+     * @param  string $path the asset path
+     * @return null       
      */
     public function appendAsset($type, $path)
     {
-
-        // validate
         if (!in_array($type, $this->assetTypes)) {
-            return $this;
+            throw new \Exception("type '$path' is not a registered asset type");
         }
-
-        // set
-        $rootKey = 'asset';
-        if (!isset($this->data[$rootKey])) {
-            $this->data[$rootKey] = [];
-        }
-        if (!isset($this->data[$rootKey][$type])) {
-            $this->data[$rootKey][$type] = [];
-        }
-        $this->data[$rootKey][$type][] = $path;
-        return $this;
+        $key = $this->getDataAssetKey($type);
+        $paths = $this->data->offsetGet($key);
+        $paths[] = $path;
+        $this->data->offsetSet($key, $paths);
     }
 }

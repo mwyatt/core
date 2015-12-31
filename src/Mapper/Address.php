@@ -15,7 +15,8 @@ class Address extends \Mwyatt\Core\Mapper
     public $tableName = 'address';
 
 
-    protected function getEntity(array $row) {
+    protected function getEntity(array $row)
+    {
         return new \Mwyatt\Core\Model\Address(
             $row['id'],
             $row['postCode'],
@@ -24,7 +25,8 @@ class Address extends \Mwyatt\Core\Mapper
     }
 
     
-    public function insert(\Mwyatt\Core\Model\Address $add) {
+    public function insert(\Mwyatt\Core\Model\Address $add)
+    {
         $person->id = $this->database->insert(
             $this->getTableName(),
             [
@@ -35,7 +37,8 @@ class Address extends \Mwyatt\Core\Mapper
     }
 
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id instanceof \Mwyatt\Core\Model\Address) {
             $id = $id->id;
         }

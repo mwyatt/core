@@ -6,11 +6,32 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public function testConstruct()
+	public $controller;
+
+
+    public function __construct()
     {
-        $url = new \Mwyatt\Core\Url;
-        $database = new \Mwyatt\Core\Database;
-        $view = new \Mwyatt\Core\View;
-        $this->assertEquals('unique-name-cache', $cache->getKey());
+    	$this->controller = new \Mwyatt\Core\Controller(
+    		new \Mwyatt\Core\ServiceFactory,
+    		new \Mwyatt\Core\View
+		);
+    }
+
+
+    public function testResponse()
+    {
+    	$this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $this->controller->response());
+    }
+
+
+    public function testService()
+    {
+    	// not yet
+    }
+
+
+    public function testRedirect()
+    {
+    	// how?
     }
 }

@@ -32,7 +32,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      * used to build urls later on
      * @var array
      */
-    public $routes;
+    public $routes = [];
 
 
     /**
@@ -99,14 +99,14 @@ class Url implements \Mwyatt\Core\UrlInterface
 
     
     /**
-     * store routes in the class for use with generate
-     * keys all by key so each one must have a key?
+     * store routes found in mux as id => route/:foo/
      * @param array $routes
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(\Pux\Mux $mux)
     {
-        $this->routes = $routes;
-        return $this;
+        foreach ($mux->getRoutes() as $routeMux) {
+            $this->routes[$routeMux[3]['id']] = empty($routeMux[3]['pattern']) ? $routeMux[1] : $routeMux[3]['pattern'];
+        }
     }
 
 
