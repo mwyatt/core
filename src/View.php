@@ -53,6 +53,7 @@ class View implements \Mwyatt\Core\ViewInterface
     {
         $this->data = new \ArrayIterator;
         $this->pathBasePackage = (string) __DIR__ . '/../';
+        $this->appendTemplatePath($this->getPathBasePackage('template/'));
         $this->setupDataAsset();
     }
 

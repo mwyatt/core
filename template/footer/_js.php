@@ -1,7 +1,7 @@
-<?php if (!empty($asset['js'])) : ?>
-	<?php foreach ($asset['js'] as $path) : ?>
+<?php if (!empty($assetJs)) : ?>
+	<?php foreach ($assetJs as $path) : ?>
 
-<script src="<?php echo $this->url->generateVersioned('asset/' . $path . '.js') ?>"></script>
+<script src="<?php echo $url->generateVersioned($this->getPathBase('asset/' . $path . '.js')) ?>"></script>
 		
 	<?php
 endforeach ?>

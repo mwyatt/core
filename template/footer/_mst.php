@@ -1,5 +1,5 @@
-<?php if (isset($asset['mustache'])) : ?>
-	<?php foreach ($asset['mustache'] as $path) : ?>
+<?php if (isset($assetMst)) : ?>
+	<?php foreach ($assetMst as $path) : ?>
 
 <script id="mst-<?php echo str_replace('/', '-', $path) ?>" type="x-tmpl-mustache">
 
