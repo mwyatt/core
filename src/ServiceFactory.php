@@ -13,28 +13,28 @@ class ServiceFactory extends \Mwyatt\Core\Factory
 {
 
 
-	protected $mapperFactory;
+    protected $mapperFactory;
 
 
-	protected $modelFactory;
+    protected $modelFactory;
 
 
-	// public function __construct(
-	// 	\Mwyatt\Core\MapperFactory $mapperFactory,
-	// 	\Mwyatt\Core\ModelFactory $modelFactory
-	// )
-	// {
-	//     $this->mapperFactory = $mapperFactory;
-	//     $this->modelFactory = $modelFactory;
-	// }
+    // public function __construct(
+    // 	\Mwyatt\Core\MapperFactory $mapperFactory,
+    // 	\Mwyatt\Core\ModelFactory $modelFactory
+    // )
+    // {
+    //     $this->mapperFactory = $mapperFactory;
+    //     $this->modelFactory = $modelFactory;
+    // }
 
 
-	public function get($name)
-	{
-		$namespace = $this->defaultNamespace . $name;
-		return new $namespace(
-			$this->mapperFactory,
-			$this->modelFactory
-		);
-	}
+    public function get($name)
+    {
+        $namespace = $this->defaultNamespace . $name;
+        return new $namespace(
+            $this->mapperFactory,
+            $this->modelFactory
+        );
+    }
 }

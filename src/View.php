@@ -59,7 +59,7 @@ class View implements \Mwyatt\Core\ViewInterface
 
     /**
      * stores data['asset.mustache'] = []
-     * @return null 
+     * @return null
      */
     protected function setupDataAsset()
     {
@@ -77,7 +77,7 @@ class View implements \Mwyatt\Core\ViewInterface
 
     /**
      * stores the path for the dependee
-     * @param string $path 
+     * @param string $path
      */
     public function setPathBase($path)
     {
@@ -100,8 +100,8 @@ class View implements \Mwyatt\Core\ViewInterface
 
     /**
      * base path for the package
-     * @param  string $append 
-     * @return string         
+     * @param  string $append
+     * @return string
      */
     public function getPathBasePackage($append = '')
     {
@@ -111,7 +111,7 @@ class View implements \Mwyatt\Core\ViewInterface
 
     /**
      * ensures that the path is a directory
-     * @param  string $path 
+     * @param  string $path
      * @return null       may throw exception
      */
     protected function testTemplatePath($path)
@@ -196,7 +196,7 @@ class View implements \Mwyatt\Core\ViewInterface
      * header/footer
      * @param  string $type must be in assetTypes
      * @param  string $path the asset path
-     * @return null       
+     * @return null
      */
     public function appendAsset($type, $path)
     {

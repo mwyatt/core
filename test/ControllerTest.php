@@ -6,32 +6,32 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 
 
-	public $controller;
+    public $controller;
 
 
     public function __construct()
     {
-    	$this->controller = new \Mwyatt\Core\Controller(
-    		new \Mwyatt\Core\ServiceFactory,
-    		new \Mwyatt\Core\View
-		);
+        $this->controller = new \Mwyatt\Core\Controller(
+            new \Mwyatt\Core\ServiceFactory,
+            new \Mwyatt\Core\View
+        );
     }
 
 
     public function testResponse()
     {
-    	$this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $this->controller->response());
+        $this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $this->controller->response());
     }
 
 
     public function testService()
     {
-    	// not yet
+        // not yet
     }
 
 
     public function testRedirect()
     {
-    	// how?
+        // how?
     }
 }

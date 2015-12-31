@@ -52,8 +52,8 @@ class Url implements \Mwyatt\Core\UrlInterface
         $host = '',
         $request = '',
         $installDirectory = ''
-    )
-    {
+    ) {
+    
         $urlServer = strtolower($host . $request);
         $urlParts = explode($installDirectory, $urlServer);
         $base = reset($urlParts) . $installDirectory;

@@ -37,7 +37,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPathBase()
     {
-        $this->view->setPathBase($this->pathBase);;
+        $this->view->setPathBase($this->pathBase);
+        ;
         $this->assertEquals($this->pathBase . 'append/', $this->view->getPathBase('append/'));
     }
 

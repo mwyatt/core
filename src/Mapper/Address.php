@@ -32,7 +32,8 @@ class Address extends \Mwyatt\Core\Mapper
             [
                 "title" => $person->title,
                 "content" => $person->content
-            ]);
+            ]
+        );
         return $person->id;
     }
 

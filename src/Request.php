@@ -48,7 +48,7 @@ class Request // implements \Mwyatt\Core\RequestInterface
 
     /**
      * store the request files in a nice way
-     * @param array $files 
+     * @param array $files
      */
     public function setFiles(array $files)
     {
@@ -138,7 +138,7 @@ class Request // implements \Mwyatt\Core\RequestInterface
 
     /**
      * is this a post request?
-     * @return boolean 
+     * @return boolean
      */
     public function isPost()
     {
