@@ -153,6 +153,11 @@ class Url implements \Mwyatt\Core\UrlInterface
         if (!$key) {
             return $this->getProtocol() . $this->getBase();
         }
+
+        if (empty($this->routes[$key])) {
+            throw new \Exception("route '$key' cannot be generated");
+        }
+
         $route = $this->routes[$key];
         $path = ltrim($route, '/');
         foreach ($config as $key => $value) {

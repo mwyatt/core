@@ -43,6 +43,15 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @expectedException \Exception
+     */
+    public function testGenerateFail()
+    {
+        $this->assertEquals('http://192.168.1.24/core/foo/bar/1/', $this->url->generate('route.not.exist'));
+    }
+
+
     public function testSetRoutes()
     {
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);

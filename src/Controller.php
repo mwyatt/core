@@ -46,12 +46,11 @@ class Controller implements \Mwyatt\Core\ControllerInterface
      * @param  array $config if required
      * @return null
      */
-    public function redirect($key, $config = [])
+    public function redirect($key, $statusCode = 200, $config = [])
     {
 
         // generate string to redirect to from url
-        // redirect
-        header('location:' . $this->url->generate($key, $config));
+        header('location:' . $this->url->generate($key, $config), true, $statusCode);
 
         // always prevent continuation
         exit;
