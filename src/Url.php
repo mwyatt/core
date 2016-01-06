@@ -48,12 +48,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      * @param string $request          usually from $_SERVER['REQUEST_URI']
      * @param string $installDirectory foo/bar/
      */
-    public function __construct(
-        $host = '',
-        $request = '',
-        $installDirectory = ''
-    ) {
-    
+    public function __construct($host, $request, $installDirectory = '/') {
         $urlServer = strtolower($host . $request);
         $urlParts = explode($installDirectory, $urlServer);
         $base = reset($urlParts) . $installDirectory;
