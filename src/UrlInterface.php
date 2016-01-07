@@ -10,8 +10,9 @@ namespace Mwyatt\Core;
  */
 interface UrlInterface
 {
-    public function __construct($host, $request, $installDirectory = '');
+    public function __construct($host, $installPathQuery, $install = '');
     public function getPath();
+    public function getQueryArray();
     public function setRoutes(\Pux\Mux $mux);
     public function generate($key = 'home', $config = []);
     public function generateVersioned($pathBase, $pathAppend);

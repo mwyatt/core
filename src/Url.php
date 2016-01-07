@@ -17,14 +17,21 @@ class Url implements \Mwyatt\Core\UrlInterface
      * static string set in config somewhere
      * @var string
      */
-    public $base;
+    protected $base;
 
 
     /**
      * foo/bar/
      * @var string
      */
-    public $path;
+    protected $path;
+
+
+    /**
+     * foo=bar&bar=fo
+     * @var string
+     */
+    protected $query;
 
 
     /**
@@ -32,7 +39,7 @@ class Url implements \Mwyatt\Core\UrlInterface
      * used to build urls later on
      * @var array
      */
-    public $routes = [];
+    protected $routes = [];
 
 
     /**
@@ -40,23 +47,32 @@ class Url implements \Mwyatt\Core\UrlInterface
      * js will review this object so will need to know
      * @var string 'http://'
      */
-    public $protocol;
+    protected $protocol;
 
 
     /**
-     * @param string $host             usually from $_SERVER['HTTP_HOST']
-     * @param string $request          usually from $_SERVER['REQUEST_URI']
-     * @param string $installDirectory foo/bar/
+     * @param string $host              usually from $_SERVER['HTTP_HOST']
+     * @param string $installPathQuery  usually from $_SERVER['REQUEST_URI']
+     * @param string $install           foo/bar/
      */
-    public function __construct($host, $request, $installDirectory = '/') {
-        $urlServer = strtolower($host . $request);
-        $urlParts = explode($installDirectory, $urlServer);
-        $base = reset($urlParts) . $installDirectory;
-        $path = end($urlParts);
+    public function __construct($host, $installPathQuery, $install = '')
+    {
+        $installPathQueryParts = explode('?', $installPathQuery);
+
+        $host .= '/';
+
+        $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';
+
+        $installPath = reset($installPathQueryParts);
+
+        $path = str_replace($install, '', ltrim($installPath, '/'));
+
+        $base = $host . $install;
+
         $this->base = $base;
         $this->path = $path;
+        $this->query = $query;
         $this->protocol = $this->getProtocol();
-        return $this;
     }
 
 
@@ -66,6 +82,17 @@ class Url implements \Mwyatt\Core\UrlInterface
     public function getPath()
     {
         return $this->path;
+    }
+
+
+    /**
+     * return an array representation of the query string
+     * @return array 
+     */
+    public function getQueryArray()
+    {
+        parse_str($this->query, $queryArray);
+        return $queryArray;
     }
 
 
@@ -149,7 +176,7 @@ class Url implements \Mwyatt\Core\UrlInterface
             return $this->getProtocol() . $this->getBase();
         }
 
-        if (empty($this->routes[$key])) {
+        if (!array_key_exists($key, $this->routes)) {
             throw new \Exception("route '$key' cannot be generated");
         }
 

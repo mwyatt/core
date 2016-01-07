@@ -2,128 +2,77 @@
 
 namespace Mwyatt\Core;
 
-class Pagination extends \Mwyatt\Core\Data implements \Mwyatt\Core\PaginationInterface
+class Pagination implements \Mwyatt\Core\PaginationInterface
 {
 
 
     /**
-     * \Mwyatt\Core\Url
      * @var object
      */
-    public $url;
+    protected $url;
 
 
     /**
      * page you are currently on, defaulted to 1
      * @var integer
      */
-    public $pageCurrent = 1;
+    protected $pageCurrent = 1;
 
 
     /**
      * max items per page
      * @var integer
      */
-    public $maxPerPage = 10;
+    protected $maxPerPage = 10;
 
 
     /**
      * total results found
      * @var int
      */
-    public $totalRows;
+    protected $totalRows;
 
 
     /**
      * the ceil for pages which could be
      * @var int
      */
-    public $possiblePages;
+    protected $possiblePages;
 
 
-    /**
-     * which is the prev page
-     * @var array
-     */
-    public $previous;
-
-
-    /**
-     * which is the next page
-     * @var array
-     */
-    public $next;
-
-
-    /**
-     * all the pages as assoc array
-     * @var array
-     */
-    public $pages;
-    
-
-    /**
-     * inject dependencies
-     */
-    public function __construct(\Mwyatt\Core\UrlInterface $url)
+    public function __construct(\Mwyatt\Core\UrlInterface $url, $pageCurrent, $totalRows)
     {
         $this->url = $url;
-    }
-
-
-    public function setMaxPerPage($number)
-    {
-        return $this->maxPerPage = $number;
-    }
-    
-
-    public function initialise()
-    {
-        if (! $this->getTotalRows()) {
-            return;
-        }
-
-        // setup possible page count
+        $this->totalRows = $totalRows;
         $this->setPossiblePages();
-
-        // check validity
-        $this->sanitizeUserPage();
-
-        // set up the pagination array
-        $this->setPagination();
+        $this->setPageCurrent($pageCurrent);
     }
 
 
-    public function getPageCurrent()
+    /**
+     * configurable from outside
+     * @param int $value 
+     */
+    public function setMaxPerPage($value)
     {
-        return $this->pageCurrent;
+        $this->maxPerPage = $value;
     }
 
-
-    public function setPageCurrent($value)
-    {
-        $this->pageCurrent = $value;
-    }
-
-
-    public function getTotalRows()
-    {
-        return $this->totalRows;
-    }
-
-
-    public function setTotalRows($value)
-    {
-        $this->totalRows = $value;
-    }
-
-
+   
+    /**
+     * possible pages found by using total rows and maximum per page
+     */
     public function setPossiblePages()
     {
         $this->possiblePages = ceil($this->totalRows / $this->maxPerPage);
     }
 
 
+    /**
+     * get a limit array usable in an sql query
+     * @param  boolean $end ?
+     * @return array|int       
+     */
     public function getLimit($end = false)
     {
         $bottom = ($this->maxPerPage * ($this->pageCurrent - 1));
@@ -140,126 +89,101 @@ class Pagination extends \Mwyatt\Core\Data implements \Mwyatt\Core\PaginationInt
     }
 
 
-    public function getPossiblePages()
-    {
-        return $this->possiblePages;
-    }
-
-
     /**
-     * constructs an array to allow the user to paginate
-     * possibly have 2 options, one with full pagination
-     * another with just next and previous
-     * @return array
+     * build the pagination array
+     * @return array 
      */
-    public function setPagination()
+    public function generate()
     {
-
-        // only 1 page, dont show
-        if ($this->getPossiblePages() < 2) {
+        if ($this->possiblePages < 2) {
             return;
         }
 
-        // structure of object
-        $data = new \StdClass();
-        $data->previous = false;
-        $data->pages = array();
-        $data->next = false;
+        $pageCurrent = $this->pageCurrent;
+        $pagination = $this->getPaginationContainer();
 
-        // previous (if possible)
-        if ($this->getPageCurrent() > 1) {
-            $page = new \StdClass();
-            $page->url = $this->urlBuild($this->getPageCurrent() - 1);
-            $data->previous = $page;
+        // previous
+        if ($pageCurrent > 1) {
+            $pagination['previous'] = $this->getPaginationPage($this->urlBuildPageLink($pageCurrent - 1));
         }
         
-        // page 1, 2, 3
-        for ($index = 1; $index <= $this->getPossiblePages(); $index ++) {
-            $page = new \StdClass();
-            $page->current = ($this->getPageCurrent() == $index ? true : false);
-            $page->url = $this->urlBuild($index);
-            $data->pages[$index] = $page;
+        for ($index = 1; $index <= $this->possiblePages; $index ++) {
+            $pagination['pages'][$index] = $this->getPaginationPage($this->urlBuildPageLink($index), ($pageCurrent == $index ? true : false));
         }
 
-        // next only if possible
-        if ($this->getPageCurrent() < $this->getPossiblePages()) {
-            $page = new \StdClass();
-            // var_dump($this->getPageCurrent());
-            // exit;
-            $page->url = $this->urlBuild($this->getPageCurrent() + 1);
-            $data->next = $page;
+        // next
+        if ($pageCurrent < $this->possiblePages) {
+            $pagination['next'] = $this->getPaginationPage($this->urlBuildPageLink($pageCurrent + 1));
         }
 
-        // set
-        $this->setData($data);
+        return $pagination;
     }
 
 
-    public function getSummary()
+    protected function getPaginationContainer()
     {
-        return 'page ' . $this->getCurrentPage() . ' of ' . $this->getPossiblePages();
+        return [
+            'previous' => null,
+            'pages' => [],
+            'next' => null
+        ];
+    }
+
+
+    protected function getPaginationPage($url, $current = null)
+    {
+        return [
+            'url' => $url,
+            'current' => $current
+        ];
+    }
+
+
+    /**
+     * little text summary 'page 1 of 20'
+     * @return string 
+     */
+    public function getSummaryText()
+    {
+        return 'page ' . $this->pageCurrent . ' of ' . $this->possiblePages;
     }
     
 
     /**
-     * returns a url without any queries except the page
-     * number
-     * @param  int $pageNumber
-     * @return string             url
+     * add the page to the query string
+     * create an absolute url
+     * @param  int $page 
+     * @return string       absolute url
      */
-    public function urlBuild($key)
+    protected function urlBuildPageLink($page)
     {
-        $url = $this->url->generate();
-        $current = $this->url->getCache('current_sans_query');
-        $query = $this->url->getQuery();
-        parse_str($query, $queryParts);
-        $queryParts['page'] = $key;
-        $query = '?' . http_build_query($queryParts);
-        return $current . $query;
+        $url = $this->url;
+        $urlBase = $url->generate() . $url->getPath();
+        $queryParts = $url->getQueryArray();
+        $queryParts['page'] = $page;
+        return $urlBase . '?' . http_build_query($queryParts);
     }
 
-    
+        
     /**
-     * Next Page
-     *
-     * @return string|false The array value or false if it does not exist
+     * page is set within the constraints of lowest and highest value
+     * @param int $page 
      */
-    public function nextPage()
-    {
-        return $this->pageCurrent++;
-    }
-
-
-    public function getCurrentPage()
-    {
-        return $this->pageCurrent;
-    }
-
-    
-    /**
-     * Check Page GET Variable
-     *
-     * @todo remove ability to add '-100' perhaps using regex match on '-'?
-     * @return true|false The page GET value
-     */
-    public function sanitizeUserPage($valid = false)
+    protected function setPageCurrent($page)
     {
 
-        // page must exist
-        if (! array_key_exists('page', $_GET)) {
-            return;
-        }
-
-        // convert to int
-        $page = $_GET['page'];
+        // need both of these?
+        $page += 0;
         $page = (int) $page;
 
-        // under 1 or above possible is invalid
-        if ($page < 1 || $page > $this->getPossiblePages()) {
-            return;
+        // cant be below 1
+        $page = $page ? $page : 1;
+
+        // cant be above possible
+        if ($page > $this->possiblePages) {
+            $page = $this->possiblePages;
         }
 
-        // passed all checks
-        $this->setPageCurrent($_GET['page']);
+        $this->pageCurrent = $page;
     }
 }

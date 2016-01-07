@@ -9,7 +9,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     public $host = '192.168.1.24';
 
 
-    public $path = '/core/foo/bar/?foo=bar';
+    public $path = '/core/foo/bar/?foo=bar&so=la';
 
 
     public $pathInstall = 'core/';
@@ -21,17 +21,21 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testConstruct()
+    public function testGetPath()
     {
-        $this->assertEquals('foo/bar/?foo=bar', $this->url->getPath());
+        $this->assertEquals('foo/bar/', $this->url->getPath());
+        $urlAlt = new \Mwyatt\Core\Url($this->host, '/core/', $this->pathInstall);
+        $this->assertEquals('', $urlAlt->getPath());
     }
 
 
-    public function testGetPath()
+    public function testGetQueryArray()
     {
-        $this->assertEquals('foo/bar/?foo=bar', $this->url->getPath());
-        $urlAlt = new \Mwyatt\Core\Url($this->host, '/core/', $this->pathInstall);
-        $this->assertEquals('', $urlAlt->getPath());
+        $queryArray = $this->url->getQueryArray();
+        $this->assertArrayHasKey('foo', $queryArray);
+        $this->assertArrayHasKey('so', $queryArray);
+        $this->assertEquals('bar', $queryArray['foo']);
+        $this->assertEquals('la', $queryArray['so']);
     }
 
 
@@ -60,7 +64,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             include $view->getPathBasePackage('routes.php')
         );
         $router->appendMuxRoutes($routes);
-        $this->url->setRoutes($router->getMux());
+        $this->url->setRoutes($router->getMux());       
     }
 
 

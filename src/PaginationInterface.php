@@ -3,6 +3,4 @@
 namespace Mwyatt\Core;
 
 interface PaginationInterface
-{
-
-}
+{}
