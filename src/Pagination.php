@@ -40,12 +40,9 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
     protected $possiblePages;
 
 
-    public function __construct(\Mwyatt\Core\UrlInterface $url, $pageCurrent, $totalRows)
+    public function __construct(\Mwyatt\Core\UrlInterface $url)
     {
         $this->url = $url;
-        $this->totalRows = $totalRows;
-        $this->setPossiblePages();
-        $this->setPageCurrent($pageCurrent);
     }
 
 
@@ -93,8 +90,12 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
      * build the pagination array
      * @return array 
      */
-    public function generate()
+    public function generate($pageCurrent, $totalRows)
     {
+        $this->totalRows = $totalRows;
+        $this->setPossiblePages();
+        $this->setPageCurrent($pageCurrent);
+
         if ($this->possiblePages < 2) {
             return;
         }
