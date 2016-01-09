@@ -13,18 +13,18 @@ abstract class ServiceAbstract
 {
 
 
-	protected $mapperFactory;
+    protected $mapperFactory;
 
 
-	protected $modelFactory;
+    protected $modelFactory;
 
 
-	public function __construct(
-		\Mwyatt\Core\MapperFactory $mapperFactory,
-		\Mwyatt\Core\ModelFactory $modelFactory
-	)
-	{
-	    $this->mapperFactory = $mapperFactory;
-	    $this->modelFactory = $modelFactory;
-	}
+    public function __construct(
+        \Mwyatt\Core\MapperFactory $mapperFactory,
+        \Mwyatt\Core\ModelFactory $modelFactory
+    ) {
+    
+        $this->mapperFactory = $mapperFactory;
+        $this->modelFactory = $modelFactory;
+    }
 }

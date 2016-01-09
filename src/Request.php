@@ -118,8 +118,8 @@ class Request implements \Mwyatt\Core\RequestInterface
     /**
      * set a single session key
      * is this enough?
-     * @param string $key   
-     * @param mixed $value 
+     * @param string $key
+     * @param mixed $value
      */
     public function setSession($key, $value)
     {
@@ -130,8 +130,8 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     /**
      * removes session key and passes back the value
-     * @param  string $key 
-     * @return mixed      
+     * @param  string $key
+     * @return mixed
      */
     public function pullSession($key)
     {
