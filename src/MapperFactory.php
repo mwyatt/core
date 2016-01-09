@@ -16,9 +16,16 @@ class MapperFactory extends \Mwyatt\Core\Factory
 	protected $database;
 
 
-	public function __construct(\Mwyatt\Core\DatabaseInterface $database)
+	protected $modelFactory;
+
+
+	public function __construct(
+		\Mwyatt\Core\DatabaseInterface $database,
+		\Mwyatt\Core\ModelFactory $modelFactory,
+	)
 	{
 	    $this->database = $database;
+	    $this->modelFactory = $modelFactory;
 	}
 
 

@@ -3,11 +3,7 @@
 namespace Mwyatt\Core;
 
 /**
- * grouping of model patterns
- * uses full functionality from Data
  * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
 abstract class ServiceAbstract
 {
@@ -23,7 +19,6 @@ abstract class ServiceAbstract
         \Mwyatt\Core\MapperFactory $mapperFactory,
         \Mwyatt\Core\ModelFactory $modelFactory
     ) {
-    
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
     }

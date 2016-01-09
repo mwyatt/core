@@ -23,9 +23,5 @@ class Content
 	public $timeCreated;
 	
 
-
-    public function getName()
-    {
-    	return $this->nameFirst . ' ' . $this->nameLast;
-    }
+	
 }

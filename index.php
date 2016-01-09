@@ -2,14 +2,33 @@
 
 include 'vendor/autoload.php';
 
-$container = new \Pimple\Container;
-
-$container['path.base'] = (string) __DIR__ . '/';
-$container['ns.mapper'] = '\\Mwyatt\\Core\\Mapper\\';
-$container['ns.model'] = '\\Mwyatt\\Core\\Model\\';
+$pathBase = (string) __DIR__ . '/';
+$nsMapper = '\\Mwyatt\\Core\\Mapper\\';
+$nsModel = '\\Mwyatt\\Core\\Model\\';
 
 $container['database'] = function ($container) {
-    return new \Mwyatt\Core\Database\Pdo(include $container['path.base'] . 'config.php');
+	$config = include $pathBase . 'config.php';
+
+	$config = new \Doctrine\DBAL\Configuration();
+	$connectionParams = array(
+	    'dbname' => 'test_1',
+	    'user' => 'root',
+	    'password' => '123',
+	    'host' => 'localhost',
+	    'driver' => 'pdo_mysql',
+	);
+	$conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+	$statement = $conn->prepare('SELECT * FROM shop_brands');
+	$statement->execute();
+	$brands = $statement->fetchAll();
+
+
+	$huh = $conn->update('foo', array('name' => 'boop'), array('id' => 2));
+
+
+	
+    return new \Mwyatt\Core\Database\Pdo();
 };
 
 $container['cache'] = function ($container) {
@@ -54,10 +73,10 @@ exit;
 
 
 $mapperFactory = new \Mwyatt\Core\MapperFactory($database);
-$mapperFactory->setDefaultNamespace($container['ns.mapper']);
+$mapperFactory->setDefaultNamespace($nsMapper);
 
 $modelFactory = new \Mwyatt\Core\ModelFactory;
-$modelFactory->setDefaultNamespace($container['ns.model']);
+$modelFactory->setDefaultNamespace($nsModel);
 
 $serviceFactory = new \Mwyatt\Core\ServiceFactory(
     $mapperFactory,

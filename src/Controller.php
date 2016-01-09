@@ -32,7 +32,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     }
 
 
-    public function getService($name)
+    public function get($name)
     {
         return $this->serviceFactory->get($name);
     }

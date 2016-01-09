@@ -31,37 +31,19 @@ abstract class MapperAbstract
     }
 
 
-    abstract protected function getEntity(array $row);
-
-
     public function getDatabase()
     {
         return $this->database;
     }
 
 
-    /**
-     * @return string
-     */
     public function getTableName()
     {
-        if ($this->tableName) {
-            return $this->tableName;
-        }
+        return $this->tableName;
     }
 
 
-    public function findById($id)
-    {
-        $this->database->select($this->getTableName(), ['id' => $id]);
-        if (!$row = $this->database->fetch()) {
-            return null;
-        }
-        return $this->getEntity($row);
-    }
-
-
-    public function findAll($conditions = [])
+    public function selectAll($conditions = [])
     {
         $entities = [];
         $this->database->select($this->getTableName(), $conditions);
