@@ -115,6 +115,36 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
+    /**
+     * set a single session key
+     * is this enough?
+     * @param string $key   
+     * @param mixed $value 
+     */
+    public function setSession($key, $value)
+    {
+        $_SESSION[$key] = $value;
+        $this->session[$key] = $value;
+    }
+
+
+    /**
+     * removes session key and passes back the value
+     * @param  string $key 
+     * @return mixed      
+     */
+    public function pullSession($key)
+    {
+        if (empty($_SESSION[$key])) {
+            return;
+        }
+        $value = $_SESSION[$key];
+        unset($_SESSION[$key]);
+        unset($this->session[$key]);
+        return $value;
+    }
+
+
     public function getFiles()
     {
         return $this->files;

@@ -6,7 +6,7 @@ namespace Mwyatt\Core\Service;
  * always returns domain objects?
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  */
-class Person extends \Mwyatt\Core\Service
+class Person extends \Mwyatt\Core\ServiceAbstract
 {
 
 
@@ -24,7 +24,7 @@ class Person extends \Mwyatt\Core\Service
 
     public function getAll()
     {
-        $mapperPerson = $this->container['mapperFactory']->get('Person');
+        $mapperPerson = $this->mapperFactory->get('Person');
 
 
         $people = $mapperPerson->read();
