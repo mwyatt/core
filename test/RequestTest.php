@@ -18,9 +18,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGet()
+    public function testGetQuery()
     {
-        $this->assertEquals('bar', $this->request->get('foo'));
+        $this->assertEquals('bar', $this->request->getQuery('foo'));
         $this->assertEquals('bar', $this->request->getPost('foo'));
     }
 

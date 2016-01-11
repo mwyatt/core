@@ -6,6 +6,9 @@ $pathBase = (string) __DIR__ . '/';
 $nsMapper = '\\Mwyatt\\Core\\Mapper\\';
 $nsModel = '\\Mwyatt\\Core\\Model\\';
 
+
+$container = new \Pimple\Container;
+
 $container['database'] = function ($container) {
 	$config = include $pathBase . 'config.php';
 
@@ -25,7 +28,6 @@ $container['database'] = function ($container) {
 
 
 	$huh = $conn->update('foo', array('name' => 'boop'), array('id' => 2));
-
 
 	
     return new \Mwyatt\Core\Database\Pdo();
