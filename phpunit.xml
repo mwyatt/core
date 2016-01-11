@@ -8,7 +8,7 @@
 			<file>test/RequestTest.php</file>
 			<file>test/ResponseTest.php</file>
 			<file>test/RouterTest.php</file>
-			<file>test/ControllerTest.php</file>
+			<!-- <file>test/ControllerTest.php</file> -->
 			<!-- <file>test/DatabaseTest.php</file> -->
 			<!-- <file>test/UtilityObjectIteratorTest.php</file> -->
 			<!-- <file>test/CacheTest.php</file> -->

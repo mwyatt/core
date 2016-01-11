@@ -1,9 +1,0 @@
-[
-	{
-		"path": "api/ping/",
-		"key": "api/ping",
-		"type": "get",
-		"controller": "\\Avdis\\Inventory\\Api\\Module\\Ping",
-		"method": "ping"
-	}
-]

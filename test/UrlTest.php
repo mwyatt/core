@@ -64,7 +64,27 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             include $view->getPathBasePackage('routes.php')
         );
         $router->appendMuxRoutes($routes);
-        $this->url->setRoutes($router->getMux());       
+        $this->url->setRoutes($router->getMux());
+    }
+
+
+    public function testGetRoutes()
+    {
+        $this->testSetRoutes();
+        
+        // testing that the route without the id is not stored here
+        // as produces a bug when json encoding
+        $this->assertCount(2, $this->url->getRoutes());
+    }
+
+
+    public function testJsonSerialize()
+    {
+        $this->testSetRoutes();
+        
+        // test jsonencoding for when within templates
+        // if anything changes within the url object this will break
+        $this->assertEquals(136, strlen(json_encode($this->url)));
     }
 
 

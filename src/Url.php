@@ -3,12 +3,9 @@
 namespace Mwyatt\Core;
 
 /**
- * the aim of this class is to do all things url
  * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Url implements \Mwyatt\Core\UrlInterface
+class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 {
 
 
@@ -108,7 +105,7 @@ class Url implements \Mwyatt\Core\UrlInterface
     /**
      * @return array
      */
-    private function getRoutes()
+    public function getRoutes()
     {
         return $this->routes;
     }
@@ -122,12 +119,16 @@ class Url implements \Mwyatt\Core\UrlInterface
     
     /**
      * store routes found in mux as id => route/:foo/
+     * some routes wont have an id as they are post or something
+     * these do not need to be stored as they wont need generating
      * @param array $routes
      */
     public function setRoutes(\Pux\Mux $mux)
     {
         foreach ($mux->getRoutes() as $routeMux) {
-            $this->routes[$routeMux[3]['id']] = empty($routeMux[3]['pattern']) ? $routeMux[1] : $routeMux[3]['pattern'];
+            if (!empty($routeMux[3]['id'])) {
+                $this->routes[$routeMux[3]['id']] = empty($routeMux[3]['pattern']) ? $routeMux[1] : $routeMux[3]['pattern'];
+            }
         }
     }
 
@@ -206,5 +207,19 @@ class Url implements \Mwyatt\Core\UrlInterface
 
         // return url to asset with modified time as query var
         return $this->generate() . $pathAppend . '?' . $timeModified;
+    }
+
+
+    /**
+     * face for object when being json encoded
+     * @return array 
+     */
+    public function jsonSerialize() {
+        return [
+            'base' => $this->getBase(),
+            'path' => $this->getPath(),
+            'routes' => $this->getRoutes(),
+            'protocol' => $this->getProtocol()
+        ];
     }
 }

@@ -38,18 +38,20 @@ class Router //implements \Mwyatt\Core\RouterInterface
 
 
     /**
-     * stores array of routes into mux, must match this format
-     * 0 - request type e.g. get
-     * 1 - relative url path to match
-     * 2 - controller namespace
-     * 3 - controller method name
-     * 4 - options
+     * stores array of routes into mux, must have the correct
+     * numerical keys
      * @param  array  $routes
      */
     public function appendMuxRoutes(array $routes)
     {
         foreach ($routes as $route) {
-            $this->mux->$route[0]($route[1], [$route[2], $route[3]], $route[4]);
+            $requestType = $route[0];
+            $urlPath = $route[1];
+            $controller = $route[2];
+            $method = $route[3];
+            $options = empty($route[4]) ? [] : $route[4];
+            
+            $this->mux->$requestType($urlPath, [$controller, $method], $options);
         }
     }
 
