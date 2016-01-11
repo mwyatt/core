@@ -8,7 +8,7 @@ interface RequestInterface
 {
     public function __construct();
     public function setFiles(array $files);
-    public function get($key);
+    public function getQuery($key);
     public function getUrlVar($key);
     public function setUrlVar($key, $value);
     public function setMuxUrlVars(array $route);

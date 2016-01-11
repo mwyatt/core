@@ -60,7 +60,18 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
+    /**
+     * deprecated for 'getQuery'
+     * @param  string $key 
+     * @return string      
+     */
     public function get($key)
+    {
+        return $this->getQuery($key);
+    }
+
+
+    public function getQuery($key)
     {
         return $this->getPropKey('get', $key);
     }
