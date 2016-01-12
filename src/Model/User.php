@@ -4,7 +4,7 @@ namespace Mwyatt\Core\Model;
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  */
-class User
+class User extends \Mwyatt\Core\ModelAbstract
 {
 
 
@@ -17,10 +17,10 @@ class User
     protected $nameLast;
 
 
-    protected $activity;
-
-
     protected $emailAddress;
+
+    
+    public $activity;
 
 
     public function getNameFull()
@@ -31,7 +31,14 @@ class User
 
     public function setEmailAddress($value)
     {
-        // test email here
-        // throw exceptions
+        \Assert\Assertion::assertEmail($value);
+        $this->nameFirst = $value;
+    }
+
+
+    public function setNameFirst($value)
+    {
+        \Assert\Assertion::assertString($value);
+        $this->nameFirst = $value;
     }
 }

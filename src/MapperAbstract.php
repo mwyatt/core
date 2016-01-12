@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
 abstract class MapperAbstract
 {
@@ -22,7 +20,13 @@ abstract class MapperAbstract
      * the name of table being read
      * @var string
      */
-    protected $tableName;
+    const TABLE = 'foo';
+
+
+    /**
+     * namespace of the model
+     */
+    const MODEL = '\\Mwyatt\\Core\\Model\\Foo';
 
 
     public function __construct(\Mwyatt\Core\DatabaseInterface $database)
@@ -31,30 +35,28 @@ abstract class MapperAbstract
     }
 
 
-    public function getDatabase()
+    public function fetchAll($type = \PDO::FETCH_CLASS)
     {
-        return $this->database;
+        $queryBuilder = $this->database->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from($this::TABLE);
+        $statement = $this->database->prepare($queryBuilder->getSQL());
+        $statement->execute();
+        $statement->fetchAll($type, $this::MODEL);
     }
 
 
-    public function getTableName()
+    public function fetchColumn($values, $column = 'id')
     {
-        return $this->tableName;
-    }
-
-
-    public function selectAll($conditions = [])
-    {
-        $entities = [];
-        $this->database->select($this->getTableName(), $conditions);
-        $rows = $this->database->fetchAll();
-
-        if ($rows) {
-            foreach ($rows as $row) {
-                $entities[] = $this->getEntity($row);
-            }
-        }
-
-        return $entities;
+        $queryBuilder = $this->database->createQueryBuilder();
+        $queryBuilder
+            ->select('*')
+            ->from($this::TABLE)
+            ->where("$column = ?")
+            ->setParameter(0, $values);
+        $statement = $this->database->prepare($queryBuilder->getSQL());
+        $statement->execute();
+        $statement->fetchAll($type, $this::MODEL);
     }
 }

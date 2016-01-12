@@ -59,4 +59,10 @@ class Response implements \Mwyatt\Core\ResponseInterface
         $this->statusCode = $statusCode;
         return $this;
     }
+
+
+    public function setHeader($header)
+    {
+        header($header);
+    }
 }

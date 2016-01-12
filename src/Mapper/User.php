@@ -7,27 +7,16 @@ namespace Mwyatt\Core\Mapper;
  */
 class User extends \Mwyatt\Core\MapperAbstract
 {
-    
+    const TABLE = 'user';
+    const MODEL = '\\Mwyatt\\Core\\Model\\User';
 
-    public $tableName = 'user';
 
-
-    public function mapModel($result)
+    public function fetchActivity($users)
     {
-        $user = $this->getModel('User');
-        $user->nameFirst = $result['nameFirst'];
-        $user->nameLast = $result['nameLast'];
-        $user->emailAddress = $result['emailAddress'];
-    }
-
-
-    public function getAll()
-    {
-        $results = $this->database->findAll();
-        $models = [];
-        foreach ($results as $result) {
-            $models[] = $this->mapModel($result);
+        $userIds = $users->extractProperty('id');
+        $activities = $activityMapper->fetchColumn($userIds, 'userId');
+        foreach ($users as $user) {
+            $user->activity = $activities->extractProperty()
         }
-        return $models;
     }
 }

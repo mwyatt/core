@@ -40,8 +40,8 @@ class ObjectIterator implements \ArrayIterator
     public function keyByProperty($property)
     {
         $thisCopy = $this->unsetGetCopy();
-        foreach ($thisCopy as $entity) {
-            $this[$entity->$property] = $entity;
+        foreach ($thisCopy as $model) {
+            $this[$model->$property] = $model;
         }
     }
 
@@ -72,8 +72,8 @@ class ObjectIterator implements \ArrayIterator
      */
     public function filterOutByProperty($property, $value)
     {
-        foreach ($this as $key => $entity) {
-            if ($entity->$property == $value) {
+        foreach ($this as $key => $model) {
+            if ($model->$property == $value) {
                 $this->offsetUnset($key);
             }
         }
@@ -92,5 +92,39 @@ class ObjectIterator implements \ArrayIterator
             $collection[] = $value->$property;
         }
         return $collection;
+    }
+
+
+    /**
+     * get the model which matches the property value
+     * @param  string $property
+     * @param  mixed $value
+     * @return object
+     */
+    public function getByPropertyValue($property, $value)
+    {
+        foreach ($this as $model) {
+            if ($model->get($property) == $value) {
+                return $model;
+            }
+        }
+    }
+
+
+    /**
+     * get the model which matches the property value
+     * @param  string $property
+     * @param  mixed $value
+     * @return object
+     */
+    public function getByPropertyValueMulti($property, $value)
+    {
+        $models = [];
+        foreach ($this as $model) {
+            if ($model->get($property) == $value) {
+                $models[] = $model;
+            }
+        }
+        return $models;
     }
 }
