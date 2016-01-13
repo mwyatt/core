@@ -23,7 +23,7 @@ class User extends \Mwyatt\Core\ModelAbstract
     public $activity;
 
 
-    public function getNameFull()
+    public function getName()
     {
         return $this->nameFirst . ' ' . $this->nameLast;
     }
@@ -32,6 +32,7 @@ class User extends \Mwyatt\Core\ModelAbstract
     public function setEmailAddress($value)
     {
         \Assert\Assertion::assertEmail($value);
+        // assert max length
         $this->nameFirst = $value;
     }
 
@@ -39,6 +40,15 @@ class User extends \Mwyatt\Core\ModelAbstract
     public function setNameFirst($value)
     {
         \Assert\Assertion::assertString($value);
+        // assert min length
+        // assert max length
+        // assert is a string
         $this->nameFirst = $value;
+    }
+
+
+    public function setNameFirst()
+    {
+        # code...
     }
 }
