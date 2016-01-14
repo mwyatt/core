@@ -16,8 +16,15 @@ class User extends \Mwyatt\Core\ServiceAbstract
     }
 
 
+    public function appendActivity()
+    {
+    	// checks a central storage for the user objects
+    	// finds the required activity and appends
+    }
+
+
     public function create()
     {
-        # code...
+
     }
 }
