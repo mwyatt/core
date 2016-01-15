@@ -19,7 +19,8 @@ class User extends \Mwyatt\Core\ServiceAbstract
     public function appendActivity()
     {
     	// checks a central storage for the user objects
-    	// finds the required activity and appends
+    	// finds the required activities and appends where needed
+        // 
     }
 
 
