@@ -65,6 +65,12 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
     }
 
 
+    public function getPossiblePages()
+    {
+        return $this->possiblePages;
+    }
+
+
     /**
      * get a limit array usable in an sql query
      * @param  boolean $end ?

@@ -10,4 +10,5 @@ interface PaginationInterface
 	public function getLimit($end = false);
 	public function generate($pageCurrent, $totalRows);
 	public function getSummaryText();
+    public function getPossiblePages();
 }
