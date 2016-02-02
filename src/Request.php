@@ -173,7 +173,7 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     private function getPropKey($type, $key, $default = null)
     {
-        return empty($this->{$type}[$key]) ? $default : $this->{$type}[$key];
+        return isset($this->{$type}[$key]) ? $this->{$type}[$key] : null;
     }
 
 
