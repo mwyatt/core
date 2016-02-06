@@ -30,7 +30,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('\Mwyatt\Core\Controller\Test', $controllerNs);
         $this->assertEquals('testSimple', $controllerMethod);
 
-        $controller = new $controllerNs(new \Mwyatt\Core\ServiceFactory, $view);
+        $controller = new $controllerNs(new \Pimple\Container, $view);
         $response = $controller->$controllerMethod($request);
 
         $this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $response);

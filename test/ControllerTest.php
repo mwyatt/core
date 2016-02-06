@@ -12,7 +12,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function __construct()
     {
         $this->controller = new \Mwyatt\Core\Controller(
-            new \Mwyatt\Core\ServiceFactory,
+            new \Pimple\Container,
             new \Mwyatt\Core\View
         );
     }
@@ -26,7 +26,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testService()
     {
-        // not yet
+        $container = new \Pimple\Container;
+        $container['thing'] = 'ok';
+        echo '<pre>';
+        print_r($container);
+        echo '</pre>';
+        exit;
+        
     }
 
 
