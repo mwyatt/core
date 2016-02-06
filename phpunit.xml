@@ -1,7 +1,16 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
-		<testsuite name="misc">
+		<testsuite name="inprogress">
+			<!-- <file>test/DatabaseTest.php</file> -->
+			<!-- <file>test/UtilityObjectIteratorTest.php</file> -->
+			<!-- <file>test/CacheTest.php</file> -->
+			<!-- <file>test/ModelTest.php</file> -->
+			<!-- <file>test/MailTest.php</file> -->
+		</testsuite>
+		<testsuite name="development">
 			<file>test/ControllerTest.php</file>
+		</testsuite>
+		<testsuite name="stable">
 			<file>test/PaginationTest.php</file>
 			<file>test/HelperTest.php</file>
 			<file>test/UrlTest.php</file>
@@ -9,11 +18,6 @@
 			<file>test/RequestTest.php</file>
 			<file>test/ResponseTest.php</file>
 			<file>test/RouterTest.php</file>
-			<!-- <file>test/DatabaseTest.php</file> -->
-			<!-- <file>test/UtilityObjectIteratorTest.php</file> -->
-			<!-- <file>test/CacheTest.php</file> -->
-			<!-- <file>test/ModelTest.php</file> -->
-			<!-- <file>test/MailTest.php</file> -->
 		</testsuite>
 	</testsuites>
 </phpunit>

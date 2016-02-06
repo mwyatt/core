@@ -26,13 +26,12 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testService()
     {
+        $key = 'thing';
+        $value = 'ok';
         $container = new \Pimple\Container;
-        $container['thing'] = 'ok';
-        echo '<pre>';
-        print_r($container);
-        echo '</pre>';
-        exit;
-        
+        $container[$key] = $value;
+        $controller = new \Mwyatt\Core\Controller($container, new \Mwyatt\Core\View);
+        $this->assertEquals($value, $controller->get($key));
     }
 
 
