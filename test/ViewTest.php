@@ -49,6 +49,12 @@ class ViewTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testPrependTemplatePath()
+    {
+        $this->assertTrue($this->view->prependTemplatePath($this->view->getPathBasePackage('template/')));
+    }
+
+
     /**
      * @expectedException \Exception
      */

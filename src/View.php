@@ -137,6 +137,20 @@ class View implements \Mwyatt\Core\ViewInterface
         return $this;
     }
 
+
+    /**
+     * prepends the path so it takes prioroty over other template paths
+     * @param  string
+     * @return object
+     */
+    public function prependTemplatePath($path)
+    {
+        $this->testTemplatePath($path);
+        $countOld = count($this->templatePaths);
+        $countNew = array_unshift($this->templatePaths, $path);
+        return $countNew == ($countOld + 1);
+    }
+
     
     /**
      * load template file and prepare all objects for output
