@@ -13,6 +13,7 @@ class MapperFactory extends \Mwyatt\Core\Factory
 {
 
 
+	protected $defaultNamespace = '\\Mwyatt\\Core\\Mapper\\';
 	protected $database;
 
 
@@ -21,7 +22,7 @@ class MapperFactory extends \Mwyatt\Core\Factory
 
 	public function __construct(
 		\Mwyatt\Core\DatabaseInterface $database,
-		\Mwyatt\Core\ModelFactory $modelFactory,
+		\Mwyatt\Core\ModelFactory $modelFactory
 	)
 	{
 	    $this->database = $database;

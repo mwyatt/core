@@ -60,12 +60,13 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     public function redirect($key, $config = [], $statusCode = 302)
     {
         $url = $this->get('Url');
+        $urlNew = $url->generate($key, $config);
 
         // generate string to redirect to from url
-        header('location:' . $url->generate($key, $config), true, $statusCode);
+        header('location:' . $urlNew, true, $statusCode);
 
-        // always prevent continuation
-        exit;
+        // for testing?
+        return $urlNew;
     }
 
 

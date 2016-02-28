@@ -8,8 +8,15 @@ namespace Mwyatt\Core\Database;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterface
+class Pdo implements \Mwyatt\Core\DatabaseInterface
 {
+   
+
+    /**
+     * database handle
+     * @var object
+     */
+    protected $connection;
 
 
     /**
@@ -21,34 +28,39 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
 
     /**
      * the default fetch mode
-     * @var int?
+     * assoc is passed to the data mapper
+     * @var int
      */
     protected $fetchMode = \PDO::FETCH_ASSOC;
-   
 
-    public function __construct(array $credentials)
+
+    /**
+     * ?
+     * @var int
+     */
+    protected $fetchStyle = \PDO::FETCH_COLUMN;
+    
+
+    public function setFetchMode($mode)
     {
-        $this->setCredentials($credentials);
+        return $this->fetchMode = $mode;
     }
 
 
-    public function connect()
+    public function connect(array $credentials)
     {
+
+        // already connected
         if ($this->connection) {
             return;
         }
-        $this->validateCredentials([
-            'database.host',
-            'database.port',
-            'database.basename',
-            'database.username',
-            'database.password'
-        ]);
+
         try {
+
             // set data source name
             $dataSourceName = [
-                'mysql:host' => $this->credentials['database.host'],
-                'dbname' => $this->credentials['database.basename'],
+                'mysql:host' => $credentials['host'],
+                'dbname' => $credentials['basename'],
                 'charset' => 'utf8'
             ];
             foreach ($dataSourceName as $key => $value) {
@@ -59,8 +71,8 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
             // connect
             $this->connection = new \PDO(
                 $dataSourceName,
-                $this->credentials['database.username'],
-                $this->credentials['database.password']
+                $credentials['username'],
+                $credentials['password']
             );
         
             // set error mode
@@ -75,27 +87,16 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
 
     public function disconnect()
     {
-        $this->connection = null;
-    }
-
-
-    public function getStatement()
-    {
-        if ($this->statement === null) {
-            throw new \PDOException("There is no PDOStatement object for use.");
-        }
-        return $this->statement;
+        return !$this->connection = null;
     }
 
 
     public function prepare($sql, $options = [])
     {
-        $this->connect();
         try {
-            $this->statement = $this->connection->prepare($sql, $options);
-            return $this;
+            return $this->statement = $this->connection->prepare($sql, $options);
         } catch (\PDOException $exception) {
-            throw new \RunTimeException($exception->getMessage());
+            throw new \Exception($exception->getMessage());
         }
     }
     
@@ -103,74 +104,53 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
     public function execute($parameters = [])
     {
         try {
-            $this->getStatement()->execute($parameters);
-            return $this;
+            return $this->statement->execute($parameters);
         } catch (\PDOException $exception) {
-            throw new \RunTimeException($exception->getMessage());
+            throw new \Exception($exception->getMessage());
         }
     }
 
 
-    public function countAffectedRows()
+    public function fetch()
     {
         try {
-            return $this->getStatement()->rowCount();
+            return $this->statement->fetch($this->fetchMode);
         } catch (\PDOException $exception) {
-            throw new \RunTimeException($exception->getMessage());
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+
+    public function fetchAll()
+    {
+        try {
+            return $this->statement->fetchAll($this->fetchMode);
+        } catch (\PDOException $exception) {
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+
+    public function getRowCount()
+    {
+        try {
+            return $this->statement->rowCount();
+        } catch (\PDOException $exception) {
+            throw new \Exception($exception->getMessage());
         }
     }
     
 
     public function getLastInsertId($name = null)
     {
-        $this->connect();
         return $this->connection->lastInsertId($name);
     }
-
-    
-    public function fetch(
-        $fetchStyle = null,
-        $cursorOrientation = null,
-        $cursorOffset = null
-    ) {
-    
-        if ($fetchStyle === null) {
-            $fetchStyle = $this->fetchMode;
-        }
- 
-        try {
-            return $this->getStatement()->fetch(
-                $fetchStyle,
-                $cursorOrientation,
-                $cursorOffset
-            );
-        } catch (\PDOException $exception) {
-            throw new \RunTimeException($exception->getMessage());
-        }
-    }
+}
 
 
-    public function fetchAll($fetchStyle = null, $column = 0)
-    {
-        if ($fetchStyle === null) {
-            $fetchStyle = $this->fetchMode;
-        }
+/*
 
-        try {
-            return $fetchStyle === \PDO::FETCH_COLUMN
-               ? $this->getStatement()->fetchAll($fetchStyle, $column)
-               : $this->getStatement()->fetchAll($fetchStyle);
-        } catch (\PDOException $exception) {
-            throw new \RunTimeException($exception->getMessage());
-        }
-    }
-     
-    
-    public function select(
-        $table,
-        $bind = [],
-        $boolOperator = "AND"
-    ) {
+    public function select($sql) {
     
         if ($bind) {
             $where = [];
@@ -220,7 +200,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
             . (($where) ? " WHERE " . $where : " ");
         return $this->prepare($sql)
             ->execute($bind)
-            ->countAffectedRows();
+            ->getRowCount();
     }
     
 
@@ -229,6 +209,7 @@ class Pdo extends \Mwyatt\Core\Database //implements \Mwyatt\Core\DatabaseInterf
         $sql = "DELETE FROM " . $table . (($where) ? " WHERE " . $where : " ");
         return $this->prepare($sql)
             ->execute()
-            ->countAffectedRows();
+            ->getRowCount();
     }
-}
+
+ */

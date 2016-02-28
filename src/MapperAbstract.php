@@ -35,7 +35,7 @@ abstract class MapperAbstract
     }
 
 
-    public function fetchAll($type = \PDO::FETCH_CLASS)
+    public function findAll($type = \PDO::FETCH_CLASS)
     {
         $queryBuilder = $this->database->createQueryBuilder();
         $queryBuilder
@@ -47,7 +47,7 @@ abstract class MapperAbstract
     }
 
 
-    public function fetchColumn($values, $column = 'id')
+    public function findColumn($values, $column = 'id')
     {
         $queryBuilder = $this->database->createQueryBuilder();
         $queryBuilder
@@ -58,5 +58,38 @@ abstract class MapperAbstract
         $statement = $this->database->prepare($queryBuilder->getSQL());
         $statement->execute();
         $statement->fetchAll($type, $this::MODEL);
+    }
+
+
+    public function insert(array $models)
+    {
+
+        // statement
+        $statement = [];
+        $lastInsertIds = [];
+        $statement[] = 'insert into';
+        $statement[] = $this::TABLE;
+        $statement[] = '(' . $this->getSqlFieldsWriteable() . ')';
+        $statement[] = 'values';
+        $statement[] = '(' . $this->getSqlPositionalPlaceholdersWriteable() . ')';
+
+        // prepare
+        $sth = $this->database->dbh->prepare(implode(' ', $statement));
+
+        // execute
+        foreach ($entities as $entity) {
+            $sth->execute($this->getSthExecutePositionalWriteable($entity));
+            if ($sth->rowCount()) {
+                $lastInsertIds[] = intval($this->database->dbh->lastInsertId());
+            }
+        }
+
+        return $$lastInsertIds;
+    }
+
+
+    public function delete(array $models, $column = 'id')
+    {
+
     }
 }

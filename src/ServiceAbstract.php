@@ -22,4 +22,16 @@ abstract class ServiceAbstract
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
     }
+
+
+    public function getModel($name)
+    {
+        return $this->modelFactory->get($name);
+    }
+
+
+    public function getMapper($name)
+    {
+        return $this->mapperFactory->get($name);
+    }
 }

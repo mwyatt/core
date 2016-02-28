@@ -1,16 +1,17 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
-		<testsuite name="inprogress">
-			<!-- <file>test/DatabaseTest.php</file> -->
-			<!-- <file>test/UtilityObjectIteratorTest.php</file> -->
-			<!-- <file>test/CacheTest.php</file> -->
-			<!-- <file>test/ModelTest.php</file> -->
-			<!-- <file>test/MailTest.php</file> -->
+		<testsuite name="plan">
+			<file>test/UtilityObjectIteratorTest.php</file>
+			<file>test/CacheTest.php</file>
+			<file>test/ModelTest.php</file>
+			<file>test/MailTest.php</file>
 		</testsuite>
-		<testsuite name="development">
-			<file>test/ControllerTest.php</file>
+		<testsuite name="dev">
+			<file>test/DatabaseTest.php</file>
+			<file>test/ServiceTest.php</file>
 		</testsuite>
 		<testsuite name="stable">
+			<file>test/ControllerTest.php</file>
 			<file>test/PaginationTest.php</file>
 			<file>test/HelperTest.php</file>
 			<file>test/UrlTest.php</file>
