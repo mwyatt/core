@@ -16,21 +16,21 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $container = new \Pimple\Container;
 
-        $container['Database'] = function($container) {
+        $container['Database'] = function ($container) {
             $database = new \Mwyatt\Core\Database\Pdo;
             $database->connect(['host' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123']);
             return $database;
         };
 
-        $container['ModelFactory'] = function($container) {
+        $container['ModelFactory'] = function ($container) {
             return new \Mwyatt\Core\ModelFactory;
         };
 
-        $container['MapperFactory'] = function($container) {
+        $container['MapperFactory'] = function ($container) {
             return new \Mwyatt\Core\MapperFactory($container['Database'], $container['ModelFactory']);
         };
 
-        $container['User'] = function($container) {
+        $container['User'] = function ($container) {
             return new \Mwyatt\Core\Service\User($container['MapperFactory'], $container['ModelFactory']);
         };
 
@@ -52,7 +52,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testSelect($value='')
+    public function testSelect($value = '')
     {
         
     }

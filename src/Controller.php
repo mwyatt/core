@@ -19,8 +19,8 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     public function __construct(
         \Pimple\Container $serviceFactory,
         \Mwyatt\Core\View $view
-    )
-    {
+    ) {
+    
         $this->serviceFactory = $serviceFactory;
         $this->view = $view;
     }
@@ -28,9 +28,9 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     /**
      * get a response object
-     * @param  string  $content    
-     * @param  integer $statusCode 
-     * @return object              
+     * @param  string  $content
+     * @param  integer $statusCode
+     * @return object
      */
     public function response($content = '', $statusCode = 200)
     {
@@ -40,8 +40,8 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     /**
      * get service from the pimple container
-     * @param  string $name 
-     * @return object       
+     * @param  string $name
+     * @return object
      */
     public function get($name)
     {
@@ -72,8 +72,8 @@ class Controller implements \Mwyatt\Core\ControllerInterface
 
     /**
      * renders a template and returns the string
-     * @param  string $templatePath 
-     * @return string               
+     * @param  string $templatePath
+     * @return string
      */
     public function render($templatePath)
     {
@@ -84,7 +84,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
     /**
      * 404 not found exception, will be caught in the routing area
      * @param  string $message what was not found
-     * @return object          
+     * @return object
      */
     public function exceptionNotFound($message = '')
     {

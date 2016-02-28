@@ -90,4 +90,3 @@ class User extends \Mwyatt\Core\ModelAbstract
         $this->timeRegistered = $value;
     }
 }
-  
