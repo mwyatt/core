@@ -9,13 +9,6 @@ class User extends \Mwyatt\Core\ServiceAbstract
 {
 
 
-    public function getAll()
-    {
-        $mapperUser = $this->mapperFactory->get('User');
-        return $mapperUser->getAll();
-    }
-
-
     public function appendActivity()
     {
         // checks a central storage for the user objects
@@ -44,11 +37,5 @@ class User extends \Mwyatt\Core\ServiceAbstract
         $userModel->id = $userMapper->insert($userModel);
 
         return $userModel;
-    }
-
-
-    public function findById($id)
-    {
-        
     }
 }

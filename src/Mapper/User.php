@@ -7,8 +7,6 @@ namespace Mwyatt\Core\Mapper;
  */
 class User extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInterface
 {
-    const TABLE = 'user';
-    const MODEL = '\\Mwyatt\\Core\\Model\\User';
 
 
     public function insert(\Mwyatt\Core\Model\User $user)

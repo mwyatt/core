@@ -32,6 +32,8 @@ abstract class MapperAbstract
     public function __construct(\Mwyatt\Core\DatabaseInterface $database)
     {
         $this->database = $database;
+        $this::TABLE = strtolower($this::getClass());
+        $this::MODEL = '\\Mwyatt\\Core\\Model\\' . $this::getClass();
     }
 
 
