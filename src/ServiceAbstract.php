@@ -37,8 +37,8 @@ abstract class ServiceAbstract
 
 
     public function findAll()
-    {
-        $mapper = $this->mapperFactory->get($this::getClass());
+    {   
+        $mapper = $this->mapperFactory->get(end(explode('\\', get_class($this))));
         return $mapper->findAll();
     }
 }

@@ -11,7 +11,7 @@ class User extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInt
 
     public function insert(\Mwyatt\Core\Model\User $user)
     {
-        $sql = ['insert', 'into', $this::TABLE, '('];
+        $sql = ['insert', 'into', $this->table, '('];
         $sql[] = implode(', ', ['email', 'password', 'timeRegistered', 'nameFirst', 'nameLast']);
         $sql[] = ') values (';
         $sql[] = implode(', ', ['?', '?', '?', '?', '?']);

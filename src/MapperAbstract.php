@@ -20,32 +20,32 @@ abstract class MapperAbstract
      * the name of table being read
      * @var string
      */
-    const TABLE = 'foo';
+    protected $table;
 
 
     /**
      * namespace of the model
      */
-    const MODEL = '\\Mwyatt\\Core\\Model\\Foo';
+    protected $model;
 
 
     public function __construct(\Mwyatt\Core\DatabaseInterface $database)
     {
         $this->database = $database;
-        $this::TABLE = strtolower($this::getClass());
-        $this::MODEL = '\\Mwyatt\\Core\\Model\\' . $this::getClass();
+        $this->table = strtolower(end(explode('\\', get_class($this))));
+        $this->model = '\\Mwyatt\\Core\\Model\\' . end(explode('\\', get_class($this)));
     }
 
 
     public function findAll($type = \PDO::FETCH_CLASS)
     {
-        $queryBuilder = $this->database->createQueryBuilder();
-        $queryBuilder
-            ->select('*')
-            ->from($this::TABLE);
-        $statement = $this->database->prepare($queryBuilder->getSQL());
-        $statement->execute();
-        $statement->fetchAll($type, $this::MODEL);
+        $sql = ['select', '*', 'from', $this->table];
+
+        $this->database->prepare(implode(' ', $sql));
+        $this->database->execute();
+        
+        $this->database->setFetchMode($type);
+        return $this->database->fetchAll();
     }
 
 
@@ -54,12 +54,12 @@ abstract class MapperAbstract
         $queryBuilder = $this->database->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from($this::TABLE)
+            ->from($this->table)
             ->where("$column = ?")
             ->setParameter(0, $values);
         $statement = $this->database->prepare($queryBuilder->getSQL());
         $statement->execute();
-        $statement->fetchAll($type, $this::MODEL);
+        $statement->fetchAll($type, $this->model);
     }
 
 
@@ -70,7 +70,7 @@ abstract class MapperAbstract
         $statement = [];
         $lastInsertIds = [];
         $statement[] = 'insert into';
-        $statement[] = $this::TABLE;
+        $statement[] = $this->table;
         $statement[] = '(' . $this->getSqlFieldsWriteable() . ')';
         $statement[] = 'values';
         $statement[] = '(' . $this->getSqlPositionalPlaceholdersWriteable() . ')';
@@ -86,7 +86,7 @@ abstract class MapperAbstract
             }
         }
 
-        return $$lastInsertIds;
+        return $lastInsertIds;
     }
 
 

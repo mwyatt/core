@@ -41,7 +41,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $userService = $this->controller->get('User');
-        $userModel = $user->insert([
+        $userModel = $userService->insert([
             'email' => 'martin.wyatt@gmail.com',
             'password' => md5('123123123'),
             'timeRegistered' => time(),
@@ -55,7 +55,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testSelect()
     {
         $userService = $this->controller->get('User');
-        $users = $user->findAll();
+        $users = $userService->findAll();
         echo '<pre>';
         print_r($users);
         echo '</pre>';

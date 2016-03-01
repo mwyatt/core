@@ -32,14 +32,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
      * @var int
      */
     protected $fetchMode = \PDO::FETCH_ASSOC;
+    // \PDO::FETCH_COLUMN
 
-
-    /**
-     * ?
-     * @var int
-     */
-    protected $fetchStyle = \PDO::FETCH_COLUMN;
-    
 
     public function setFetchMode($mode)
     {
@@ -111,7 +105,7 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function fetch()
+    public function fetch($mode, $argument = null)
     {
         try {
             return $this->statement->fetch($this->fetchMode);
@@ -121,10 +115,14 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function fetchAll()
+    public function fetchAll($mode, $argument = null)
     {
         try {
-            return $this->statement->fetchAll($this->fetchMode);
+            if ($this->fetchMode == \PDO::FETCH_CLASS) {
+                return $this->statement->fetchAll($this->fetchMode, $this->model);
+            } else {
+                return $this->statement->fetchAll($this->fetchMode);
+            }
         } catch (\PDOException $exception) {
             throw new \Exception($exception->getMessage());
         }
