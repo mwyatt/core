@@ -26,21 +26,6 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     protected $statement;
 
 
-    /**
-     * the default fetch mode
-     * assoc is passed to the data mapper
-     * @var int
-     */
-    protected $fetchMode = \PDO::FETCH_ASSOC;
-    // \PDO::FETCH_COLUMN
-
-
-    public function setFetchMode($mode)
-    {
-        return $this->fetchMode = $mode;
-    }
-
-
     public function connect(array $credentials)
     {
 
@@ -105,23 +90,23 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function fetch($mode, $argument = null)
+    public function fetch($mode = \PDO::FETCH_ASSOC, $argument = null)
     {
         try {
-            return $this->statement->fetch($this->fetchMode);
+            return $this->statement->fetch($mode);
         } catch (\PDOException $exception) {
             throw new \Exception($exception->getMessage());
         }
     }
 
 
-    public function fetchAll($mode, $argument = null)
+    public function fetchAll($mode = \PDO::FETCH_ASSOC, $class = null, $argument = null)
     {
         try {
-            if ($this->fetchMode == \PDO::FETCH_CLASS) {
-                return $this->statement->fetchAll($this->fetchMode, $this->model);
+            if ($mode == \PDO::FETCH_CLASS && $class) {
+                return $this->statement->fetchAll($mode, $class);
             } else {
-                return $this->statement->fetchAll($this->fetchMode);
+                return $this->statement->fetchAll($mode);
             }
         } catch (\PDOException $exception) {
             throw new \Exception($exception->getMessage());

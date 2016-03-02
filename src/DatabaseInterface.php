@@ -9,7 +9,6 @@ namespace Mwyatt\Core;
  */
 interface DatabaseInterface
 {
-    public function setFetchMode($mode);
     public function connect(array $credentials);
     public function disconnect();
     public function prepare($sql, $options = []);

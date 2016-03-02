@@ -44,8 +44,7 @@ abstract class MapperAbstract
         $this->database->prepare(implode(' ', $sql));
         $this->database->execute();
         
-        $this->database->setFetchMode($type);
-        return $this->database->fetchAll();
+        return $this->database->fetchAll($type, $this->model);
     }
 
 
