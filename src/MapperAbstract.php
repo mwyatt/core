@@ -61,10 +61,10 @@ abstract class MapperAbstract
         $sql = ['select', '*', 'from', $this->table, 'where', $column, '= ?'];
 
         $this->database->prepare(implode(' ', $sql));
-echo '<pre>';
-print_r($this->database->fetch($type, $this->model));
-echo '</pre>';
-exit;
+        echo '<pre>';
+        print_r($this->database->fetch($type, $this->model));
+        echo '</pre>';
+        exit;
 
         foreach ($values as $value) {
             $this->database->execute([$values]);
