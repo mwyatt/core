@@ -37,6 +37,12 @@ abstract class MapperAbstract
     }
 
 
+    public function returnObjects($arrayOfObjecta)
+    {
+        return new \Mwyatt\Core\Utility\ObjectIterator($arrayOfObjecta);
+    }
+
+
     public function findAll($type = \PDO::FETCH_CLASS)
     {
         $sql = ['select', '*', 'from', $this->table];
@@ -44,21 +50,28 @@ abstract class MapperAbstract
         $this->database->prepare(implode(' ', $sql));
         $this->database->execute();
         
-        return $this->database->fetchAll($type, $this->model);
+        return $this->returnObjects($this->database->fetchAll($type, $this->model));
     }
 
 
     public function findColumn($values, $column = 'id')
     {
-        $queryBuilder = $this->database->createQueryBuilder();
-        $queryBuilder
-            ->select('*')
-            ->from($this->table)
-            ->where("$column = ?")
-            ->setParameter(0, $values);
-        $statement = $this->database->prepare($queryBuilder->getSQL());
-        $statement->execute();
-        $statement->fetchAll($type, $this->model);
+        $results = [];
+
+        $sql = ['select', '*', 'from', $this->table, 'where', $column, '= ?'];
+
+        $this->database->prepare(implode(' ', $sql));
+echo '<pre>';
+print_r($this->database->fetch($type, $this->model));
+echo '</pre>';
+exit;
+
+        foreach ($values as $value) {
+            $this->database->execute([$values]);
+            $results[] = $this->database->fetch($type, $this->model);
+        }
+        
+        return $this->returnObjects($results);
     }
 
 

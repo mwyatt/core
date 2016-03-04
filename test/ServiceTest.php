@@ -12,6 +12,15 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public $controller;
 
 
+    public $exampleUserData = [
+        'email' => 'martin.wyatt@gmail.com',
+        'password' => '123123123',
+        'timeRegistered' => 129038190382392,
+        'nameFirst' => 'Martin',
+        'nameLast' => 'Wyatt'
+    ];
+
+
     public function setUp()
     {
         $container = new \Pimple\Container;
@@ -40,26 +49,33 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $userService = $this->controller->get('User');
-        $userModel = $userService->insert([
-            'email' => 'martin.wyatt@gmail.com',
-            'password' => md5('123123123'),
-            'timeRegistered' => time(),
-            'nameFirst' => 'Martin',
-            'nameLast' => 'Wyatt'
-        ]);
-        $this->assertGreaterThan(0, $userModel->id);
+        $serviceUser = $this->controller->get('User');
+        $modelUser = $serviceUser->insert($this->exampleUserData);
+        $this->assertGreaterThan(0, $modelUser->id);
     }
 
 
     public function testSelect()
     {
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        echo '<pre>';
-        print_r($users);
-        echo '</pre>';
-        exit;
+        $serviceUser = $this->controller->get('User');
+        $users = $serviceUser->findAll();
+
+        $this->assertGreaterThan(1, $users->count());
+    }
+
+
+    public function testUpdate()
+    {
+        $serviceUser = $this->controller->get('User');
+        $modelUser = $serviceUser->insert($this->exampleUserData);
+        $modelUser = $serviceUser->findById($modelUser->id);
+
+        $this->assertInstanceOf('Mwyatt\\Core\\Model\\User', $modelUser);
+    }
+
+
+    public function testDelete()
+    {
         
     }
 }

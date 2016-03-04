@@ -25,17 +25,25 @@ class User extends \Mwyatt\Core\ServiceAbstract
      */
     public function insert($user)
     {
-        $userModel = $this->modelFactory->get('User');
-        $userMapper = $this->mapperFactory->get('User');
+        $modelUser = $this->modelFactory->get('User');
+        $mapperUser = $this->mapperFactory->get('User');
 
-        $userModel->setEmail($user['email']);
-        $userModel->setNameFirst($user['nameFirst']);
-        $userModel->setNameLast($user['nameLast']);
-        $userModel->setPassword($user['password']);
-        $userModel->setTimeRegistered(time());
+        $modelUser->setEmail($user['email']);
+        $modelUser->setNameFirst($user['nameFirst']);
+        $modelUser->setNameLast($user['nameLast']);
+        $modelUser->setPassword($user['password']);
+        $modelUser->setTimeRegistered(time());
         
-        $userModel->id = $userMapper->insert($userModel);
+        $modelUser->id = $mapperUser->insert($modelUser);
 
-        return $userModel;
+        return $modelUser;
+    }
+
+
+    public function findById($id)
+    {
+        $mapperUser = $this->mapperFactory->get('User');
+        $modelUsers = $mapperUser->findColumn([$id], 'id');
+        return $modelUsers->current();
     }
 }

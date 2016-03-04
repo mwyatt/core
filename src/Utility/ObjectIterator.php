@@ -8,7 +8,7 @@ namespace Mwyatt\Core\Utility;
  * @version     0.1
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class ObjectIterator implements \ArrayIterator
+class ObjectIterator extends \ArrayIterator
 {
 
 
