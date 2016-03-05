@@ -28,4 +28,15 @@ class User extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInt
         
         return $this->database->getLastInsertId();
     }
+
+
+    public function deleteById($id)
+    {
+        $sql = ['delete', 'from', $this->table, 'where id = ?'];
+
+        $this->database->prepare(implode(' ', $sql));
+        $this->database->execute([$id]);
+
+        return $this->database->getRowCount();
+    }
 }

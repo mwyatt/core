@@ -23,7 +23,7 @@ class User extends \Mwyatt\Core\ServiceAbstract
      * @param  array $user assoc
      * @return object       model/user
      */
-    public function insert($user)
+    public function insert(array $user)
     {
         $modelUser = $this->modelFactory->get('User');
         $mapperUser = $this->mapperFactory->get('User');
@@ -45,5 +45,12 @@ class User extends \Mwyatt\Core\ServiceAbstract
         $mapperUser = $this->mapperFactory->get('User');
         $modelUsers = $mapperUser->findColumn([$id], 'id');
         return $modelUsers->current();
+    }
+
+
+    public function deleteById($userId)
+    {
+        $mapperUser = $this->mapperFactory->get('User');
+        return $mapperUser->deleteById($userId);
     }
 }

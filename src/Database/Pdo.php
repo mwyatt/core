@@ -90,23 +90,25 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function fetch($mode = \PDO::FETCH_ASSOC, $argument = null)
+    public function fetch($mode = \PDO::FETCH_ASSOC)
     {
-        try {
-            return $this->statement->fetch($mode);
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
-        }
+        return $this->fetcheroo('fetch', $mode);
     }
 
 
-    public function fetchAll($mode = \PDO::FETCH_ASSOC, $class = null, $argument = null)
+    public function fetchAll($mode = \PDO::FETCH_ASSOC, $argument = null)
+    {
+        return $this->fetcheroo('fetchAll', $mode, $argument);
+    }
+
+
+    public function fetcheroo($method, $mode, $argument)
     {
         try {
-            if ($mode == \PDO::FETCH_CLASS && $class) {
-                return $this->statement->fetchAll($mode, $class);
+            if ($argument) {
+                return $this->statement->$method($mode, $argument);
             } else {
-                return $this->statement->fetchAll($mode);
+                return $this->statement->$method($mode);
             }
         } catch (\PDOException $exception) {
             throw new \Exception($exception->getMessage());

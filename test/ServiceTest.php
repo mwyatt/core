@@ -60,7 +60,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $serviceUser = $this->controller->get('User');
         $users = $serviceUser->findAll();
 
-        $this->assertGreaterThan(1, $users->count());
+        $this->assertGreaterThan(0, $users->count());
     }
 
 
@@ -76,6 +76,11 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        
+        $serviceUser = $this->controller->get('User');
+        $modelUsers = $serviceUser->findAll();
+
+        foreach ($modelUsers as $modelUser) {
+            $this->assertGreaterThan(0, $serviceUser->deleteById($modelUser->id));
+        }
     }
 }

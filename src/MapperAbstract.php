@@ -29,6 +29,9 @@ abstract class MapperAbstract
     protected $model;
 
 
+    protected $fetchType = \PDO::FETCH_CLASS;
+
+
     public function __construct(\Mwyatt\Core\DatabaseInterface $database)
     {
         $this->database = $database;
@@ -37,41 +40,46 @@ abstract class MapperAbstract
     }
 
 
-    public function returnObjects($arrayOfObjecta)
+    public function setFetchType($type)
+    {
+        $this->fetchType = $type;
+    }
+
+
+    public function getIterator($arrayOfObjecta)
     {
         return new \Mwyatt\Core\Utility\ObjectIterator($arrayOfObjecta);
     }
 
 
-    public function findAll($type = \PDO::FETCH_CLASS)
+    public function findAll()
     {
         $sql = ['select', '*', 'from', $this->table];
 
         $this->database->prepare(implode(' ', $sql));
         $this->database->execute();
         
-        return $this->returnObjects($this->database->fetchAll($type, $this->model));
+        return $this->getIterator($this->database->fetchAll($this->fetchType, $this->model));
     }
 
 
     public function findColumn($values, $column = 'id')
     {
         $results = [];
+        $sqlParams = [];
 
-        $sql = ['select', '*', 'from', $this->table, 'where', $column, '= ?'];
-
-        $this->database->prepare(implode(' ', $sql));
-        echo '<pre>';
-        print_r($this->database->fetch($type, $this->model));
-        echo '</pre>';
-        exit;
+        $sql = ['select', '*', 'from', $this->table, 'where', $column, '='];
 
         foreach ($values as $value) {
-            $this->database->execute([$values]);
-            $results[] = $this->database->fetch($type, $this->model);
+            $sqlParams[] = '?';
         }
-        
-        return $this->returnObjects($results);
+        $sql[] = implode(', ', $sqlParams);
+
+        $this->database->prepare(implode(' ', $sql));
+
+        $this->database->execute($values);
+
+        return $this->getIterator($this->database->fetchAll($this->fetchType, $this->model));
     }
 
 
@@ -99,11 +107,5 @@ abstract class MapperAbstract
         }
 
         return $lastInsertIds;
-    }
-
-
-    public function delete(array $models, $column = 'id')
-    {
-
     }
 }

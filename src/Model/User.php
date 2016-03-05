@@ -42,6 +42,21 @@ class User extends \Mwyatt\Core\ModelAbstract
     public $activity;
 
 
+    // public function __construct(
+    //     $nameFirst,
+    //     $nameLast,
+    //     $email,
+    //     $password,
+    //     $timeRegistered
+    // )
+    // {
+    //     $this->setEmail($email)
+    //     $this->setNameFirst($nameFirst)
+    //     $this->setNameLast($nameLast)
+    //     $this->setPassword($password)
+    // }
+
+
     public function getNameFull()
     {
         return $this->nameFirst . ' ' . $this->nameLast;
