@@ -6,39 +6,27 @@ class CacheTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public function testSetGetKey()
-    {
-        $cache = new \Mwyatt\Core\Cache('unique-name-cache');
-        $this->assertEquals('unique-name-cache', $cache->getKey());
-    }
+    public $fileName = 'bar.foo';
 
 
     public function testCreate()
     {
-        $cache = new \Mwyatt\Core\Cache('unique-name-cache');
+        $cache = new \Mwyatt\Core\Cache;
         $data = 'foo-bar';
-        $this->assertTrue($cache->create($data));
+        $this->assertGreaterThan(0, $cache->create($this->fileName, $data));
     }
 
 
     public function testRead()
     {
-        $cache = new \Mwyatt\Core\Cache('unique-name-cache');
-        $cache->read();
-        $this->assertEquals('foo-bar', $cache->getData());
+        $cache = new \Mwyatt\Core\Cache;
+        $this->assertEquals('foo-bar', $cache->read($this->fileName));
     }
 
 
     public function testDelete()
     {
-        // $cache = new \Mwyatt\Core\Cache('unique-name-cache');
-        // $this->assertTrue($cache->delete());
-    }
-
-
-    public function testFlush()
-    {
-        // $cache = new \Mwyatt\Core\Cache;
-        // $cache->flush();
+        $cache = new \Mwyatt\Core\Cache;
+        $this->assertTrue($cache->delete($this->fileName));
     }
 }

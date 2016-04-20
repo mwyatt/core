@@ -6,114 +6,35 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    /**
-     * must be before registry filled
-     * @expectedException Exception
-     */
-    public function testConnectFail()
-    {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $credentials = include (string) __DIR__ . '/../config.php';
-        $credentials['database.password'] = null;
-        $database->setCredentials($credentials);
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-    }
-
-
-    /**
-     * should not throw exception
-     */
-    public function testConnect()
-    {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-    }
+    public $exampleUserData = [
+        'email' => 'martin.wyatt@gmail.com',
+        'password' => '123123123',
+        'timeRegistered' => 129038190382392,
+        'nameFirst' => 'Martin',
+        'nameLast' => 'Wyatt'
+    ];
 
 
     public function testCreate()
     {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-        $entityTest = new \Mwyatt\Core\Entity\Test;
-        $entityTest->bar = 'test';
-
-        // multi
-        $modelTest->create([$entityTest, $entityTest]);
-        $this->assertCount(2, $modelTest->getData());
-
-        // single
-        $modelTest->create([$entityTest]);
-        $this->assertCount(1, $modelTest->getData());
+        $user = new \Mwyatt\Core\Model\User;
     }
 
 
-    public function testRead()
+    public function testSetPass()
     {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-        $modelTest->read();
-        $this->assertGreaterThan(0, $modelTest->getData());
+        $user = new \Mwyatt\Core\Model\User;
+        $user->setEmail($this->exampleUserData['email']);
+        $this->assertEquals($user->email, $this->exampleUserData['email']);
     }
 
 
     /**
-     * read by known string which will exist
-     * then read by known ids from results and compare count
+     * @expectedException \Exception
      */
-    public function testReadColumn()
+    public function testSetFail()
     {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-
-        // string
-        $modelTest->readColumn(['test'], 'bar');
-        $this->assertGreaterThan(0, $modelTest->getData());
-
-        // get ids
-        $ids = [];
-        foreach ($modelTest->getData() as $entityTest) {
-            $ids[] = $entityTest->getId();
-        }
-
-        // int
-        $modelTest->readColumn($ids);
-        $this->assertCount(count($ids), $modelTest->getData());
-    }
-
-
-    public function testUpdate()
-    {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-        $modelTest->read();
-        $dataCount = count($modelTest->getData());
-        foreach ($modelTest->getData() as $entityTest) {
-            $entityTest->bar = 'test-updated';
-        }
-        $modelTest->update($modelTest->getData());
-        foreach ($modelTest->getData() as $success) {
-            $this->assertEquals(1, $success);
-        }
-        $this->assertCount($dataCount, $modelTest->getData());
-    }
-
-
-    public function testDelete()
-    {
-        $database = new \Mwyatt\Core\Database\Pdo;
-        $database->setCredentials(include (string) __DIR__ . '/../config.php');
-        $modelTest = new \Mwyatt\Core\Model\Test($database);
-        $modelTest->read();
-        $dataCount = count($modelTest->getData());
-        $modelTest->delete($modelTest->getData());
-        foreach ($modelTest->getData() as $success) {
-            $this->assertEquals(1, $success);
-        }
-        $this->assertCount($dataCount, $modelTest->getData());
+        $user = new \Mwyatt\Core\Model\User;
+        $user->setEmail('failureemail.com');
     }
 }

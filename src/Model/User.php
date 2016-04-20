@@ -1,23 +1,11 @@
 <?php
+
 namespace Mwyatt\Core\Model;
-
-/*
-    CREATE TABLE `user` (
-      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-      `email` varchar(50) NOT NULL DEFAULT '',
-      `password` varchar(255) NOT NULL DEFAULT '',
-      `timeRegistered` int(10) unsigned DEFAULT NULL,
-      `nameFirst` varchar(75) NOT NULL DEFAULT '',
-      `nameLast` varchar(75) NOT NULL DEFAULT '',
-      PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
- */
 
 /**
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  */
-class User extends \Mwyatt\Core\ModelAbstract
+class User
 {
 
 
@@ -40,21 +28,6 @@ class User extends \Mwyatt\Core\ModelAbstract
 
     
     public $activity;
-
-
-    // public function __construct(
-    //     $nameFirst,
-    //     $nameLast,
-    //     $email,
-    //     $password,
-    //     $timeRegistered
-    // )
-    // {
-    //     $this->setEmail($email)
-    //     $this->setNameFirst($nameFirst)
-    //     $this->setNameLast($nameLast)
-    //     $this->setPassword($password)
-    // }
 
 
     public function getNameFull()

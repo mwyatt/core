@@ -1,14 +1,8 @@
 <?php
 
-namespace Mwyatt\Core\Utility;
+namespace Mwyatt\Core;
 
-/**
- * extends the arrayiterator which allows for complex transforms
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
- */
-class ObjectIterator extends \ArrayIterator
+class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIteratorInterface
 {
 
 

@@ -17,14 +17,7 @@ class Cache implements \Mwyatt\Core\CacheInterface
 	 * folder house for cache
 	 * @var string
 	 */
-	protected $path = 'cache/';
-
-
-	/**
-	 * the filepath and name for the file of focus
-	 * @var string
-	 */
-	protected $key = '';
+	protected $dirDefault = 'cache/';
 
 
 	/**
@@ -34,34 +27,40 @@ class Cache implements \Mwyatt\Core\CacheInterface
 	protected $pathBase;
 
 
-	/**
-	 * typical extension used
-	 * @var string
-	 */
-	protected $extension = '';
-
-
 	protected $data;
 
 
 	/**
-	 * set the key to work with when caching data
+	 * fire in a storage path which cache will work with
 	 * @param string $key path/foo-bar
 	 */
-	public function __construct($key)
+	public function __construct($path = '')
 	{
-        $this->pathBase = (string) (__DIR__ . '/../');
-        $this->setKey($key);
+		if (!$path) {
+			$path = (string) (__DIR__ . '/../') . $this->dirDefault;
+		}
+		$this->setPathBase($path);
 	}
 
 
-	/**
-	 * returns the full path for a cached item regardless if it exists
-	 * @param  string $key this-delimiter-space
-	 * @return string      
-	 */
-	protected function getFilePath($key) {
-		return $this->pathBase . $this->path . $this->getKey() . $this->extension;
+	public function setPathBase($path)
+	{
+		$this->isWritable($path);
+		$this->pathBase = $path;
+	}
+
+
+	public function getPathBase($append = '')
+	{
+		return $this->pathBase . $append;
+	}
+
+
+	protected function isWritable($path)
+	{
+		if (!is_writable($path)) {
+			throw new \Exception("Cache path '$path' is not writable.");
+		}
 	}
 
 
@@ -72,29 +71,17 @@ class Cache implements \Mwyatt\Core\CacheInterface
 	 * @param  array $data 
 	 * @return bool       
 	 */
-	public function create($data)
+	public function create($fileName, $data)
 	{
-		$key = $this->getKey();
-		$path = $this->getFilePath($key);
+		$path = $this->getPathBase($fileName);
 
-		// file must not already exist
 		if (file_exists($path)) {
 			return;
 		}
 
-		// stringify
 		$data = serialize($data);
 
-		// write to file
-		if (file_put_contents($path, $data)) {
-			return true;
-		}
-	}
-
-
-	public function getKey()
-	{
-		return $this->key;
+		return file_put_contents($path, $data);
 	}
 
 
@@ -104,17 +91,14 @@ class Cache implements \Mwyatt\Core\CacheInterface
 	 * @param  string $key example-file-name
 	 * @return bool      
 	 */
-	public function read()
+	public function read($fileName)
 	{
-		$key = $this->getKey();
-		$path = $this->getFilePath($key);
+		$path = $this->getPathBase($fileName);
 
-		// quickly check if a file exists
-		if (! file_exists($path)) {
+		if (!file_exists($path)) {
 			return;
 		}
 
-		// load in
 		$data = file_get_contents($path);
 		return $this->data = unserialize($data);
 	}
@@ -123,43 +107,16 @@ class Cache implements \Mwyatt\Core\CacheInterface
 	/**
 	 * removes the file from the cache
 	 * @param  string $key 
-	 * @return bool      
+	 * @return bool
 	 */
-	public function delete()
+	public function delete($fileName)
 	{
-		$key = $this->getKey();
-		$path = $this->getFilePath($key);
+		$path = $this->getPathBase($fileName);
 
-		// nothing to delete
-		if (! file_exists($this->getFilePath($key))) {
+		if (!file_exists($path)) {
 			return;
 		}
 
-		// remove
-		if (unlink($this->getFilePath($key))) {
-			return true;
-		}
-	}
-
-
-	/**
-	 * empty entire cache directory
-	 * @return bool 
-	 */
-	public function flush()
-	{
-		// glob(pattern)
-	}
-
-
-	public function setKey($key)
-	{
-		return $this->key = $key;
-	}
-
-
-	public function getData()
-	{
-		return $this->data;
+		return unlink($path);
 	}
 }
