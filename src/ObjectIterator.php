@@ -4,39 +4,21 @@ namespace Mwyatt\Core;
 
 class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIteratorInterface
 {
-
-
-    /**
-     * unset all iterator and return a copy
-     * @return array
-     */
-    private function unsetGetCopy()
-    {
-        $thisCopy = $this->getArrayCopy();
-
-        // done 2 times because first time it leaves one?
-        foreach ($this as $key => $value) {
-            $this->offsetUnset($key);
-        }
-        foreach ($this as $key => $value) {
-            $this->offsetUnset($key);
-        }
-        return $thisCopy;
-    }
-    
+   
 
     /**
      * key the iterator by the specified property
      * only 1 level deep
      * @param  string $property
-     * @return null
+     * @return array
      */
-    public function keyByProperty($property)
+    public function getKeyedByProperty($property)
     {
-        $thisCopy = $this->unsetGetCopy();
-        foreach ($thisCopy as $model) {
-            $this[$model->$property] = $model;
+        $keyed = [];
+        foreach ($this as $object) {
+            $keyed[$object->$property] = $object;
         }
+        return $keyed;
     }
 
 
@@ -44,17 +26,18 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
      * key the iterator by the specified property
      * but go 2 levels
      * @param  string $property
-     * @return null
+     * @return array
      */
-    public function keyByPropertyMulti($property)
+    public function getKeyedByPropertyMulti($property)
     {
-        $thisCopy = $this->unsetGetCopy();
-        foreach ($thisCopy as $value) {
-            if (empty($this[$value->$property])) {
-                $this[$value->$property] = [];
+        $keyed = [];
+        foreach ($this as $object) {
+            if (empty($keyed[$object->$property])) {
+                $keyed[$object->$property] = [];
             }
-            $this[$value->$property][] = $value;
+            $keyed[$object->$property][] = $object;
         }
+        return $keyed;
     }
 
 
@@ -64,10 +47,10 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
      * @param  mixed $value
      * @return null
      */
-    public function filterOutByProperty($property, $value)
+    public function filterOutByPropertyValue($property, $value)
     {
-        foreach ($this as $key => $model) {
-            if ($model->$property == $value) {
+        foreach ($this as $key => $object) {
+            if ($object->$property == $value) {
                 $this->offsetUnset($key);
             }
         }
@@ -90,35 +73,19 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
 
 
     /**
-     * get the model which matches the property value
+     * get the object which matches the property value
      * @param  string $property
      * @param  mixed $value
      * @return object
      */
     public function getByPropertyValue($property, $value)
     {
-        foreach ($this as $model) {
-            if ($model->get($property) == $value) {
-                return $model;
+        $objects = [];
+        foreach ($this as $object) {
+            if ($object->$property == $value) {
+                $objects[] = $object;
             }
         }
-    }
-
-
-    /**
-     * get the model which matches the property value
-     * @param  string $property
-     * @param  mixed $value
-     * @return object
-     */
-    public function getByPropertyValueMulti($property, $value)
-    {
-        $models = [];
-        foreach ($this as $model) {
-            if ($model->get($property) == $value) {
-                $models[] = $model;
-            }
-        }
-        return $models;
+        return $objects;
     }
 }

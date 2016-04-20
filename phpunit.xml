@@ -4,9 +4,10 @@
 			<file>test/MailTest.php</file>
 		</testsuite>
 		<testsuite name="dev">
-			<file>test/UtilityObjectIteratorTest.php</file>
+			<file>test/ErrorTest.php</file>
 		</testsuite>
 		<testsuite name="stable">
+			<file>test/ObjectIteratorTest.php</file>
 			<file>test/CacheTest.php</file>
 			<file>test/ModelTest.php</file>
 			<file>test/DatabaseTest.php</file>
