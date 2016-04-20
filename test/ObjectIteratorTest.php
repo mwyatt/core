@@ -31,7 +31,7 @@ class ObjectIteratorTest extends \PHPUnit_Framework_TestCase
         $cat4->type = 'Spooky';
         $cat4->weight = 423;
 
-        $this->objects = [$cat1, $cat2, $cat3, $cat4];        
+        $this->objects = [$cat1, $cat2, $cat3, $cat4];
     }
 
 
