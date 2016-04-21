@@ -9,12 +9,7 @@ namespace Mwyatt\Core;
  */
 interface MailInterface
 {
-
-
-    /**
-     * configures headers and sends mail out
-     * @param  array  $properties see requiredSendProperties for rules
-     * @return bool
-     */
-    public function send(array $config);
+    public function __construct(\Swift_Mailer $swiftMailer);
+    public function getNewMessage();
+    public function send($message);
 }

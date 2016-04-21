@@ -3,9 +3,9 @@
 		<testsuite name="plan">
 		</testsuite>
 		<testsuite name="dev">
-			<file>test/MailTest.php</file>
 		</testsuite>
 		<testsuite name="stable">
+			<file>test/MailTest.php</file>
 			<file>test/ErrorTest.php</file>
 			<file>test/ObjectIteratorTest.php</file>
 			<file>test/CacheTest.php</file>
