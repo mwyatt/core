@@ -3,10 +3,10 @@
 namespace Mwyatt\Core;
 
 // set_error_handler(array($this, 'handle'));
-        //     ini_set('display_errors', 1);
-        //     ini_set('display_startup_errors', 1);
-        //     error_reporting(E_ALL);
-            // debug_print_backtrace()
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+// debug_print_backtrace()
 class Error
 {
 
@@ -44,8 +44,8 @@ class Error
 
     public function handle($errorType, $errorString, $errorFile, $errorLine)
     {
-        $lines = file_get_contents($pathFile);
-        $date = date('d/m/Y', time());
+        $lines = file_get_contents($this->pathFile);
+        $date = date('d/m/Y @ H:i:s', time());
         $line = "[Type $errorType] $errorString | $errorFile [Line $errorLine] [Date $date]\n";
         return file_put_contents($this->pathFile, $lines . $line);
     }
