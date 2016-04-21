@@ -25,7 +25,7 @@ class Mail implements \Mwyatt\Core\MailInterface
     
     /**
      * get swiftmail message instance
-     * @return object 
+     * @return object
      */
     public function getNewMessage()
     {
@@ -46,7 +46,7 @@ class Mail implements \Mwyatt\Core\MailInterface
     /**
      * sets body after mashing in inline styles
      * this is the method for doing tagging, simple now!
-     * @return string inlined stuffs 
+     * @return string inlined stuffs
      */
     public function getInlinedHtml($body)
     {
