@@ -54,7 +54,7 @@ abstract class MapperAbstract
 
     public function getIterator($arrayOfObjecta)
     {
-        return new \Mwyatt\Core\Utility\ObjectIterator($arrayOfObjecta);
+        return new \Mwyatt\Core\ObjectIterator($arrayOfObjecta);
     }
 
 

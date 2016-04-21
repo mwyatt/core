@@ -62,11 +62,8 @@ class Router //implements \Mwyatt\Core\RouterInterface
      */
     public function getMuxRouteCurrent($path)
     {
-
-        // pux needs '/' at start incase :var first
         $path = '/' . $path;
         $path = str_replace('//', '/', $path);
-
         $route = $this->mux->dispatch($path);
         $this->setMuxRouteCurrent($route);
         return $route;
