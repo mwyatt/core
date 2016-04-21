@@ -118,5 +118,31 @@ class ObjectIteratorTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue(current($orderExpected) == $cat->weight);
             next($orderExpected);
         }
+
+        // other examples:
+
+        // if ($type == 'float') {
+        //     $a->$property += 0;
+        //     $b->$property += 0;
+        // }
+        // if ($type == 'string') {
+        //     if ($order == 'asc') {
+        //         return strcasecmp($a->$property, $b->$property);
+        //     } else {
+        //         return strcasecmp($b->$property, $a->$property);
+        //     }
+        // } elseif ($type == 'integer' || $type == 'float') {
+        //     if ($order == 'asc') {
+        //         if ($a->$property == $b->$property) {
+        //             return 0;
+        //         }
+        //         return $a->$property < $b->$property ? -1 : 1;
+        //     } else {
+        //         if ($a->$property == $b->$property) {
+        //             return 0;
+        //         }
+        //         return $a->$property > $b->$property ? -1 : 1;
+        //     }
+        // }
     }
 }

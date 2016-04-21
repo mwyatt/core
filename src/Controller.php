@@ -53,6 +53,7 @@ class Controller implements \Mwyatt\Core\ControllerInterface
      * redirects the user to another url and terminates
      * utilising the generator from symfony
      * could this be a static function?
+     * should this be moved to Router? as it has been needed outside of controllers
      * @param  string $key      routeKey
      * @param  array $config if required
      * @return null
