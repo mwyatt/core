@@ -9,25 +9,25 @@ class User
 {
 
 
-    public $id;
+    protected $id;
 
 
-    public $nameFirst;
+    protected $nameFirst;
 
 
-    public $password;
+    protected $password;
 
 
-    public $timeRegistered;
+    protected $timeRegistered;
 
 
-    public $nameLast;
+    protected $nameLast;
 
 
-    public $email;
+    protected $email;
 
     
-    public $activity;
+    protected $activity;
 
 
     public function getNameFull()
