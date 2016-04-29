@@ -8,8 +8,8 @@ abstract class ModelAbstract
 
     /**
      * get property via method if in place or just the property
-     * @param  string $property 
-     * @return mixed           
+     * @param  string $property
+     * @return mixed
      */
     public function get($property)
     {
