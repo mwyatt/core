@@ -2,9 +2,6 @@
 
 namespace Mwyatt\Core\Service;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 class User extends \Mwyatt\Core\ServiceAbstract
 {
 

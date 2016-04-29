@@ -2,28 +2,15 @@
 
 namespace Mwyatt\Core\Model;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
-class User
+class User extends \Mwyatt\Core\ModelAbstract
 {
 
 
     protected $id;
-
-
     protected $nameFirst;
-
-
     protected $password;
-
-
     protected $timeRegistered;
-
-
     protected $nameLast;
-
-
     protected $email;
 
     

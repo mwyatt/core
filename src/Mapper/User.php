@@ -2,9 +2,6 @@
 
 namespace Mwyatt\Core\Mapper;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 class User extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInterface
 {
 
