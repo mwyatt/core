@@ -66,8 +66,8 @@ class Controller implements \Mwyatt\Core\ControllerInterface
         // generate string to redirect to from url
         header('location:' . $urlNew, true, $statusCode);
 
-        // for testing?
-        return $urlNew;
+        // must exit because otherwise the script will continue
+        exit;
     }
 
 
