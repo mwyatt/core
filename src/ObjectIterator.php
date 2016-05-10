@@ -4,6 +4,16 @@ namespace Mwyatt\Core;
 
 class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIteratorInterface
 {
+
+
+    public function unsetAllGetAll()
+    {
+        $copy = clone $this;
+        while (list($k, $v) = each($this)) {
+            unset($this[$k]); 
+        }
+        return $copy;
+    }
    
 
     /**

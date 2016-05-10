@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Model;
 
-class User extends \Mwyatt\Core\ModelAbstract
+class User extends \Mwyatt\Core\AbstractModel
 {
 
 

@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class ModelAbstract
+abstract class AbstractModel
 {
 
 
