@@ -10,7 +10,7 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     {
         $copy = clone $this;
         while (list($k, $v) = each($this)) {
-            unset($this[$k]); 
+            unset($this[$k]);
         }
         return $copy;
     }
