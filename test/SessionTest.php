@@ -6,48 +6,26 @@ class SessionTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public function testConstruct()
+    public function setUp()
     {
         $GLOBALS['_SESSION'] = [];
-        $sessionFooBar = new \Mwyatt\Core\Session('foo/bar');
-        $this->assertArrayHasKey('foo/bar', $_SESSION);
     }
 
 
-    public function testSetGetData()
+    public function testSetGet()
     {
-        $GLOBALS['_SESSION'] = [];
-        $sessionFooBar = new \Mwyatt\Core\Session('foo/bar');
-        $sessionFooBar->setData('foo');
-        $this->assertEquals('foo', $sessionFooBar->getData());
+        $session = new \Mwyatt\Core\Session;
+        $session->set('foo', 'bar');
+        $this->assertTrue($session->get('foo') === 'bar');
     }
 
 
-    public function testSetGetDataKey()
+    public function testPull()
     {
-        $GLOBALS['_SESSION'] = [];
-        $sessionFooBar = new \Mwyatt\Core\Session('foo/bar');
-        $sessionFooBar->setDataKey('foo', 'bar');
-        $this->assertEquals('bar', $sessionFooBar->getDataKey('foo'));
-    }
-
-
-    public function testPullData()
-    {
-        $GLOBALS['_SESSION'] = [];
-        $sessionFooBar = new \Mwyatt\Core\Session('foo/bar');
-        $sessionFooBar->setData('foo');
-        $this->assertEquals('foo', $sessionFooBar->pullData());
-        $this->assertEquals('', $sessionFooBar->pullData());
-    }
-
-
-    public function testPullDataKey()
-    {
-        $GLOBALS['_SESSION'] = [];
-        $sessionFooBar = new \Mwyatt\Core\Session('foo/bar');
-        $sessionFooBar->setDataKey('foo', 'bar');
-        $this->assertEquals('bar', $sessionFooBar->pullDataKey('foo'));
-        $this->assertEquals('', $sessionFooBar->pullDataKey('foo'));
+        $session = new \Mwyatt\Core\Session;
+        $session->set('foo', 'bar');
+        $this->assertTrue($session->pull('foo') === 'bar');
+        $this->assertTrue(!$session->pull('foo'));
+        $this->assertTrue(!$session->get('foo'));
     }
 }

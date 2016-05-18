@@ -16,11 +16,11 @@ class User extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInt
 
         $this->database->prepare(implode(' ', $sql));
         $this->database->execute([
-            $user->email,
-            $user->password,
-            $user->timeRegistered,
-            $user->nameFirst,
-            $user->nameLast
+            $user->get('email'),
+            $user->get('password'),
+            $user->get('timeRegistered'),
+            $user->get('nameFirst'),
+            $user->get('nameLast')
         ]);
         
         return $this->database->getLastInsertId();

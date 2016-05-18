@@ -31,7 +31,7 @@ class User extends \Mwyatt\Core\ServiceAbstract
         $modelUser->setPassword($user['password']);
         $modelUser->setTimeRegistered(time());
         
-        $modelUser->id = $mapperUser->insert($modelUser);
+        // $modelUser->set('id', $mapperUser->insert($modelUser));
 
         return $modelUser;
     }

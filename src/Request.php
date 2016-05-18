@@ -7,29 +7,16 @@ namespace Mwyatt\Core;
 class Request implements \Mwyatt\Core\RequestInterface
 {
 
+    // should these be protected?
+    public $session;
+    public $cookie;
 
-    private $get;
-
-
-    private $post;
-
-
-    private $cookie;
-
-
-    private $server;
-
-
-    private $session;
-
-
-    private $urlVars = [];
-
-
-    public $body;
-
-
-    public $files = [];
+    protected $query;
+    protected $post;
+    protected $server;
+    protected $urlVars = [];
+    protected $body;
+    protected $files = [];
 
 
     /**
@@ -37,11 +24,11 @@ class Request implements \Mwyatt\Core\RequestInterface
      */
     public function __construct()
     {
-        $this->get = $_GET;
+        $this->query = $_GET;
         $this->post = $_POST;
-        $this->cookie = $_COOKIE;
+        $this->cookie = new \Mwyatt\Core\Cookie;
+        $this->session = new \Mwyatt\Core\Session;
         $this->server = $_SERVER;
-        $this->session = $_SESSION;
         $this->files = $this->setFiles($_FILES);
     }
 
@@ -73,7 +60,7 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     public function getQuery($key, $default = null)
     {
-        return $this->getPropKey('get', $key, $default);
+        return $this->getPropKey('query', $key, $default);
     }
 
 
@@ -114,6 +101,12 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
+    public function setCookie($key, $value, $time)
+    {
+        setcookie($key, $value, $time);
+    }
+
+
     public function getServer($key, $default = null)
     {
         return $this->getPropKey('server', $key, $default);
@@ -122,37 +115,19 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     public function getSession($key, $default = null)
     {
-        return $this->getPropKey('session', $key, $default);
+        return $this->session->get($key, $default);
     }
 
 
-    /**
-     * set a single session key
-     * is this enough?
-     * @param string $key
-     * @param mixed $value
-     */
     public function setSession($key, $value)
     {
-        $_SESSION[$key] = $value;
-        $this->session[$key] = $value;
+        $this->session->set($key, $value);
     }
 
 
-    /**
-     * removes session key and passes back the value
-     * @param  string $key
-     * @return mixed
-     */
     public function pullSession($key, $default = null)
     {
-        if (empty($_SESSION[$key])) {
-            return $default;
-        }
-        $value = $_SESSION[$key];
-        unset($_SESSION[$key]);
-        unset($this->session[$key]);
-        return $value;
+        return $this->session->pull($key, $default);
     }
 
 
@@ -173,7 +148,7 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     private function getPropKey($type, $key, $default = null)
     {
-        return isset($this->{$type}[$key]) ? $this->{$type}[$key] : null;
+        return isset($this->{$type}[$key]) ? $this->{$type}[$key] : $default;
     }
 
 

@@ -5,6 +5,8 @@
 		<testsuite name="dev">
 		</testsuite>
 		<testsuite name="stable">
+			<file>test/SessionTest.php</file>
+			<file>test/CookieTest.php</file>
 			<file>test/MailTest.php</file>
 			<file>test/ErrorTest.php</file>
 			<file>test/ObjectIteratorTest.php</file>

@@ -25,7 +25,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $user = new \Mwyatt\Core\Model\User;
         $user->setEmail($this->exampleUserData['email']);
-        $this->assertEquals($user->email, $this->exampleUserData['email']);
+        $this->assertEquals($user->get('email'), $this->exampleUserData['email']);
     }
 
 

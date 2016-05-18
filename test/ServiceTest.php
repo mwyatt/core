@@ -51,7 +51,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $serviceUser = $this->controller->get('User');
         $modelUser = $serviceUser->insert($this->exampleUserData);
-        $this->assertGreaterThan(0, $modelUser->id);
+        $this->assertGreaterThan(0, $modelUser->get('id'));
     }
 
 
@@ -68,7 +68,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $serviceUser = $this->controller->get('User');
         $modelUser = $serviceUser->insert($this->exampleUserData);
-        $modelUser = $serviceUser->findById($modelUser->id);
+        $modelUser = $serviceUser->findById($modelUser->get('id'));
 
         $this->assertInstanceOf('Mwyatt\\Core\\Model\\User', $modelUser);
     }
@@ -80,7 +80,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $modelUsers = $serviceUser->findAll();
 
         foreach ($modelUsers as $modelUser) {
-            $this->assertGreaterThan(0, $serviceUser->deleteById($modelUser->id));
+            $this->assertGreaterThan(0, $serviceUser->deleteById($modelUser->get('id')));
         }
     }
 }
