@@ -10,26 +10,26 @@ $nsModel = '\\Mwyatt\\Core\\Model\\';
 $container = new \Pimple\Container;
 
 $container['database'] = function ($container) {
-	$config = include $pathBase . 'config.php';
+    $config = include $pathBase . 'config.php';
 
-	$config = new \Doctrine\DBAL\Configuration();
-	$connectionParams = array(
-	    'dbname' => 'test_1',
-	    'user' => 'root',
-	    'password' => '123',
-	    'host' => 'localhost',
-	    'driver' => 'pdo_mysql',
-	);
-	$conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+    $config = new \Doctrine\DBAL\Configuration();
+    $connectionParams = array(
+        'dbname' => 'test_1',
+        'user' => 'root',
+        'password' => '123',
+        'host' => 'localhost',
+        'driver' => 'pdo_mysql',
+    );
+    $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
-	$statement = $conn->prepare('SELECT * FROM shop_brands');
-	$statement->execute();
-	$brands = $statement->fetchAll();
+    $statement = $conn->prepare('SELECT * FROM shop_brands');
+    $statement->execute();
+    $brands = $statement->fetchAll();
 
 
-	$huh = $conn->update('foo', array('name' => 'boop'), array('id' => 2));
+    $huh = $conn->update('foo', array('name' => 'boop'), array('id' => 2));
 
-	
+    
     return new \Mwyatt\Core\Database\Pdo();
 };
 
@@ -103,6 +103,7 @@ $request = new \Mwyatt\Core\Request;
 
 $command = $route[2][1];
 $response = $controller->{$command}($request);
+
 
 
 echo $response->getContent();
