@@ -104,4 +104,5 @@ $request = new \Mwyatt\Core\Request;
 $command = $route[2][1];
 $response = $controller->{$command}($request);
 
+
 echo $response->getContent();
