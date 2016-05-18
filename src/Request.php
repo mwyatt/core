@@ -49,8 +49,8 @@ class Request implements \Mwyatt\Core\RequestInterface
 
     /**
      * deprecated for 'getQuery'
-     * @param  string $key 
-     * @return string      
+     * @param  string $key
+     * @return string
      */
     public function get($key, $default = null)
     {

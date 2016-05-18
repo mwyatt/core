@@ -18,9 +18,9 @@ class Cookie
      * TRUE. This does not indicate whether the user accepted the cookie.
      *
      * updates the cookie if already set
-     * 
-     * @param string $key   
-     * @param string $value 
+     *
+     * @param string $key
+     * @param string $value
      * @param int $time  epoch
      */
     public function set($key, $value, $time)
