@@ -19,8 +19,8 @@ class File extends \Mwyatt\Core\AbstractModel
         $pathRelative,
         $title,
         $isDirectory
-    )
-    {
+    ) {
+    
         $this->pathAbsolute = $pathAbsolute;
         $this->pathRelative = $pathRelative;
         $this->title = $title;

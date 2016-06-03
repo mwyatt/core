@@ -9,7 +9,7 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
     public function testSetPathBase()
     {
         $fileSystem = new \Mwyatt\Core\FileSystem('./template/');
-        $this->assertTrue(is_object($fileSystem));       
+        $this->assertTrue(is_object($fileSystem));
     }
 
 

@@ -22,7 +22,8 @@ class FileSystem
     }
 
 
-    public function getFile($pathRelative) {
+    public function getFile($pathRelative)
+    {
         $pathAbsolute = $this->pathBase . $pathRelative;
         $this->validatePath($pathAbsolute);
 
@@ -48,7 +49,8 @@ class FileSystem
     }
 
 
-    public function getDirectory($pathRelative = '') {
+    public function getDirectory($pathRelative = '')
+    {
         $pathAbsolute = $this->pathBase . $pathRelative;
         $this->validatePath($pathAbsolute);
 
@@ -64,14 +66,16 @@ class FileSystem
     }
 
 
-    public function deleteFile($path) {
+    public function deleteFile($path)
+    {
         $this->validatePath($path);
 
         return unlink($path);
     }
 
 
-    public function deleteDirectory($path) {
+    public function deleteDirectory($path)
+    {
         $this->validatePath($path);
 
         if (!is_dir($path)) {
@@ -86,7 +90,8 @@ class FileSystem
     }
 
 
-    private function validatePath($path) {
+    private function validatePath($path)
+    {
         if (!file_exists($path)) {
             throw new \Exception("'$path' does not exist.");
         }
