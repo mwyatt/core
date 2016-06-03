@@ -3,6 +3,7 @@
 		<testsuite name="plan">
 		</testsuite>
 		<testsuite name="dev">
+			<file>test/FileSystemTest.php</file>
 		</testsuite>
 		<testsuite name="stable">
 			<file>test/SessionTest.php</file>
