@@ -22,9 +22,8 @@ class FileSystem
     }
 
 
-    public function getFile($pathRelative)
+    public function getFile($pathAbsolute)
     {
-        $pathAbsolute = $this->pathBase . $pathRelative;
         $this->validatePath($pathAbsolute);
 
         $fileInfo = pathinfo($pathAbsolute);
@@ -92,14 +91,6 @@ class FileSystem
 
     private function validatePath($path)
     {
-        if (!file_exists($path)) {
-            throw new \Exception("'$path' does not exist.");
-        }
-
-        if (strpos($path, '../') !== false) {
-            throw new \Exception("'$path' is invalid.");
-        }
-
         if (!is_readable($path)) {
             throw new \Exception("'$path' is unreadable.");
         }

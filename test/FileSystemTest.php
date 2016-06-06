@@ -8,21 +8,15 @@ class FileSystemTest extends \PHPUnit_Framework_TestCase
 
     public function testSetPathBase()
     {
-        $fileSystem = new \Mwyatt\Core\FileSystem('./template/');
+        $fileSystem = new \Mwyatt\Core\FileSystem((string) (__DIR__ . '/') . '../template/');
         $this->assertTrue(is_object($fileSystem));
     }
 
 
-    public function testGetFile()
+    public function testGetDirectory()
     {
-        $fileSystem = new \Mwyatt\Core\FileSystem('./template/');
-        // $file = $fileSystem->getFile('footer/');
-        $file = $fileSystem->getDirectory();
-        // $this->assertTrue();
-        echo '<pre>';
-        print_r($file);
-        echo '</pre>';
-        exit;
-
+        $fileSystem = new \Mwyatt\Core\FileSystem((string) (__DIR__ . '/') . '../template/');
+        $files = $fileSystem->getDirectory();
+        $this->assertTrue(count($files) > 0);
     }
 }
