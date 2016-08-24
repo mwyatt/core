@@ -7,11 +7,11 @@ class User extends \Mwyatt\Core\AbstractModel
 
 
     protected $id;
+    protected $email;
     protected $nameFirst;
+    protected $nameLast;
     protected $password;
     protected $timeRegistered;
-    protected $nameLast;
-    protected $email;
 
     
     protected $activity;
