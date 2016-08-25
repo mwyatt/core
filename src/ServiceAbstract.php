@@ -2,10 +2,7 @@
 
 namespace Mwyatt\Core;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
-abstract class ServiceAbstract
+abstract class ServiceAbstract implements \IteratorAggregate
 {
 
 
@@ -15,12 +12,27 @@ abstract class ServiceAbstract
     protected $modelFactory;
 
 
+    protected $collection = [];
+
+
     public function __construct(
         \Mwyatt\Core\MapperFactory $mapperFactory,
         \Mwyatt\Core\ModelFactory $modelFactory
     ) {
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
+    }
+
+
+    public function getIterator()
+    {
+        return new ArrayIterator($this->collection);
+    }
+
+
+    public function add($item)
+    {
+        $this->collection[] = $item;
     }
 
 
