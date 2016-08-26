@@ -50,8 +50,25 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $serviceUser = $this->controller->get('User');
-        $modelUser = $serviceUser->insert($this->exampleUserData);
-        $this->assertGreaterThan(0, $modelUser->get('id'));
+        $modelUser = $serviceUser->getModel('User');
+        $exampleUserData = $this->exampleUserData;
+
+        $modelUser->setEmail($exampleUserData['email']);
+        $modelUser->setNameFirst($exampleUserData['nameFirst']);
+        $modelUser->setNameLast($exampleUserData['nameLast']);
+        $modelUser->setPassword($exampleUserData['password']);
+
+        $newId = $serviceUser->insert($modelUser);
+
+        $this->assertGreaterThan(0, $newId);
+    }
+
+
+    public function testInsertLog()
+    {
+        $serviceUser = $this->controller->get('User');
+        $serviceUser->findAll();
+        $serviceUser->findLogs();
     }
 
 
@@ -61,6 +78,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $users = $serviceUser->findAll();
 
         $this->assertGreaterThan(0, $users->count());
+    }
+
+
+    public function testSelectAssoc()
+    {
+        
     }
 
 

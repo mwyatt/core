@@ -6,40 +6,45 @@ class User extends \Mwyatt\Core\ServiceAbstract
 {
 
 
-    public function appendActivity()
+    public function findLogs()
     {
-        // checks a central storage for the user objects
-        // finds the required activities and appends where needed
-        //
+        $mapperUserLog = $this->getMapper('User\Log');
+        $userIds = $this->collection->extractProperty('id');
+        $userLogs = $mapperUserLog->readByUserIds($userIds);
+        foreach ($userLogs as $userLog) {
+            $user = $this->collection->getByPropertyValue('id', $userLog->get('userId'));
+            $user->logs->add($userLog);
+        }
     }
 
 
-    /**
-     * not always multi as how would you provide correct feedback
-     * if one was not created? it either needs to be created or not
-     * @param  array $user assoc
-     * @return object       model/user
-     */
-    public function insert(array $user)
+    public function insertLog(\Mwyatt\Core\Model\User\Log $userLog)
     {
-        $modelUser = $this->modelFactory->get('User');
-        $mapperUser = $this->mapperFactory->get('User');
+        $mapperUserLog = $this->getMapper('User\Log');
+        try {
+            $newId = $mapperUserLog->insert($userLog);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return $newId;
+    }
 
-        $modelUser->setEmail($user['email']);
-        $modelUser->setNameFirst($user['nameFirst']);
-        $modelUser->setNameLast($user['nameLast']);
-        $modelUser->setPassword($user['password']);
-        $modelUser->setTimeRegistered(time());
-        
-        // $modelUser->set('id', $mapperUser->insert($modelUser));
 
-        return $modelUser;
+    public function insert(\Mwyatt\Core\Model\User $user)
+    {
+        $mapperUser = $this->getMapper('User');
+        try {
+            $newId = $mapperUser->insert($user);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return $newId;
     }
 
 
     public function findById($id)
     {
-        $mapperUser = $this->mapperFactory->get('User');
+        $mapperUser = $this->getMapper('User');
         $modelUsers = $mapperUser->findColumn([$id], 'id');
         return $modelUsers->current();
     }
@@ -47,7 +52,7 @@ class User extends \Mwyatt\Core\ServiceAbstract
 
     public function deleteById($userId)
     {
-        $mapperUser = $this->mapperFactory->get('User');
+        $mapperUser = $this->getMapper('User');
         return $mapperUser->deleteById($userId);
     }
 }

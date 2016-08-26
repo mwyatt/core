@@ -21,6 +21,7 @@ abstract class ServiceAbstract implements \IteratorAggregate
     ) {
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
+        $this->collection = new \Mwyatt\Core\ObjectIterator;
     }
 
 

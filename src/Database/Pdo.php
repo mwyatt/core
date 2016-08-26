@@ -90,9 +90,9 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function fetch($mode = \PDO::FETCH_ASSOC)
+    public function fetch($mode = \PDO::FETCH_ASSOC, $argument = null)
     {
-        return $this->fetchCommon('fetch', $mode, null);
+        return $this->fetchCommon('fetch', $mode, $argument);
     }
 
 

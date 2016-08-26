@@ -13,8 +13,7 @@ class User extends \Mwyatt\Core\AbstractModel
     protected $password;
     protected $timeRegistered;
 
-    
-    protected $activity;
+    public $logs;
 
 
     public function getNameFull()

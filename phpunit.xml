@@ -1,9 +1,10 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
 		<testsuite name="plan">
+			<file>test/FileSystemTest.php</file>
 		</testsuite>
 		<testsuite name="dev">
-			<file>test/FileSystemTest.php</file>
+			<file>test/ServiceTest.php</file>
 		</testsuite>
 		<testsuite name="stable">
 			<file>test/SessionTest.php</file>
@@ -14,7 +15,6 @@
 			<file>test/CacheTest.php</file>
 			<file>test/ModelTest.php</file>
 			<file>test/DatabaseTest.php</file>
-			<file>test/ServiceTest.php</file>
 			<file>test/ControllerTest.php</file>
 			<file>test/PaginationTest.php</file>
 			<file>test/HelperTest.php</file>
