@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Model;
 
-class Log extends \Mwyatt\Core\AbstractModel
+class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\Model\LogInterface
 {
 
     

@@ -6,26 +6,14 @@ class Log extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInte
 {
 
 
-    public function insert(\Mwyatt\Core\Model\User\Log $userLog)
+    public function insert(\Mwyatt\Core\Model\LogInterface $userLog)
     {
-        $this->database->prepare("
-            insert into
-
-can do both the log and the relationship here
-perhaps use the log mapper here?
-
-                `log`.`content`,
-                `log`.`timeCreated`
-            from `userLog`
-            left join `log` on `userLog`.`logId` = `log`.`id`
-            where `userLog`.`userId` = ?
-        ");
-        $collections = [];
-        foreach ($userIds as $userId) {
-            $this->database->execute([$userId]);
-            $collections[] = $this->getIterator($this->database->fetchAll($this->fetchType, $this->model));
-        }
-        return $collections;
+        $this->database->prepare("insert into `userLog` (`userId`, `logId`) values (?, ?)");
+        $this->database->execute([
+            $userLog->get('userId'),
+            $userLog->get('logId')
+        ]);
+        return $this->database->getLastInsertId();
     }
 
 
@@ -42,8 +30,13 @@ perhaps use the log mapper here?
         $collections = [];
         foreach ($userIds as $userId) {
             $this->database->execute([$userId]);
-            $collections[] = $this->getIterator($this->database->fetchAll($this->fetchType, $this->model));
+            $collections[] = $this->database->fetch($this->fetchType, $this->model);
         }
-        return $collections;
+        echo '<pre>';
+        print_r($collections);
+        echo '</pre>';
+        exit;
+        
+        return $this->getIterator($collections);
     }
 }

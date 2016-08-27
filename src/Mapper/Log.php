@@ -6,8 +6,18 @@ class Log extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInte
 {
 
 
-    public function insert(\Mwyatt\Core\Model\Log $log)
+    public function insert(\Mwyatt\Core\Model\LogInterface $log)
     {
-        
+        $sql = ['insert', 'into', $this->table, '('];
+        $sql[] = implode(', ', ['content', 'timeCreated']);
+        $sql[] = ') values (';
+        $sql[] = implode(', ', ['?', '?']);
+        $sql[] = ');';
+        $this->database->prepare(implode(' ', $sql));
+        $this->database->execute([
+            $log->get('content'),
+            time()
+        ]);
+        return $this->database->getLastInsertId();
     }
 }

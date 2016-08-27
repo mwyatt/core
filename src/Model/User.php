@@ -16,6 +16,12 @@ class User extends \Mwyatt\Core\AbstractModel
     public $logs;
 
 
+    public function __construct()
+    {
+        $this->logs = new \Mwyatt\Core\ObjectIterator;
+    }
+
+
     public function getNameFull()
     {
         return $this->nameFirst . ' ' . $this->nameLast;

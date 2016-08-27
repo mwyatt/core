@@ -12,7 +12,7 @@ abstract class ServiceAbstract implements \IteratorAggregate
     protected $modelFactory;
 
 
-    protected $collection = [];
+    protected $collection;
 
 
     public function __construct(
@@ -21,13 +21,12 @@ abstract class ServiceAbstract implements \IteratorAggregate
     ) {
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
-        $this->collection = new \Mwyatt\Core\ObjectIterator;
     }
 
 
     public function getIterator()
     {
-        return new ArrayIterator($this->collection);
+        return new \ArrayIterator($this->collection);
     }
 
 
@@ -52,7 +51,9 @@ abstract class ServiceAbstract implements \IteratorAggregate
     public function findAll()
     {
         $mapper = $this->mapperFactory->get($this->getClassName());
-        return $mapper->findAll();
+        $all = $mapper->findAll();
+        $this->collection = $all;
+        return $all;
     }
 
 

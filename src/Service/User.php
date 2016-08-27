@@ -11,6 +11,11 @@ class User extends \Mwyatt\Core\ServiceAbstract
         $mapperUserLog = $this->getMapper('User\Log');
         $userIds = $this->collection->extractProperty('id');
         $userLogs = $mapperUserLog->readByUserIds($userIds);
+        echo '<pre>';
+        print_r($userLogs);
+        echo '</pre>';
+        exit;
+        
         foreach ($userLogs as $userLog) {
             $user = $this->collection->getByPropertyValue('id', $userLog->get('userId'));
             $user->logs->add($userLog);
@@ -18,15 +23,23 @@ class User extends \Mwyatt\Core\ServiceAbstract
     }
 
 
-    public function insertLog(\Mwyatt\Core\Model\User\Log $userLog)
+    public function insertLog(array $userLogData)
     {
         $mapperUserLog = $this->getMapper('User\Log');
+        $mapperLog = $this->getMapper('Log');
+        $userLog = $this->getModel('User\Log');
+
         try {
-            $newId = $mapperUserLog->insert($userLog);
+            $userLog->setUserId($userLogData['userId']);
+            $userLog->setContent($userLogData['content']);
+            $logId = $mapperLog->insert($userLog);
+            $userLog->setLogId($logId);
+            $userLogId = $mapperUserLog->insert($userLog);
         } catch (Exception $e) {
-            return -1;
+            return;
         }
-        return $newId;
+
+        return true;
     }
 
 
