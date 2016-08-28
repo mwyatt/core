@@ -60,10 +60,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $serviceUser = $this->controller->get('User');
         $users = $serviceUser->findAll();
         $user = $users->current();
-echo '<pre>';
-print_r($user);
-echo '</pre>';
-exit;
+        echo '<pre>';
+        print_r($user);
+        echo '</pre>';
+        exit;
 
         $serviceUser->insertLog([
             'userId' => $user->get('id'),
