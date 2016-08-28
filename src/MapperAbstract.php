@@ -35,14 +35,15 @@ abstract class MapperAbstract
     public function __construct(\Mwyatt\Core\DatabaseInterface $database)
     {
         $this->database = $database;
-        $this->table = strtolower($this->getClassName());
-        $this->model = '\\Mwyatt\\Core\\Model\\' . $this->getClassName();
+        $relClassName = $this->getRelativeClassName();
+        $this->table = lcfirst(str_replace('\\', '', $relClassName));
+        $this->model = '\\Mwyatt\\Core\\Model\\' . $relClassName;
     }
 
 
-    public function getClassName()
+    public function getRelativeClassName()
     {
-        return end(explode('\\', get_class($this)));
+        return str_replace('Mwyatt\\Core\\Mapper\\', '', get_class($this));
     }
 
 

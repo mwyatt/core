@@ -15,7 +15,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public $exampleUserData = [
         'email' => 'martin.wyatt@gmail.com',
         'password' => '123123123',
-        'timeRegistered' => 129038190382392,
         'nameFirst' => 'Martin',
         'nameLast' => 'Wyatt'
     ];
@@ -50,17 +49,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $serviceUser = $this->controller->get('User');
-        $modelUser = $serviceUser->getModel('User');
-        $exampleUserData = $this->exampleUserData;
+        $user = $serviceUser->insert($this->exampleUserData);
 
-        $modelUser->setEmail($exampleUserData['email']);
-        $modelUser->setNameFirst($exampleUserData['nameFirst']);
-        $modelUser->setNameLast($exampleUserData['nameLast']);
-        $modelUser->setPassword($exampleUserData['password']);
-
-        $newId = $serviceUser->insert($modelUser);
-
-        $this->assertGreaterThan(0, $newId);
+        $this->assertGreaterThan(0, $user->get('id'));
     }
 
 
@@ -69,6 +60,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $serviceUser = $this->controller->get('User');
         $users = $serviceUser->findAll();
         $user = $users->current();
+echo '<pre>';
+print_r($user);
+echo '</pre>';
+exit;
 
         $serviceUser->insertLog([
             'userId' => $user->get('id'),
@@ -115,7 +110,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     // public function testUpdate()
     // {
     //     $serviceUser = $this->controller->get('User');
-    //     $modelUser = $serviceUser->insert($this->exampleUserData);
+    //     $modelUser = $serviceUser->insert($his->$this->exampleUserData);
     //     $modelUser = $serviceUser->findById($modelUser->get('id'));
 
     //     $this->assertInstanceOf('Mwyatt\\Core\\Model\\User', $modelUser);

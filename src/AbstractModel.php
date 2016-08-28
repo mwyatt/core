@@ -6,6 +6,15 @@ abstract class AbstractModel
 {
 
 
+    protected $id;
+
+
+    public function setId($id)
+    {
+        return $this->id = $id;
+    }
+
+
     /**
      * get property via method if in place or just the property
      * @param  string $property

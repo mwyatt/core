@@ -21,22 +21,26 @@ class Log extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInte
     {
         $this->database->prepare("
             select
+                `log`.`id`,
                 `log`.`content`,
                 `log`.`timeCreated`
             from `userLog`
             left join `log` on `userLog`.`logId` = `log`.`id`
             where `userLog`.`userId` = ?
         ");
-        $collections = [];
+        $userLogs = [];
         foreach ($userIds as $userId) {
             $this->database->execute([$userId]);
-            $collections[] = $this->database->fetch($this->fetchType, $this->model);
+            if ($userLog = $this->database->fetch($this->fetchType, $this->model)) {
+                echo '<pre>';
+                print_r($userLog);
+                echo '</pre>';
+                exit;
+                
+                $userLog->setUserId($userId);
+                $userLogs[] = $userLog;
+            }
         }
-        echo '<pre>';
-        print_r($collections);
-        echo '</pre>';
-        exit;
-        
-        return $this->getIterator($collections);
+        return $this->getIterator($userLogs);
     }
 }
