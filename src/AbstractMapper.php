@@ -88,14 +88,14 @@ abstract class AbstractMapper
                 $results[] = $model;
             }
         }
-        return $this->getIterator($results);       
+        return $this->getIterator($results);
     }
 
 
     /**
      * is this ever a good idea?
-     * @param  object $model 
-     * @param  array  $cols  
+     * @param  object $model
+     * @param  array  $cols
      * @return object        $model
      */
     public function lazyPersist(\Mwyatt\Core\ModelInterface $model, array $cols)

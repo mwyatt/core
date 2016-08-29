@@ -46,7 +46,7 @@ class User extends \Mwyatt\Core\AbstractService
 
     /**
      * wip
-     * @param  int $userLogId 
+     * @param  int $userLogId
      * @return int rowcount
      */
     public function deleteLogById($userLogId)
@@ -62,8 +62,8 @@ class User extends \Mwyatt\Core\AbstractService
     /**
      * is this the place where the object will be validated for correctness?
      * the mapper should not care about whether the object is correct
-     * @param  array  $userData 
-     * @return object           
+     * @param  array  $userData
+     * @return object
      */
     public function register(array $userData)
     {
