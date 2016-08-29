@@ -2,19 +2,21 @@
 
 namespace Mwyatt\Core\Service;
 
-class User extends \Mwyatt\Core\ServiceAbstract
+class User extends \Mwyatt\Core\AbstractService
 {
 
 
-    public function findLogs()
+    public function findLogs(\Mwyatt\Core\ModelIterator $users)
     {
         $mapperUserLog = $this->getMapper('User\Log');
-        $userIds = $this->collection->extractProperty('id');
-        $userLogs = $mapperUserLog->readByUserIds($userIds);
-        
+        $userIds = $users->extractProperty('id');
+        $userLogs = $mapperUserLog->findByUserIds($userIds);
+
         foreach ($userLogs as $userLog) {
-            if ($user = $this->collection->getByPropertyValue('id', $userLog->get('userId'))) {
-                $user->logs->add($userLog);
+            $userGroup = $users->getByPropertyValue('id', $userLog->get('userId'));
+            $user = current($userGroup);
+            if ($user) {
+                $user->logs->append($userLog);
             }
         }
     }
@@ -24,23 +26,46 @@ class User extends \Mwyatt\Core\ServiceAbstract
     {
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
+        $log = $this->getModel('Log');
         $userLog = $this->getModel('User\Log');
 
         try {
             $userLog->setUserId($userLogData['userId']);
             $userLog->setContent($userLogData['content']);
-            $logId = $mapperLog->insert($userLog);
-            $userLog->setLogId($logId);
-            $userLogId = $mapperUserLog->insert($userLog);
+            $log->setContent($userLogData['content']);
+            $mapperLog->persist($log);
+            $userLog->setLogId($log->get('id'));
+            $mapperUserLog->persist($userLog);
         } catch (Exception $e) {
-            return;
+
         }
 
-        return true;
+        return $userLog;
     }
 
 
-    public function insert(array $userData)
+    /**
+     * wip
+     * @param  int $userLogId 
+     * @return int rowcount
+     */
+    public function deleteLogById($userLogId)
+    {
+        $mapperUserLog = $this->getMapper('User\Log');
+        $mapperLog = $this->getMapper('Log');
+        $userLogs = $mapperUserLog->findByIds($userLogId);
+        $log = $mapperLog->findByIds($id);
+        return;
+    }
+
+
+    /**
+     * is this the place where the object will be validated for correctness?
+     * the mapper should not care about whether the object is correct
+     * @param  array  $userData 
+     * @return object           
+     */
+    public function register(array $userData)
     {
         $mapperUser = $this->getMapper('User');
         $user = $this->getModel('User');
@@ -49,25 +74,34 @@ class User extends \Mwyatt\Core\ServiceAbstract
             $user->setNameFirst($userData['nameFirst']);
             $user->setNameLast($userData['nameLast']);
             $user->setPassword($userData['password']);
-            $user = $mapperUser->insert($user);
+            $user = $mapperUser->persist($user);
         } catch (Exception $e) {
-            return;
+            return $e->getMessage();
         }
         return $user;
     }
 
 
-    public function findById($id)
+    public function update(\Mwyatt\Core\Model\User $user)
     {
         $mapperUser = $this->getMapper('User');
-        $modelUsers = $mapperUser->findColumn([$id], 'id');
-        return $modelUsers->current();
+        return $mapperUser->persist($user);
     }
 
 
-    public function deleteById($userId)
+    public function delete(\Mwyatt\Core\Model\User $user)
     {
         $mapperUser = $this->getMapper('User');
-        return $mapperUser->deleteById($userId);
+        $mapperUserLog = $this->getMapper('User\Log');
+        $mapperLog = $this->getMapper('Log');
+
+        $userLogs = $mapperUserLog->findByUserIds([$user->get('id')]);
+        foreach ($userLogs as $userLog) {
+            $mapperUserLog->delete($userLog);
+        }
+        $logIds = $userLogs->extractProperty('logId');
+        $logs = $mapperLog->findByIds($logIds);
+
+        return $mapperUser->delete($user);
     }
 }

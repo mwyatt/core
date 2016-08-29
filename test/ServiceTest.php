@@ -46,84 +46,73 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testInsert()
+    public function testPersistInsert()
     {
         $serviceUser = $this->controller->get('User');
-        $user = $serviceUser->insert($this->exampleUserData);
+        $user = $serviceUser->register($this->exampleUserData);
 
-        $this->assertGreaterThan(0, $user->get('id'));
+        $this->assertTrue($user->get('id') > 0);
     }
 
 
-    public function testInsertLog()
+    public function testFindAll()
+    {
+        $serviceUser = $this->controller->get('User');
+        $users = $serviceUser->findAll();
+
+        $this->assertTrue($users->count() > 0);
+    }
+
+
+    public function testPersistUpdate()
+    {
+        $newName = 'Bart';
+        $serviceUser = $this->controller->get('User');
+        $users = $serviceUser->findAll();
+        $user = $users->current();
+        $user->setNameFirst($newName);
+        $serviceUser->update($user);
+        $user = $serviceUser->findById($user->get('id'));
+
+        $this->assertTrue($user->get('nameFirst') === $newName);
+    }
+
+
+    public function testPersistLog()
     {
         $serviceUser = $this->controller->get('User');
         $users = $serviceUser->findAll();
         $user = $users->current();
-        echo '<pre>';
-        print_r($user);
-        echo '</pre>';
-        exit;
 
-        $serviceUser->insertLog([
+        $userLog = $serviceUser->insertLog([
             'userId' => $user->get('id'),
-            'content' => 'Example logging content.'
+            'content' => 'Example logging content 1.'
         ]);
 
-        $serviceUser->insertLog([
-            'userId' => $user->get('id'),
-            'content' => 'Example logging content.'
-        ]);
-
-        $serviceUser->insertLog([
-            'userId' => $user->get('id'),
-            'content' => 'Example logging content.'
-        ]);
-    }
-
-
-    public function testFind()
-    {
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
-
-        $this->assertGreaterThan(0, $users->count());
+        $this->assertTrue($userLog->get('id') > 0);
     }
 
 
     public function testFindLog()
     {
         $serviceUser = $this->controller->get('User');
-        $serviceUser->findAll();
-        $serviceUser->findLogs();
+        $users = $serviceUser->findAll();
+        $serviceUser->findLogs($users);
 
-        echo '<pre>';
-        print_r($serviceUser);
-        echo '</pre>';
-        exit;
-        
-
-        // $this->assertGreaterThan(0, $users->count());
+        foreach ($users as $user) {
+            $this->assertTrue($user->logs->count() > 0);
+        }
     }
 
 
-    // public function testUpdate()
-    // {
-    //     $serviceUser = $this->controller->get('User');
-    //     $modelUser = $serviceUser->insert($his->$this->exampleUserData);
-    //     $modelUser = $serviceUser->findById($modelUser->get('id'));
+    public function testDelete()
+    {
+        $serviceUser = $this->controller->get('User');
+        $users = $serviceUser->findAll();
+        $serviceUser->findLogs($users);
 
-    //     $this->assertInstanceOf('Mwyatt\\Core\\Model\\User', $modelUser);
-    // }
-
-
-    // public function testDelete()
-    // {
-    //     $serviceUser = $this->controller->get('User');
-    //     $modelUsers = $serviceUser->findAll();
-
-    //     foreach ($modelUsers as $modelUser) {
-    //         $this->assertGreaterThan(0, $serviceUser->deleteById($modelUser->get('id')));
-    //     }
-    // }
+        foreach ($users as $user) {
+            $this->assertTrue($serviceUser->delete($user) > 0);
+        }
+    }
 }

@@ -15,16 +15,6 @@ class ServiceFactory extends \Mwyatt\Core\Factory
     protected $modelFactory;
 
 
-    // public function __construct(
-    // 	\Mwyatt\Core\MapperFactory $mapperFactory,
-    // 	\Mwyatt\Core\ModelFactory $modelFactory
-    // )
-    // {
-    //     $this->mapperFactory = $mapperFactory;
-    //     $this->modelFactory = $modelFactory;
-    // }
-
-
     public function get($name)
     {
         $namespace = $this->defaultNamespace . $name;

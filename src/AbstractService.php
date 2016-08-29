@@ -2,8 +2,15 @@
 
 namespace Mwyatt\Core;
 
-abstract class ServiceAbstract implements \IteratorAggregate
+abstract class AbstractService
 {
+
+
+    /**
+     * how will this work?
+     * @var object iterator
+     */
+    protected $collection;
 
 
     protected $mapperFactory;
@@ -12,27 +19,12 @@ abstract class ServiceAbstract implements \IteratorAggregate
     protected $modelFactory;
 
 
-    protected $collection;
-
-
     public function __construct(
         \Mwyatt\Core\MapperFactory $mapperFactory,
         \Mwyatt\Core\ModelFactory $modelFactory
     ) {
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
-    }
-
-
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->collection);
-    }
-
-
-    public function add($item)
-    {
-        $this->collection[] = $item;
     }
 
 
@@ -48,17 +40,25 @@ abstract class ServiceAbstract implements \IteratorAggregate
     }
 
 
+    public function findById($id)
+    {
+        $mapper = $this->mapperFactory->get($this->getRelativeClassName());
+        $models = $mapper->findByIds([$id]);
+        return $models->current();
+    }
+
+
     public function findAll()
     {
-        $mapper = $this->mapperFactory->get($this->getClassName());
+        $mapper = $this->mapperFactory->get($this->getRelativeClassName());
         $all = $mapper->findAll();
         $this->collection = $all;
         return $all;
     }
 
 
-    public function getClassName()
+    public function getRelativeClassName()
     {
-        return end(explode('\\', get_class($this)));
+        return str_replace('Mwyatt\\Core\\Service\\', '', get_class($this));
     }
 }

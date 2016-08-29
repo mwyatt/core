@@ -18,13 +18,28 @@ class User extends \Mwyatt\Core\AbstractModel
 
     public function __construct()
     {
-        $this->logs = new \Mwyatt\Core\ObjectIterator;
+        $this->logs = new \Mwyatt\Core\ModelIterator;
+    }
+
+
+    public function setId($id)
+    {
+        return $this->id = $id;
     }
 
 
     public function getNameFull()
     {
         return $this->nameFirst . ' ' . $this->nameLast;
+    }
+
+
+    public function getTimeRegistered()
+    {
+        if (!$this->timeRegistered) {
+            $this->timeRegistered = time();
+        }
+        return $this->timeRegistered;
     }
 
 
@@ -61,12 +76,5 @@ class User extends \Mwyatt\Core\AbstractModel
     {
         \Assert\Assertion::maxLength($value, 255);
         $this->password = $value;
-    }
-
-
-    public function setTimeRegistered($value)
-    {
-        \Assert\Assertion::integer($value);
-        $this->timeRegistered = $value;
     }
 }

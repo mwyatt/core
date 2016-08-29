@@ -2,26 +2,22 @@
 
 namespace Mwyatt\Core\Mapper\User;
 
-class Log extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInterface
+class Log extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
-    public function insert(\Mwyatt\Core\Model\LogInterface $userLog)
+    public function persist(\Mwyatt\Core\Model\LogInterface $userLog)
     {
-        $this->database->prepare("insert into `userLog` (`userId`, `logId`) values (?, ?)");
-        $this->database->execute([
-            $userLog->get('userId'),
-            $userLog->get('logId')
-        ]);
-        return $this->database->getLastInsertId();
+        return $this->lazyPersist($userLog, ['userId', 'logId']);
     }
 
 
-    public function readByUserIds($userIds)
+    public function findByUserIds($userIds)
     {
-        $this->database->prepare("
+        $this->adapter->prepare("
             select
-                `log`.`id`,
+                `userLog`.`id` as `id`,
+                `userLog`.`logId`,
                 `log`.`content`,
                 `log`.`timeCreated`
             from `userLog`
@@ -30,13 +26,8 @@ class Log extends \Mwyatt\Core\MapperAbstract implements \Mwyatt\Core\MapperInte
         ");
         $userLogs = [];
         foreach ($userIds as $userId) {
-            $this->database->execute([$userId]);
-            if ($userLog = $this->database->fetch($this->fetchType, $this->model)) {
-                echo '<pre>';
-                print_r($userLog);
-                echo '</pre>';
-                exit;
-                
+            $this->adapter->execute([$userId]);
+            if ($userLog = $this->adapter->fetch($this->fetchType, $this->model)) {
                 $userLog->setUserId($userId);
                 $userLogs[] = $userLog;
             }

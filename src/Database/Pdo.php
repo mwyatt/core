@@ -83,7 +83,11 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     public function execute($parameters = [])
     {
         try {
-            return $this->statement->execute($parameters);
+            if ($parameters) {
+                return $this->statement->execute($parameters);
+            } else {
+                return $this->statement->execute();
+            }
         } catch (\PDOException $exception) {
             throw new \Exception($exception->getMessage());
         }
@@ -133,71 +137,44 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     {
         return $this->connection->lastInsertId($name);
     }
+
+
+    public function bindParam($key, $value, $type = null)
+    {
+        if ($type) {
+            $this->statement->bindParam($key, $value, $type);
+        } elseif (is_int($value)) {
+            $this->statement->bindParam($key, $value, $this->getParamInt());
+        } elseif (is_bool($value)) {
+            $this->statement->bindParam($key, $value, $this->getParamBool());
+        } elseif (is_null($value)) {
+            $this->statement->bindParam($key, $value, $this->getParamNull());
+        } elseif (is_string($value)) {
+            $this->statement->bindParam($key, $value, $this->getParamStr());
+        }
+    }
+
+
+    public function getParamInt()
+    {
+        return \PDO::PARAM_INT;
+    }
+
+
+    public function getParamNull()
+    {
+        return \PDO::PARAM_NULL;
+    }
+
+
+    public function getParamStr()
+    {
+        return \PDO::PARAM_STR;
+    }
+
+
+    public function getParamBool()
+    {
+        return \PDO::PARAM_BOOL;
+    }
 }
-
-
-/*
-
-    public function select($sql) {
-    
-        if ($bind) {
-            $where = [];
-            foreach ($bind as $col => $value) {
-                unset($bind[$col]);
-                $bind[":" . $col] = $value;
-                $where[] = $col . " = :" . $col;
-            }
-        }
-
-        $sql = "SELECT * FROM " . $table
-            . (($bind) ? " WHERE "
-            . implode(" " . $boolOperator . " ", $where) : " ");
-        $this->prepare($sql)
-            ->execute($bind);
-        return $this;
-    }
-
-    
-    public function insert($table, array $bind)
-    {
-        $cols = implode(", ", array_keys($bind));
-        $values = implode(", :", array_keys($bind));
-        foreach ($bind as $col => $value) {
-            unset($bind[$col]);
-            $bind[":" . $col] = $value;
-        }
- 
-        $sql = "INSERT INTO " . $table
-            . " (" . $cols . ")  VALUES (:" . $values . ")";
-        return (int) $this->prepare($sql)
-            ->execute($bind)
-            ->getLastInsertId();
-    }
-
-
-    public function update($table, array $bind, $where = "")
-    {
-        $set = [];
-        foreach ($bind as $col => $value) {
-            unset($bind[$col]);
-            $bind[":" . $col] = $value;
-            $set[] = $col . " = :" . $col;
-        }
- 
-        $sql = "UPDATE " . $table . " SET " . implode(", ", $set)
-            . (($where) ? " WHERE " . $where : " ");
-        return $this->prepare($sql)
-            ->execute($bind)
-            ->getRowCount();
-    }
-    
-
-    public function delete($table, $where = "")
-    {
-        $sql = "DELETE FROM " . $table . (($where) ? " WHERE " . $where : " ");
-        return $this->prepare($sql)
-            ->execute()
-            ->getRowCount();
-    }
-
- */

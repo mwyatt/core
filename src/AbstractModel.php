@@ -2,17 +2,8 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractModel
+abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
 {
-
-
-    protected $id;
-
-
-    public function setId($id)
-    {
-        return $this->id = $id;
-    }
 
 
     /**

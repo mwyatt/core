@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIteratorInterface
+class ModelIterator extends \ArrayIterator
 {
 
 
@@ -16,7 +16,7 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     {
         $keyed = [];
         foreach ($this as $object) {
-            $keyed[$object->$property] = $object;
+            $keyed[$object->get($property)] = $object;
         }
         return $keyed;
     }
@@ -32,10 +32,10 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     {
         $keyed = [];
         foreach ($this as $object) {
-            if (empty($keyed[$object->$property])) {
-                $keyed[$object->$property] = [];
+            if (empty($keyed[$object->get($property)])) {
+                $keyed[$object->get($property)] = [];
             }
-            $keyed[$object->$property][] = $object;
+            $keyed[$object->get($property)][] = $object;
         }
         return $keyed;
     }
@@ -50,7 +50,7 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     public function filterOutByPropertyValue($property, $value)
     {
         foreach ($this as $key => $object) {
-            if ($object->$property == $value) {
+            if ($object->get($property) == $value) {
                 $this->offsetUnset($key);
             }
         }
@@ -66,7 +66,7 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     {
         $collection = [];
         foreach ($this as $value) {
-            $collection[] = $value->$property;
+            $collection[] = $value->get($property);
         }
         return $collection;
     }
@@ -82,10 +82,16 @@ class ObjectIterator extends \ArrayIterator implements \Mwyatt\Core\ObjectIterat
     {
         $objects = [];
         foreach ($this as $object) {
-            if ($object->$property == $value) {
+            if ($object->get($property) == $value) {
                 $objects[] = $object;
             }
         }
         return $objects;
+    }
+
+
+    public function append(\Mwyatt\Core\ModelInterface $model)
+    {
+        $this[] = $model;
     }
 }

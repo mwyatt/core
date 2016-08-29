@@ -14,18 +14,18 @@ class MapperFactory extends \Mwyatt\Core\Factory
 
 
     protected $defaultNamespace = '\\Mwyatt\\Core\\Mapper\\';
-    protected $database;
+    protected $adapter;
 
 
     protected $modelFactory;
 
 
     public function __construct(
-        \Mwyatt\Core\DatabaseInterface $database,
+        \Mwyatt\Core\DatabaseInterface $adapter,
         \Mwyatt\Core\ModelFactory $modelFactory
     ) {
     
-        $this->database = $database;
+        $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
     }
 
@@ -33,6 +33,6 @@ class MapperFactory extends \Mwyatt\Core\Factory
     public function get($name)
     {
         $namespace = $this->defaultNamespace . $name;
-        return new $namespace($this->database);
+        return new $namespace($this->adapter);
     }
 }
