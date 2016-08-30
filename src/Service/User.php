@@ -54,7 +54,13 @@ class User extends \Mwyatt\Core\AbstractService
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
         $userLogs = $mapperUserLog->findByIds($userLogId);
-        $log = $mapperLog->findByIds($id);
+        if (!$userLogs->count()) {
+            return;
+        }
+        $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
+        foreach ($variable as $key => $value) {
+            # code...
+        }
         return;
     }
 

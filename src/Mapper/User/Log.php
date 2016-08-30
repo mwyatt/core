@@ -34,4 +34,10 @@ class Log extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInte
         }
         return $this->getIterator($userLogs);
     }
+
+
+    public function deleteById()
+    {
+        $this->adapter->transacationBegin();
+    }
 }

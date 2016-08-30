@@ -158,14 +158,19 @@ abstract class AbstractMapper
     }
 
 
-    public function delete(\Mwyatt\Core\ModelInterface $model)
+    public function delete(array $models)
     {
         $sql = ['delete', 'from', $this->table, 'where id = ?'];
+        $rowCount = 0;
 
         $this->adapter->prepare(implode(' ', $sql));
-        $this->adapter->bindParam(1, $model->get('id'), $this->adapter->getParamInt());
-        $this->adapter->execute();
 
-        return $this->adapter->getRowCount();
+        foreach ($models as $model) {
+            $this->adapter->bindParam(1, $model->get('id'), $this->adapter->getParamInt());
+            $this->adapter->execute();
+            $rowCount += $this->adapter->getRowCount();
+        }
+
+        return $rowCount;
     }
 }
