@@ -38,7 +38,7 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
 
         if ($modelId) {
             $this->adapter->bindParam(":id", $modelId, $this->adapter->getParamInt());
-        }        
+        }
 
         if (!$this->adapter->execute()) {
             return;
