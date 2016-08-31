@@ -6,9 +6,29 @@ class Log extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInte
 {
 
 
-    public function persist(\Mwyatt\Core\Model\LogInterface $userLog)
+    public function insert(\Mwyatt\Core\Model\User\Log $model)
     {
-        return $this->lazyPersist($userLog, ['userId', 'logId']);
+        if ($model->get('id')) {
+            return;
+        }
+        $cols = ['userId', 'logId'];
+        $sql = $this->getInsertGenericSql($cols);
+
+        if (!$this->adapter->prepare($sql)) {
+            return;
+        }
+
+        $this->adapter->bindParam(':userId', $model->get('userId'), $this->adapter->getParamInt());
+        $this->adapter->bindParam(':logId', $model->get('logId'), $this->adapter->getParamInt());
+
+        if (!$this->adapter->execute()) {
+            return;
+        }
+        
+        $model->setId($this->adapter->getLastInsertId());
+        $rowCount = 1;
+
+        return $rowCount;
     }
 
 

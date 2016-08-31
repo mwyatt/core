@@ -29,16 +29,15 @@ class User extends \Mwyatt\Core\AbstractService
         $log = $this->getModel('Log');
         $userLog = $this->getModel('User\Log');
 
-        try {
-            $userLog->setUserId($userLogData['userId']);
-            $userLog->setContent($userLogData['content']);
-            $log->setContent($userLogData['content']);
-            $mapperLog->persist($log);
-            $userLog->setLogId($log->get('id'));
-            $mapperUserLog->persist($userLog);
-        } catch (Exception $e) {
 
-        }
+        $userLog->setUserId($userLogData['userId']);
+        $userLog->setContent($userLogData['content']);
+        $log->setContent($userLogData['content']);
+        $mapperLog->persist($log);
+        $userLog->setLogId($log->get('id'));
+        $mapperUserLog->persist($userLog);
+        
+
 
         return $userLog;
     }
@@ -80,11 +79,11 @@ class User extends \Mwyatt\Core\AbstractService
             $user->setNameFirst($userData['nameFirst']);
             $user->setNameLast($userData['nameLast']);
             $user->setPassword($userData['password']);
-            $user = $mapperUser->persist($user);
+            $mapperUser->persist($user);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $user;
+        return $user->get('id');
     }
 
 

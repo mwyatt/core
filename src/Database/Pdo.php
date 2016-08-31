@@ -88,40 +88,28 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
     public function fetch($mode = \PDO::FETCH_ASSOC, $argument = null)
     {
-        try {
-            if ($argument) {
-                $this->statement->setFetchMode($mode, $argument);
-                return $this->statement->fetch();
-            } else {
-                return $this->statement->fetch($mode);
-            }
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
+        if ($argument) {
+            $this->statement->setFetchMode($mode, $argument);
+            return $this->statement->fetch();
+        } else {
+            return $this->statement->fetch($mode);
         }
     }
 
 
     public function fetchAll($mode = \PDO::FETCH_ASSOC, $argument = null)
     {
-        try {
-            if ($argument) {
-                return $this->statement->fetchAll($mode, $argument);
-            } else {
-                return $this->statement->fetchAll($mode);
-            }
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
+        if ($argument) {
+            return $this->statement->fetchAll($mode, $argument);
+        } else {
+            return $this->statement->fetchAll($mode);
         }
     }
 
 
     public function getRowCount()
     {
-        try {
-            return $this->statement->rowCount();
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
-        }
+        return $this->statement->rowCount();
     }
     
 
@@ -151,17 +139,7 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
     public function bindParam($key, $value, $type = null)
     {
-        if ($type) {
-            $this->statement->bindParam($key, $value, $type);
-        } elseif (is_int($value)) {
-            $this->statement->bindParam($key, $value, $this->getParamInt());
-        } elseif (is_bool($value)) {
-            $this->statement->bindParam($key, $value, $this->getParamBool());
-        } elseif (is_null($value)) {
-            $this->statement->bindParam($key, $value, $this->getParamNull());
-        } elseif (is_string($value)) {
-            $this->statement->bindParam($key, $value, $this->getParamStr());
-        }
+        $this->statement->bindParam($key, $value, $type);
     }
 
 
