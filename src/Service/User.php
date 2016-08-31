@@ -102,9 +102,8 @@ class User extends \Mwyatt\Core\AbstractService
         $mapperLog = $this->getMapper('Log');
 
         $userLogs = $mapperUserLog->findByUserIds([$user->get('id')]);
-        foreach ($userLogs as $userLog) {
-            $mapperUserLog->delete($userLog);
-        }
+        $mapperUserLog->delete($userLogs);
+
         $logIds = $userLogs->extractProperty('logId');
         $logs = $mapperLog->findByIds($logIds);
 

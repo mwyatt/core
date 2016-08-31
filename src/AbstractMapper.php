@@ -38,6 +38,15 @@ abstract class AbstractMapper
     }
 
 
+    /**
+     * @return bool
+     */
+    public function beginTransaction()
+    {
+        return $this->adapter->beginTransaction();
+    }
+
+
     public function getRelativeClassName()
     {
         return str_replace('Mwyatt\\Core\\Mapper\\', '', get_class($this));

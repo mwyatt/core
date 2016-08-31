@@ -11,5 +11,4 @@ interface MapperInterface
     public function findAll();
     public function findByIds(array $ids);
     public function lazyPersist(\Mwyatt\Core\ModelInterface $model, array $cols);
-    public function delete(\Mwyatt\Core\ModelInterface $model);
 }

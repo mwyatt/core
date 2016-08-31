@@ -17,4 +17,7 @@ interface DatabaseInterface
     public function fetchAll();
     public function getRowCount();
     public function getLastInsertId($name = null);
+    public function beginTransaction();
+    public function rollBack();
+    public function commit();
 }

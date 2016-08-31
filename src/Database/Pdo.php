@@ -72,24 +72,16 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
     public function prepare($sql, $options = [])
     {
-        try {
-            return $this->statement = $this->connection->prepare($sql, $options);
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
-        }
+        return $this->statement = $this->connection->prepare($sql, $options);
     }
     
     
     public function execute($parameters = [])
     {
-        try {
-            if ($parameters) {
-                return $this->statement->execute($parameters);
-            } else {
-                return $this->statement->execute();
-            }
-        } catch (\PDOException $exception) {
-            throw new \Exception($exception->getMessage());
+        if ($parameters) {
+            return $this->statement->execute($parameters);
+        } else {
+            return $this->statement->execute();
         }
     }
 
@@ -136,6 +128,24 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     public function getLastInsertId($name = null)
     {
         return $this->connection->lastInsertId($name);
+    }
+
+
+    public function beginTransaction()
+    {
+        return $this->adapter->beginTransaction();
+    }
+
+
+    public function rollBack()
+    {
+        return $this->adapter->rollBack();
+    }
+
+
+    public function commit()
+    {
+        return $this->adapter->commit();
     }
 
 
