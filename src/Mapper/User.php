@@ -17,7 +17,7 @@ class User extends \Mwyatt\Core\AbstractMapper
 
     /**
      * possible exception from this
-     * @param  array  $data 
+     * @param  array  $data
      * @return object|exception
      */
     public function create(array $data)
@@ -75,7 +75,7 @@ class User extends \Mwyatt\Core\AbstractMapper
             }
         } catch (\Exception $e) {
             
-            // 
+            //
         }
 
         return $rowCount;

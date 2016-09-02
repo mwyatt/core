@@ -88,7 +88,7 @@ abstract class AbstractMapper
 
     /**
      * exceptions should be handled at the mapper level, not service?
-     * @return iterator 
+     * @return iterator
      */
     public function findAll()
     {
@@ -100,7 +100,7 @@ abstract class AbstractMapper
             $models = $this->adapter->fetchAll($this->fetchType, $this->model);
         } catch (\Exception $e) {
 
-            // 
+            //
         }
 
         return $this->getIterator($models);
@@ -132,7 +132,7 @@ abstract class AbstractMapper
             }
         } catch (\Exception $e) {
             
-            // 
+            //
         }
 
         return $this->getIterator($models);

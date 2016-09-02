@@ -9,21 +9,21 @@ class Factory
 {
 
 
-	protected $defaultNamespace;
+    protected $defaultNamespace;
 
 
-	public function setDefaultNamespace($namespace)
-	{
-		$this->defaultNamespace = $namespace;
-	}
+    public function setDefaultNamespace($namespace)
+    {
+        $this->defaultNamespace = $namespace;
+    }
 
 
-	public function get($name)
-	{
-		$namespace = $this->defaultNamespace . $name;
-		if (!class_exists($namespace)) {
-			throw new \Exception("Factory cannot create $namespace, it does not exist.");
-		}
-		return new $namespace;
-	}
+    public function get($name)
+    {
+        $namespace = $this->defaultNamespace . $name;
+        if (!class_exists($namespace)) {
+            throw new \Exception("Factory cannot create $namespace, it does not exist.");
+        }
+        return new $namespace;
+    }
 }
