@@ -37,25 +37,36 @@ class User extends \Mwyatt\Core\AbstractModel
     public function getTimeRegistered()
     {
         if (!$this->timeRegistered) {
-            $this->timeRegistered = time();
+            $this->setTimeRegistered(time());
         }
         return $this->timeRegistered;
     }
 
 
+    protected function setTimeRegistered($value)
+    {
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->minLength(1);
+        $assertionChain->integer();
+        $this->timeRegistered = $value;
+    }
+
+
     public function setEmail($value)
     {
-        \Assert\Assertion::maxLength($value, 50);
-        \Assert\Assertion::email($value);
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->maxLength(50);
+        $assertionChain->email($value);
         $this->email = $value;
     }
 
 
     protected function assertName($value)
     {
-        \Assert\Assertion::minLength($value, 3);
-        \Assert\Assertion::maxLength($value, 75);
-        \Assert\Assertion::string($value);
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->minLength(3);
+        $assertionChain->maxLength(75);
+        $assertionChain->string($value);
         return $value;
     }
 
@@ -74,7 +85,8 @@ class User extends \Mwyatt\Core\AbstractModel
 
     public function setPassword($value)
     {
-        \Assert\Assertion::maxLength($value, 255);
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->maxLength(255);
         $this->password = $value;
     }
 }

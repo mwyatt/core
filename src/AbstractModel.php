@@ -23,4 +23,10 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
             return $this->$property;
         }
     }
+
+
+    protected function getAssertionChain($value)
+    {
+        return \Assert\that($value);
+    }
 }

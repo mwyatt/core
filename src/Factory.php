@@ -21,6 +21,9 @@ class Factory
 	public function get($name)
 	{
 		$namespace = $this->defaultNamespace . $name;
+		if (!class_exists($namespace)) {
+			throw new \Exception("Factory cannot create $namespace, it does not exist.");
+		}
 		return new $namespace;
 	}
 }

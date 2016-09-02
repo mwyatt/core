@@ -121,19 +121,19 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
     public function beginTransaction()
     {
-        return $this->adapter->beginTransaction();
+        return $this->connection->beginTransaction();
     }
 
 
     public function rollBack()
     {
-        return $this->adapter->rollBack();
+        return $this->connection->rollBack();
     }
 
 
     public function commit()
     {
-        return $this->adapter->commit();
+        return $this->connection->commit();
     }
 
 

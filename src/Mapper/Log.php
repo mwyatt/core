@@ -6,6 +6,15 @@ class Log extends \Mwyatt\Core\AbstractMapper
 {
 
 
+    public function create(array $data)
+    {
+        $this->testKeys($data, ['content']);
+        $model = $this->getModel();
+        $model->setContent($data['content']);
+        return $model;
+    }
+
+
     public function persist(\Mwyatt\Core\Model\LogInterface $model)
     {
         $modelId = $model->get('id');
@@ -16,10 +25,7 @@ class Log extends \Mwyatt\Core\AbstractMapper
             $sql = $this->getInsertGenericSql($cols);
         }
 
-        if (!$this->adapter->prepare($sql)) {
-            return;
-        }
-
+        $this->adapter->prepare($sql);
         $this->adapter->bindParam(':content', $model->get('content'), $this->adapter->getParamStr());
         $this->adapter->bindParam(':timeCreated', $model->get('timeCreated'), $this->adapter->getParamInt());
 
@@ -27,9 +33,7 @@ class Log extends \Mwyatt\Core\AbstractMapper
             $this->adapter->bindParam(":id", $modelId, $this->adapter->getParamInt());
         }
 
-        if (!$this->adapter->execute()) {
-            return;
-        }
+        $this->adapter->execute();
         
         if ($modelId) {
             $model->setId($this->adapter->getLastInsertId());

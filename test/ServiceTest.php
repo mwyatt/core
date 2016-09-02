@@ -59,8 +59,18 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testPersistInsert()
     {
         $userService = $this->controller->get('User');
-        $user = $userService->register($this->exampleUserData);
+        $userData = $this->exampleUserData;
+        $user = $userService->register($userData);
         $this->assertTrue($user->get('id') > 0);
+
+        $userData['email'] = 123;
+        
+        try {
+            $user = $userService->register($userData);
+        } catch (\Exception $e) {
+            $e->getMessage();
+        }
+        $this->assertTrue(empty($user));
     }
 
 
@@ -93,10 +103,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $users = $userService->findAll();
         $user = $users->current();
 
-        $userLog = $userService->insertLog([
-            'userId' => $user->get('id'),
-            'content' => 'Example logging content 1.'
-        ]);
+        try {
+            $userLog = $userService->insertLog([
+                'userId' => $user->get('id'),
+                'content' => 'Example logging content 1.'
+            ]);
+        } catch (\Exception $e) {
+            $e->getMessage();
+        }
 
         $this->assertTrue($userLog->get('id') > 0);
     }
@@ -109,16 +123,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $userService->findLogs($users);
 
         foreach ($users as $user) {
-            // $this->assertTrue($user->logs->count() > 0);
+            $this->assertTrue($user->logs->count() > 0);
         }
     }
 
 
     public function testDelete()
     {
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        $userService->findLogs($users);
 
         foreach ($users as $user) {
             $this->assertTrue($userService->delete($user) > 0);

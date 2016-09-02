@@ -27,8 +27,17 @@ class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\Model\LogIn
     public function getTimeCreated()
     {
         if (!$this->timeCreated) {
-            $this->timeCreated = time();
+            $this->setTimeCreated(time());
         }
         return $this->timeCreated;
+    }
+
+
+    protected function setTimeCreated($value)
+    {
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->minLength(1);
+        $assertionChain->integer();
+        $this->timeCreated = $value;
     }
 }

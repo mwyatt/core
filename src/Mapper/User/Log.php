@@ -6,6 +6,16 @@ class Log extends \Mwyatt\Core\AbstractMapper
 {
 
 
+    public function create(array $data)
+    {
+        $this->testKeys($data, ['userId', 'logId']);
+        $model = $this->getModel();
+        $model->setUserId($data['userId']);
+        $model->setLogId($data['logId']);
+        return $model;
+    }
+
+
     public function insert(\Mwyatt\Core\Model\User\Log $model)
     {
         if ($model->get('id')) {
@@ -32,7 +42,7 @@ class Log extends \Mwyatt\Core\AbstractMapper
     }
 
 
-    public function findByUserIds($userIds)
+    public function findByUserIds(array $userIds)
     {
         $this->adapter->prepare("
             select
@@ -46,18 +56,13 @@ class Log extends \Mwyatt\Core\AbstractMapper
         ");
         $userLogs = [];
         foreach ($userIds as $userId) {
-            $this->adapter->execute([$userId]);
+            $this->adapter->bindParam(1, $userId, $this->getParamInt());
+            $this->adapter->execute();
             if ($userLog = $this->adapter->fetch($this->fetchType, $this->model)) {
                 $userLog->setUserId($userId);
                 $userLogs[] = $userLog;
             }
         }
         return $this->getIterator($userLogs);
-    }
-
-
-    public function deleteById()
-    {
-        $this->adapter->transacationBegin();
     }
 }

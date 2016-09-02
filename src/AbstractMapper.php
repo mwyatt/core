@@ -74,39 +74,68 @@ abstract class AbstractMapper
     }
 
 
+    public function getModel()
+    {
+        return new $this->getModelClass();
+    }
+
+
     public function getIterator(array $models)
     {
         return new \Mwyatt\Core\ModelIterator($models);
     }
 
 
+    /**
+     * exceptions should be handled at the mapper level, not service?
+     * @return iterator 
+     */
     public function findAll()
     {
-        $sql = ['select', '*', 'from', $this->table];
+        $models = [];
 
-        $this->adapter->prepare(implode(' ', $sql));
-        $this->adapter->execute();
-     
-        $models = $this->adapter->fetchAll($this->fetchType, $this->model);
+        try {
+            $this->adapter->prepare("select * from `{$this->table}`");
+            $this->adapter->execute();
+            $models = $this->adapter->fetchAll($this->fetchType, $this->model);
+        } catch (\Exception $e) {
+
+            // 
+        }
 
         return $this->getIterator($models);
     }
 
 
-    public function findByIds(array $ids)
+    public function testKeys($data, $keys)
     {
-        $sql = ['select', '*', 'from', $this->table, 'where', '`id`', '= ?'];
-        $this->adapter->prepare(implode(' ', $sql));
-        $results = [];
-        
-        foreach ($ids as $id) {
-            $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
-            $this->adapter->execute();
-            if ($model = $this->adapter->fetch($this->fetchType, $this->model)) {
-                $results[] = $model;
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                throw new \Exception("Missing $key from data array.");
             }
         }
-        return $this->getIterator($results);
+    }
+
+
+    public function findByIds(array $ids)
+    {
+        $models = [];
+
+        try {
+            $this->adapter->prepare("select * from `{$this->table}` where `id` = ?");
+            foreach ($ids as $id) {
+                $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
+                $this->adapter->execute();
+                if ($model = $this->adapter->fetch($this->fetchType, $this->model)) {
+                    $models[] = $model;
+                }
+            }
+        } catch (\Exception $e) {
+            
+            // 
+        }
+
+        return $this->getIterator($models);
     }
 
 
@@ -152,7 +181,7 @@ abstract class AbstractMapper
     }
 
 
-    public function delete(array $models)
+    public function delete($models)
     {
         $sql = ['delete', 'from', $this->table, 'where id = ?'];
         $rowCount = 0;

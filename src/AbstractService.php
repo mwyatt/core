@@ -6,13 +6,6 @@ abstract class AbstractService
 {
 
 
-    /**
-     * how will this work?
-     * @var object iterator
-     */
-    protected $collection;
-
-
     protected $mapperFactory;
 
 
@@ -52,7 +45,6 @@ abstract class AbstractService
     {
         $mapper = $this->mapperFactory->get($this->getRelativeClassName());
         $all = $mapper->findAll();
-        $this->collection = $all;
         return $all;
     }
 

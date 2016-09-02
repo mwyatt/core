@@ -8,9 +8,9 @@ class User extends \Mwyatt\Core\AbstractService
 
     public function badMethod()
     {
-        $sql = ['select', '*badThing', 'from', $this->table];
-        $this->adapter->prepare(implode(' ', $sql));
-        $this->adapter->execute();
+        $mapperUser = $this->getMapper('User');
+        $mapperUser->badMethod();
+
     }
 
 
@@ -34,14 +34,11 @@ class User extends \Mwyatt\Core\AbstractService
     {
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
-        $log = $this->getModel('Log');
-        $userLog = $this->getModel('User\Log');
 
-        $userLog->setUserId($userLogData['userId']);
-        $userLog->setContent($userLogData['content']);
-        $log->setContent($userLogData['content']);
+        $log = $mapperLog->create($userLogData);
         $mapperLog->persist($log);
-        $userLog->setLogId($log->get('id'));
+        $userLogData['logId'] = $log->get('id');
+        $userLog = $mapperUserLog->create($userLogData);
         $mapperUserLog->insert($userLog);
 
         return $userLog;
@@ -72,22 +69,16 @@ class User extends \Mwyatt\Core\AbstractService
     /**
      * is this the place where the object will be validated for correctness?
      * the mapper should not care about whether the object is correct
+     * expect exception from this
      * @param  array  $userData
-     * @return object
+     * @return object|exception
      */
     public function register(array $userData)
     {
         $mapperUser = $this->getMapper('User');
         $user = $this->getModel('User');
-        try {
-            $user->setEmail($userData['email']);
-            $user->setNameFirst($userData['nameFirst']);
-            $user->setNameLast($userData['nameLast']);
-            $user->setPassword($userData['password']);
-            $mapperUser->persist($user);
-        } catch (Exception $e) {
-            return;
-        }
+        $user = $mapperUser->create($userData);
+        $mapperUser->persist($user);
         return $user;
     }
 
@@ -117,6 +108,11 @@ class User extends \Mwyatt\Core\AbstractService
             $mapperLog->delete($logs);
             $mapperUser->delete($user);
         } catch (\Exception $e) {
+            echo '<pre>';
+            print_r($e->getMessage());
+            echo '</pre>';
+            exit;
+            
             $mapperUser->rollback();
             return;
         }
