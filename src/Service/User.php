@@ -6,6 +6,13 @@ class User extends \Mwyatt\Core\AbstractService
 {
 
 
+    public function badMethod()
+    {
+        $mapperUser = $this->getMapper('User');
+        // $mapperUser-
+    }
+
+
     public function findLogs(\Mwyatt\Core\ModelIterator $users)
     {
         $mapperUserLog = $this->getMapper('User\Log');
@@ -95,18 +102,28 @@ class User extends \Mwyatt\Core\AbstractService
     }
 
 
+    /**
+     * @param  \Mwyatt\Core\Model\User
+     * @return bool
+     */
     public function delete(\Mwyatt\Core\Model\User $user)
     {
         $mapperUser = $this->getMapper('User');
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
-
         $userLogs = $mapperUserLog->findByUserIds([$user->get('id')]);
-        $mapperUserLog->delete($userLogs);
+        $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
 
-        $logIds = $userLogs->extractProperty('logId');
-        $logs = $mapperLog->findByIds($logIds);
+        try {
+            $mapperUser->beginTransaction();
+            $mapperUserLog->delete($userLogs);
+            $mapperLog->delete($logs);
+            $mapperUser->delete($user);
+        } catch (\Exception $e) {
+            $mapperUser->rollback();
+            return;
+        }
 
-        return $mapperUser->delete($user);
+        return $mapperUser->commit();
     }
 }

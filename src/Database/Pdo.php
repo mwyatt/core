@@ -53,7 +53,7 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
                 $credentials['username'],
                 $credentials['password']
             );
-        
+
             // set error mode
             $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             // $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

@@ -38,12 +38,21 @@ abstract class AbstractMapper
     }
 
 
-    /**
-     * @return bool
-     */
     public function beginTransaction()
     {
         return $this->adapter->beginTransaction();
+    }
+
+
+    public function rollBack()
+    {
+        return $this->adapter->rollBack();
+    }
+
+
+    public function commit()
+    {
+        return $this->adapter->commit();
     }
 
 
@@ -180,6 +189,6 @@ abstract class AbstractMapper
             $rowCount += $this->adapter->getRowCount();
         }
 
-        return $rowCount;
+        return $rowCount == count($models);
     }
 }

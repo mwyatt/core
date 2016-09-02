@@ -46,10 +46,20 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @expectedException \Exception
+     */
+    public function testException()
+    {
+        $userService = $this->controller->get('User');
+        
+    }
+
+
     public function testPersistInsert()
     {
-        $serviceUser = $this->controller->get('User');
-        $user = $serviceUser->register($this->exampleUserData);
+        $userService = $this->controller->get('User');
+        $user = $userService->register($this->exampleUserData);
 
         $this->assertTrue($user->get('id') > 0);
     }
@@ -57,8 +67,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindAll()
     {
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
+        $userService = $this->controller->get('User');
+        $users = $userService->findAll();
 
         $this->assertTrue($users->count() > 0);
     }
@@ -67,12 +77,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testPersistUpdate()
     {
         $newName = 'Bart';
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
+        $userService = $this->controller->get('User');
+        $users = $userService->findAll();
         $user = $users->current();
         $user->setNameFirst($newName);
-        $serviceUser->update($user);
-        $user = $serviceUser->findById($user->get('id'));
+        $userService->update($user);
+        $user = $userService->findById($user->get('id'));
 
         $this->assertTrue($user->get('nameFirst') === $newName);
     }
@@ -80,11 +90,11 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testPersistLog()
     {
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
+        $userService = $this->controller->get('User');
+        $users = $userService->findAll();
         $user = $users->current();
 
-        $userLog = $serviceUser->insertLog([
+        $userLog = $userService->insertLog([
             'userId' => $user->get('id'),
             'content' => 'Example logging content 1.'
         ]);
@@ -95,9 +105,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindLog()
     {
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
-        $serviceUser->findLogs($users);
+        $userService = $this->controller->get('User');
+        $users = $userService->findAll();
+        $userService->findLogs($users);
 
         foreach ($users as $user) {
             $this->assertTrue($user->logs->count() > 0);
@@ -107,12 +117,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $serviceUser = $this->controller->get('User');
-        $users = $serviceUser->findAll();
-        $serviceUser->findLogs($users);
+        $userService = $this->controller->get('User');
+        $users = $userService->findAll();
+        $userService->findLogs($users);
 
         foreach ($users as $user) {
-            $this->assertTrue($serviceUser->delete($user) > 0);
+            $this->assertTrue($userService->delete($user) > 0);
         }
     }
 }
