@@ -8,8 +8,9 @@ class User extends \Mwyatt\Core\AbstractService
 
     public function badMethod()
     {
-        $mapperUser = $this->getMapper('User');
-        // $mapperUser-
+        $sql = ['select', '*badThing', 'from', $this->table];
+        $this->adapter->prepare(implode(' ', $sql));
+        $this->adapter->execute();
     }
 
 
@@ -36,15 +37,12 @@ class User extends \Mwyatt\Core\AbstractService
         $log = $this->getModel('Log');
         $userLog = $this->getModel('User\Log');
 
-
         $userLog->setUserId($userLogData['userId']);
         $userLog->setContent($userLogData['content']);
         $log->setContent($userLogData['content']);
         $mapperLog->persist($log);
         $userLog->setLogId($log->get('id'));
-        $mapperUserLog->persist($userLog);
-        
-
+        $mapperUserLog->insert($userLog);
 
         return $userLog;
     }
@@ -88,9 +86,9 @@ class User extends \Mwyatt\Core\AbstractService
             $user->setPassword($userData['password']);
             $mapperUser->persist($user);
         } catch (Exception $e) {
-            return $e->getMessage();
+            return;
         }
-        return $user->get('id');
+        return $user;
     }
 
 

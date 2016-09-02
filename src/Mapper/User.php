@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Mapper;
 
-class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInterface
+class User extends \Mwyatt\Core\AbstractMapper
 {
 
 
@@ -32,9 +32,7 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
             $sql = $this->getInsertGenericSql($cols);
         }
 
-        if (!$this->adapter->prepare($sql)) {
-            return;
-        }
+        $this->adapter->prepare($sql);
 
         $this->adapter->bindParam(':email', $model->get('email'), $this->adapter->getParamStr());
         $this->adapter->bindParam(':password', $model->get('password'), $this->adapter->getParamStr());
@@ -46,17 +44,25 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
             $this->adapter->bindParam(":id", $modelId, $this->adapter->getParamInt());
         }
 
-        if (!$this->adapter->execute()) {
-            return;
-        }
+        $this->adapter->execute();
 
         if ($modelId) {
+            $rowCount = $this->adapter->getRowCount();
+        } else {
             $model->setId($this->adapter->getLastInsertId());
             $rowCount = 1;
-        } else {
-            $rowCount = $this->adapter->getRowCount();
         }
 
         return $rowCount;
+    }
+
+
+    public function delete(\Mwyatt\Core\Model\User $user)
+    {
+        $sql = ['delete', 'from', $this->table, 'where id = ?'];
+        $this->adapter->prepare(implode(' ', $sql));
+        $this->adapter->bindParam(1, $user->get('id'), $this->adapter->getParamInt());
+        $this->adapter->execute();
+        return $this->adapter->getRowCount();
     }
 }
