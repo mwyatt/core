@@ -111,68 +111,44 @@ abstract class AbstractMapper
 
 
     /**
-     * is this ever a good idea?
-     * @param  object $model
-     * @param  array  $cols
-     * @return object        $model
+     * builds insert statement using cols provided
+     * @param  array  $cols 'name', 'another'
+     * @return string       built insert sql
      */
-    public function lazyPersist(\Mwyatt\Core\ModelInterface $model, array $cols)
+    public function getInsertGenericSql(array $cols)
     {
-        $hasId = $model->get('id');
-        $sql = [$hasId ? 'update' : 'insert into'];
-        $sql[] = $this->table;
-        $executeData = [];
+        $sql = ['insert into', $this->table, '('];
         $sqlCols = [];
-        
-        if ($hasId) {
-            $sql[] = 'set';
-            foreach ($cols as $col) {
-                $sqlCols[] = "`$col` = :$col";
-            }
-        } else {
-            $sql[] = '(';
-            foreach ($cols as $col) {
-                $sqlCols[] = "`$col`";
-            }
-            $sql[] = implode(', ', $sqlCols);
-            $sql[] = ') values (';
-            $sqlCols = [];
-            foreach ($cols as $col) {
-                $sqlCols[] = ":$col";
-            }
+        foreach ($cols as $col) {
+            $sqlCols[] = "`$col`";
         }
-
         $sql[] = implode(', ', $sqlCols);
-
-        if ($hasId) {
-            $sql[] = "where `id` = :id";
-        } else {
-            $sql[] = ')';
+        $sql[] = ') values (';
+        $sqlCols = [];
+        foreach ($cols as $col) {
+            $sqlCols[] = ":$col";
         }
+        $sql[] = implode(', ', $sqlCols);
+        $sql[] = ')';
+        return implode(' ', $sql);
+    }
 
-        try {
-            $this->adapter->prepare(implode(' ', $sql));
-            if ($hasId) {
-                $this->adapter->bindParam(":id", $model->get('id'));
-            }
-            foreach ($cols as $col) {
-                $this->adapter->bindParam(":$col", $model->get($col));
-            }
-            $this->adapter->execute();
-        } catch (\Exception $e) {
-            return $e->getMessage();
+
+    /**
+     * builds update statement using cols provided
+     * @param  array  $cols 'name', 'another'
+     * @return string       built update sql
+     */
+    public function getUpdateGenericSql(array $cols)
+    {
+        $sql = ['update', $this->table, 'set'];
+        $sqlCols = [];
+        foreach ($cols as $col) {
+            $sqlCols[] = "`$col` = :$col";
         }
-
-        // potential error
-        if (!$this->adapter->getRowCount()) {
-            return 'No rows were affected.';
-        }
-
-        if (!$hasId) {
-            $model->setId($this->adapter->getLastInsertId());
-        }
-
-        return $model;
+        $sql[] = implode(', ', $sqlCols);
+        $sql[] = "where `id` = :id";
+        return implode(' ', $sql);
     }
 
 

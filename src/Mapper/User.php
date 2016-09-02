@@ -13,19 +13,50 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
 
 
     /**
-     * is this the best way to handle insert|update?
-     * will be more convinient using just one method instead of two
      * @param  \Mwyatt\Core\Model\User $user
-     * @return object|string    the object or error string.
+     * @return bool
      */
-    public function persist(\Mwyatt\Core\Model\User $user)
+    public function persist(\Mwyatt\Core\Model\User $model)
     {
-        return $this->lazyPersist($user, [
+        $modelId = $model->get('id');
+        $cols = [
             'email',
             'password',
             'timeRegistered',
             'nameFirst',
             'nameLast'
-        ]);
+        ];
+        if ($modelId) {
+            $sql = $this->getUpdateGenericSql($cols);
+        } else {
+            $sql = $this->getInsertGenericSql($cols);
+        }
+
+        if (!$this->adapter->prepare($sql)) {
+            return;
+        }
+
+        $this->adapter->bindParam(':email', $model->get('email'), $this->adapter->getParamStr());
+        $this->adapter->bindParam(':password', $model->get('password'), $this->adapter->getParamStr());
+        $this->adapter->bindParam(':timeRegistered', $model->get('timeRegistered'), $this->adapter->getParamInt());
+        $this->adapter->bindParam(':nameFirst', $model->get('nameFirst'), $this->adapter->getParamStr());
+        $this->adapter->bindParam(':nameLast', $model->get('nameLast'), $this->adapter->getParamStr());
+
+        if ($modelId) {
+            $this->adapter->bindParam(":id", $modelId, $this->adapter->getParamInt());
+        }
+
+        if (!$this->adapter->execute()) {
+            return;
+        }
+
+        if ($modelId) {
+            $model->setId($this->adapter->getLastInsertId());
+            $rowCount = 1;
+        } else {
+            $rowCount = $this->adapter->getRowCount();
+        }
+
+        return $rowCount;
     }
 }
