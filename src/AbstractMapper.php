@@ -98,22 +98,11 @@ abstract class AbstractMapper
             $this->adapter->prepare("select * from `{$this->table}`");
             $this->adapter->execute();
             $models = $this->adapter->fetchAll($this->fetchType, $this->model);
-        } catch (\Exception $e) {
-
-            //
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
 
         return $this->getIterator($models);
-    }
-
-
-    public function testKeys($data, $keys)
-    {
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $data)) {
-                throw new \Exception("Missing $key from data array.");
-            }
-        }
     }
 
 
@@ -130,9 +119,8 @@ abstract class AbstractMapper
                     $models[] = $model;
                 }
             }
-        } catch (\Exception $e) {
-            
-            //
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
 
         return $this->getIterator($models);

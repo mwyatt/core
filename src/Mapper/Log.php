@@ -6,15 +6,6 @@ class Log extends \Mwyatt\Core\AbstractMapper
 {
 
 
-    public function create(array $data)
-    {
-        $this->testKeys($data, ['content']);
-        $model = $this->getModel();
-        $model->setContent($data['content']);
-        return $model;
-    }
-
-
     public function persist(\Mwyatt\Core\Model\LogInterface $model)
     {
         $modelId = $model->get('id');

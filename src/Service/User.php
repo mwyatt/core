@@ -30,56 +30,47 @@ class User extends \Mwyatt\Core\AbstractService
     }
 
 
-    public function insertLog(array $userLogData)
+    public function insertLog(\Mwyatt\Core\Model\User\Log $userLog)
+    {
+        $mapperUserLog = $this->getMapper('User\Log');
+        $mapperLog = $this->getMapper('Log');
+        $log = $mapperLog->getModel();
+
+        try {
+            $mapperUserLog->beginTransaction();
+            $log->setContent($userLog->getContent());
+            $mapperLog->persist($log);
+            $userLog->setLogId($log->get('id'));
+            $mapperUserLog->insert($userLog);
+            $mapperUserLog->commit();
+        } catch (\Exception $e) {
+            $mapperUserLog->rollback();
+            throw new \Exception("Unable to insert user log.");
+        }
+    }
+
+
+    public function deleteLog(\Mwyatt\Core\Model\User\Log $userLog)
     {
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
 
-        $log = $mapperLog->create($userLogData);
-        $mapperLog->persist($log);
-        $userLogData['logId'] = $log->get('id');
-        $userLog = $mapperUserLog->create($userLogData);
-        $mapperUserLog->insert($userLog);
-
-        return $userLog;
+        try {
+            $mapperUserLog->beginTransaction();
+            $mapperLog->delete([$userLog]);
+            $mapperUserLog->delete([$userLog]);
+            $mapperUserLog->commit();
+        } catch (\Exception $e) {
+            $mapperUserLog->rollback();
+            throw new \Exception("Unable to delete user log.");
+        }
     }
 
 
-    /**
-     * wip
-     * @param  int $userLogId
-     * @return int rowcount
-     */
-    public function deleteLogById($userLogId)
-    {
-        $mapperUserLog = $this->getMapper('User\Log');
-        $mapperLog = $this->getMapper('Log');
-        $userLogs = $mapperUserLog->findByIds($userLogId);
-        if (!$userLogs->count()) {
-            return;
-        }
-        $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
-        foreach ($variable as $key => $value) {
-            # code...
-        }
-        return;
-    }
-
-
-    /**
-     * is this the place where the object will be validated for correctness?
-     * the mapper should not care about whether the object is correct
-     * expect exception from this
-     * @param  array  $userData
-     * @return object|exception
-     */
-    public function register(array $userData)
+    public function register(\Mwyatt\Core\Model\User $user)
     {
         $mapperUser = $this->getMapper('User');
-        $user = $this->getModel('User');
-        $user = $mapperUser->create($userData);
         $mapperUser->persist($user);
-        return $user;
     }
 
 
@@ -90,10 +81,6 @@ class User extends \Mwyatt\Core\AbstractService
     }
 
 
-    /**
-     * @param  \Mwyatt\Core\Model\User
-     * @return bool
-     */
     public function delete(\Mwyatt\Core\Model\User $user)
     {
         $mapperUser = $this->getMapper('User');

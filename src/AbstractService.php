@@ -21,9 +21,9 @@ abstract class AbstractService
     }
 
 
-    public function getModel($name)
+    public function getModel($name = null)
     {
-        return $this->modelFactory->get($name);
+        return $this->modelFactory->get($name ? $name : $this->getRelativeClassName());
     }
 
 

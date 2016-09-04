@@ -46,7 +46,6 @@ class User extends \Mwyatt\Core\AbstractModel
     protected function setTimeRegistered($value)
     {
         $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->minLength(1);
         $assertionChain->integer();
         $this->timeRegistered = $value;
     }

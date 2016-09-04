@@ -6,32 +6,6 @@ class User extends \Mwyatt\Core\AbstractMapper
 {
 
 
-    public function badMethod()
-    {
-        $sql = ['select', '*badThing', 'from', $this->table];
-        $this->adapter->prepare(implode(' ', $sql));
-        $this->adapter->execute();
-
-    }
-
-
-    /**
-     * possible exception from this
-     * @param  array  $data
-     * @return object|exception
-     */
-    public function create(array $data)
-    {
-        $this->testKeys($data, ['email', 'nameFirst', 'nameLast', 'password']);
-        $model = $this->getModel();
-        $model->setEmail($data['email']);
-        $model->setNameFirst($data['nameFirst']);
-        $model->setNameLast($data['nameLast']);
-        $model->setPassword($data['password']);
-        return $model;
-    }
-
-
     /**
      * @param  \Mwyatt\Core\Model\User $user
      * @return bool
@@ -73,9 +47,8 @@ class User extends \Mwyatt\Core\AbstractMapper
                 $model->setId($this->adapter->getLastInsertId());
                 $rowCount = 1;
             }
-        } catch (\Exception $e) {
-            
-            //
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
 
         return $rowCount;
@@ -85,9 +58,14 @@ class User extends \Mwyatt\Core\AbstractMapper
     public function delete(\Mwyatt\Core\Model\User $user)
     {
         $sql = ['delete', 'from', $this->table, 'where id = ?'];
-        $this->adapter->prepare(implode(' ', $sql));
-        $this->adapter->bindParam(1, $user->get('id'), $this->adapter->getParamInt());
-        $this->adapter->execute();
-        return $this->adapter->getRowCount();
+
+        try {
+            $this->adapter->prepare(implode(' ', $sql));
+            $this->adapter->bindParam(1, $user->get('id'), $this->adapter->getParamInt());
+            $this->adapter->execute();
+            return $this->adapter->getRowCount();
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
+        }
     }
 }

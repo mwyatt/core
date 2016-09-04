@@ -52,7 +52,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testException()
     {
         $userService = $this->controller->get('User');
-        $userService->badMethod();
+        $user = $userService->findById('saoidj');
     }
 
 
@@ -60,24 +60,31 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $userService = $this->controller->get('User');
         $userData = $this->exampleUserData;
-        $user = $userService->register($userData);
-        $this->assertTrue($user->get('id') > 0);
+        $user = $userService->getModel();
 
-        $userData['email'] = 123;
-        
-        try {
-            $user = $userService->register($userData);
+        try {        
+            $user->setEmail($userData['email']);
+            $user->setNameFirst($userData['nameFirst']);
+            $user->setNameLast($userData['nameLast']);
+            $user->setPassword($userData['password']);
+            $userService->register($user);
         } catch (\Exception $e) {
-            $e->getMessage();
+            echo $e->getMessage();
         }
-        $this->assertTrue(empty($user));
+
+        $this->assertTrue($user->get('id') > 0);
     }
 
 
     public function testFindAll()
     {
         $userService = $this->controller->get('User');
-        $users = $userService->findAll();
+
+        try {
+            $users = $userService->findAll();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
         $this->assertTrue($users->count() > 0);
     }
@@ -87,11 +94,16 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     {
         $newName = 'Bart';
         $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        $user = $users->current();
-        $user->setNameFirst($newName);
-        $userService->update($user);
-        $user = $userService->findById($user->get('id'));
+
+        try {
+            $users = $userService->findAll();
+            $user = $users->current();
+            $user->setNameFirst($newName);
+            $userService->update($user);
+            $user = $userService->findById($user->get('id'));
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
         $this->assertTrue($user->get('nameFirst') === $newName);
     }
@@ -100,16 +112,16 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testPersistLog()
     {
         $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        $user = $users->current();
+        $userLogService = $this->getService('User\Log');
 
         try {
-            $userLog = $userService->insertLog([
-                'userId' => $user->get('id'),
-                'content' => 'Example logging content 1.'
-            ]);
+            $users = $userService->findAll();
+            $user = $users->current();
+            $userLog = $userLogService->getModel();
+            $userLog->setUserId($user->get('id'));
+            $userLog->setContent('Example logging content 1.');
         } catch (\Exception $e) {
-            $e->getMessage();
+            echo $e->getMessage();
         }
 
         $this->assertTrue($userLog->get('id') > 0);
@@ -119,8 +131,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testFindLog()
     {
         $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        $userService->findLogs($users);
+
+        try {
+            $users = $userService->findAll();
+            $userService->findLogs($users);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
 
         foreach ($users as $user) {
             $this->assertTrue($user->logs->count() > 0);
@@ -130,9 +147,15 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
+        $userService = $this->controller->get('User');
 
-        foreach ($users as $user) {
-            $this->assertTrue($userService->delete($user) > 0);
+        try {
+            $users = $userService->findAll();
+            foreach ($users as $user) {
+                $this->assertTrue($userService->delete($user) > 0);
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
         }
     }
 }

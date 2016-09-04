@@ -10,7 +10,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
 
     public $database;
-    public $credentials = ['host' => '', 'basename' => 'phpunit_1', 'username' => 'root', 'password' => '123'];
+    public $credentials = ['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123'];
     public $userId;
 
 

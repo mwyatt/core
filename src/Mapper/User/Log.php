@@ -56,7 +56,7 @@ class Log extends \Mwyatt\Core\AbstractMapper
         ");
         $userLogs = [];
         foreach ($userIds as $userId) {
-            $this->adapter->bindParam(1, $userId, $this->getParamInt());
+            $this->adapter->bindParam(1, $userId, $this->adapter->getParamInt());
             $this->adapter->execute();
             if ($userLog = $this->adapter->fetch($this->fetchType, $this->model)) {
                 $userLog->setUserId($userId);
