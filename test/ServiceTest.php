@@ -62,7 +62,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $userData = $this->exampleUserData;
         $user = $userService->getModel();
 
-        try {        
+        try {
             $user->setEmail($userData['email']);
             $user->setNameFirst($userData['nameFirst']);
             $user->setNameLast($userData['nameLast']);
