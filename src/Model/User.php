@@ -16,15 +16,21 @@ class User extends \Mwyatt\Core\AbstractModel
     public $logs;
 
 
-    public function __construct()
+    /**
+     * ensures that id cannot be set unless coming from db
+     * @param integer $id 
+     */
+    public function __construct($id = 0)
     {
-        $this->logs = new \Mwyatt\Core\ModelIterator;
+        $this->setId($id);
     }
 
 
-    public function setId($id)
+    protected function setId($value)
     {
-        return $this->id = $id;
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->integer();
+        return $this->id = $value;
     }
 
 

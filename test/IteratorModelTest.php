@@ -2,15 +2,48 @@
 
 namespace Mwyatt\Core;
 
-class ObjectIteratorTest extends \PHPUnit_Framework_TestCase
+class IteratorModelTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public $objects;
+    public $container;
+
+
+    public $controller;
+
+
+    public $models;
 
 
     public function setUp()
     {
+
+        $container = new \Pimple\Container;
+
+        $container['Database'] = function ($container) {
+            $database = new \Mwyatt\Core\Database\Pdo;
+            $database->connect(['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123']);
+            return $database;
+        };
+
+        $container['ModelFactory'] = function ($container) {
+            return new \Mwyatt\Core\ModelFactory;
+        };
+
+        $container['MapperFactory'] = function ($container) {
+            return new \Mwyatt\Core\MapperFactory($container['Database'], $container['ModelFactory']);
+        };
+
+        $container['User'] = function ($container) {
+            return new \Mwyatt\Core\Service\User($container['MapperFactory'], $container['ModelFactory']);
+        };
+
+        $this->controller = new \Mwyatt\Core\Controller($container, new \Mwyatt\Core\View);
+
+        $this->controller-
+        
+
+
         $cat1 = new \stdClass;
         $cat1->name = 'Felix';
         $cat1->type = 'Tabby';

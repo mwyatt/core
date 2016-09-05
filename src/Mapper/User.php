@@ -7,6 +7,34 @@ class User extends \Mwyatt\Core\AbstractMapper
 
 
     /**
+     * should there be an entry point where the model can be created
+     * at all times?
+     * @param  array  $data col > value
+     * @return object       model
+     */
+    public function createModel(array $data)
+    {
+
+        // function for this?
+        $keys = ['email', 'nameFirst', 'nameLast', 'password'];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                throw new \Exception("Missing data key '$key' when creating user model.");
+            }
+        }
+
+        $user = $this->getModel(isset($data['id']) ? $data['id'] : 0);
+        $user->setEmail($data['email']);
+        $user->setNameFirst($data['nameFirst']);
+        $user->setNameLast($data['nameLast']);
+        $user->setPassword($data['password']);
+        $user->logs = $this->getIterator([], 'Log');
+
+        return $user;
+    }
+
+
+    /**
      * @param  \Mwyatt\Core\Model\User $user
      * @return bool
      */

@@ -80,9 +80,20 @@ abstract class AbstractMapper
     }
 
 
-    public function getIterator(array $models)
+    /**
+     * get the iterator specific to this class or roll back to the
+     * base model iterator
+     * @param  array  $models 
+     * @return object         iterator
+     */
+    public function getIterator($models = [])
     {
-        return new \Mwyatt\Core\ModelIterator($models);
+        $iteratorBaseClass = '\Mwyatt\Core\Iterator\Model';
+        $chosenClassName = $iteratorBaseClass . $this->getRelativeClassName();
+        if (!class_exists($chosenClassName)) {
+            $chosenClassName = $iteratorBaseClass;
+        }
+        return new $iteratorBaseClass($models);
     }
 
 

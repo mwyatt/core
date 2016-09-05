@@ -10,7 +10,7 @@
 			<file>test/CookieTest.php</file>
 			<file>test/MailTest.php</file>
 			<file>test/ErrorTest.php</file>
-			<file>test/ObjectIteratorTest.php</file>
+			<file>test/IteratorTest.php</file>
 			<file>test/CacheTest.php</file>
 			<file>test/ModelTest.php</file>
 			<file>test/DatabaseTest.php</file>

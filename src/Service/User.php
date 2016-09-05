@@ -6,15 +6,14 @@ class User extends \Mwyatt\Core\AbstractService
 {
 
 
-    public function badMethod()
+    public function createModel(array $data)
     {
         $mapperUser = $this->getMapper('User');
-        $mapperUser->badMethod();
-
+        return $mapperUser->createModel($data);
     }
 
 
-    public function findLogs(\Mwyatt\Core\ModelIterator $users)
+    public function findLogs(\Mwyatt\Core\Iterator\Model $users)
     {
         $mapperUserLog = $this->getMapper('User\Log');
         $userIds = $users->extractProperty('id');
