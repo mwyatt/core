@@ -142,8 +142,8 @@ abstract class AbstractMapper
 
     /**
      * may not be needed?
-     * @param  array  $keys 
-     * @param  array  $data 
+     * @param  array  $keys
+     * @param  array  $data
      */
     public function testArrayKeys(array $keys, array $data)
     {

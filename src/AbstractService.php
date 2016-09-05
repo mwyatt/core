@@ -12,7 +12,8 @@ abstract class AbstractService implements \Mwyatt\Core\ServiceInterface
     protected $modelFactory;
 
 
-    public function __construct(\Mwyatt\Core\MapperFactory $mapperFactory, \Mwyatt\Core\ModelFactory $modelFactory) {
+    public function __construct(\Mwyatt\Core\MapperFactory $mapperFactory, \Mwyatt\Core\ModelFactory $modelFactory)
+    {
         $this->mapperFactory = $mapperFactory;
         $this->modelFactory = $modelFactory;
     }
