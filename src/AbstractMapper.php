@@ -83,17 +83,21 @@ abstract class AbstractMapper
     /**
      * get the iterator specific to this class or roll back to the
      * base model iterator
+     * or gives the one asked for
      * @param  array  $models
      * @return object         iterator
      */
-    public function getIterator($models = [])
+    public function getIterator($models = [], $relativeClass = '')
     {
-        $iteratorBaseClass = '\Mwyatt\Core\Iterator\Model';
-        $chosenClassName = $iteratorBaseClass . $this->getRelativeClassName();
-        if (!class_exists($chosenClassName)) {
-            $chosenClassName = $iteratorBaseClass;
+        $baseClass = '\Mwyatt\Core\Iterator\Model';
+        if (!$relativeClass) {
+            $relativeClass = $this->getRelativeClassName();
         }
-        return new $iteratorBaseClass($models);
+        $chosenClassName = $baseClass . $relativeClass;
+        if (!class_exists($chosenClassName)) {
+            $chosenClassName = $baseClass;
+        }
+        return new $chosenClassName($models);
     }
 
 
@@ -103,38 +107,51 @@ abstract class AbstractMapper
      */
     public function findAll()
     {
-        $models = [];
-
         try {
+            $models = [];
             $this->adapter->prepare("select * from `{$this->table}`");
             $this->adapter->execute();
-            $models = $this->adapter->fetchAll($this->fetchType, $this->model);
+            while ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
+                $models[] = $this->createModel($data);
+            }
+            return $this->getIterator($models);
         } catch (\PDOException $e) {
             throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
-
-        return $this->getIterator($models);
     }
 
 
     public function findByIds(array $ids)
     {
-        $models = [];
-
         try {
+            $models = [];
             $this->adapter->prepare("select * from `{$this->table}` where `id` = ?");
             foreach ($ids as $id) {
                 $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
                 $this->adapter->execute();
-                if ($model = $this->adapter->fetch($this->fetchType, $this->model)) {
-                    $models[] = $model;
+                if ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
+                    $models[] = $this->createModel($data);
                 }
             }
+            return $this->getIterator($models);
         } catch (\PDOException $e) {
             throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
+    }
 
-        return $this->getIterator($models);
+
+    /**
+     * may not be needed?
+     * @param  array  $keys 
+     * @param  array  $data 
+     */
+    public function testArrayKeys(array $keys, array $data)
+    {
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                throw new \Exception("Missing data key '$key'.");
+            }
+        }
     }
 
 

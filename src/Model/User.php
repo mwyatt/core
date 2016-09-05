@@ -16,43 +16,14 @@ class User extends \Mwyatt\Core\AbstractModel
     public $logs;
 
 
-    /**
-     * ensures that id cannot be set unless coming from db
-     * @param integer $id
-     */
-    public function __construct($id = 0)
-    {
-        $this->setId($id);
-    }
-
-
-    protected function setId($value)
-    {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->integer();
-        return $this->id = $value;
-    }
-
-
     public function getNameFull()
     {
         return $this->nameFirst . ' ' . $this->nameLast;
     }
 
 
-    public function getTimeRegistered()
+    public function setTimeRegistered($value)
     {
-        if (!$this->timeRegistered) {
-            $this->setTimeRegistered(time());
-        }
-        return $this->timeRegistered;
-    }
-
-
-    protected function setTimeRegistered($value)
-    {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->integer();
         $this->timeRegistered = $value;
     }
 

@@ -7,6 +7,27 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
 
 
     /**
+     * ensures that id cannot be set unless coming from db
+     * sometimes a table will not use this
+     * @param integer $id
+     */
+    public function __construct($id = 0)
+    {
+        if (property_exists($this, 'id') && method_exists($this, 'setId')) {
+            $this->setId($id);
+        }
+    }
+
+
+    protected function setId($value)
+    {
+        $assertionChain = $this->getAssertionChain($value);
+        $assertionChain->integerish();
+        return $this->id = $value;
+    }
+
+
+    /**
      * get property via method if in place or just the property
      * @param  string $property
      * @return mixed

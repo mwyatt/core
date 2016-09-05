@@ -2,37 +2,46 @@
 
 namespace Mwyatt\Core\Mapper;
 
-class Log extends \Mwyatt\Core\AbstractMapper
+class Log extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
-    public function persist(\Mwyatt\Core\Model\LogInterface $model)
+    public function createModel(array $data)
     {
-        $modelId = $model->get('id');
-        $cols = ['content', 'timeCreated'];
-        if ($modelId) {
-            $sql = $this->getUpdateGenericSql($cols);
-        } else {
-            $sql = $this->getInsertGenericSql($cols);
+        $model = new $this->model(isset($data['id']) ? $data['id'] : 0);
+        $model->setContent($data['content']);
+        $model->setTimeCreated($data['timeCreated']);
+        return $model;
+    }
+
+
+    public function insert(array $data)
+    {
+        $data['timeCreated'] = time();
+        try {
+            $this->createModel($data);
+            $this->adapter->prepare($this->getInsertGenericSql(['content', 'timeCreated']));
+            $this->adapter->bindParam(':content', $data['content'], $this->adapter->getParamStr());
+            $this->adapter->bindParam(':timeCreated', $data['timeCreated'], $this->adapter->getParamInt());
+            $this->adapter->execute();
+            $data['id'] = $this->adapter->getLastInsertId();
+            return $this->createModel($data);
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
+    }
 
-        $this->adapter->prepare($sql);
-        $this->adapter->bindParam(':content', $model->get('content'), $this->adapter->getParamStr());
-        $this->adapter->bindParam(':timeCreated', $model->get('timeCreated'), $this->adapter->getParamInt());
 
-        if ($modelId) {
-            $this->adapter->bindParam(":id", $modelId, $this->adapter->getParamInt());
+    public function update(\Mwyatt\Core\Model\LogInterface $model)
+    {
+        try {
+            $this->adapter->prepare($this->getUpdateGenericSql(['content']));
+            $this->adapter->bindParam(':content', $model->get('content'), $this->adapter->getParamStr());
+            $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
+            $this->adapter->execute();
+            return $this->adapter->getRowCount();
+        } catch (\PDOException $e) {
+            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
-
-        $this->adapter->execute();
-        
-        if ($modelId) {
-            $model->setId($this->adapter->getLastInsertId());
-            $rowCount = 1;
-        } else {
-            $rowCount = $this->adapter->getRowCount();
-        }
-
-        return $rowCount;
     }
 }

@@ -20,7 +20,21 @@ class Model extends \Mwyatt\Core\AbstractIterator
                 $models[] = $model;
             }
         }
-        return $models;
+        return new $this($models);
+    }
+
+
+    public function getByPropertyValues($property, array $values)
+    {
+        $models = [];
+        foreach ($this as $model) {
+            foreach ($values as $value) {
+                if ($model->get($property) == $value) {
+                    $models[] = $model;
+                }
+            }
+        }
+        return new $this($models);
     }
 
 
@@ -71,6 +85,12 @@ class Model extends \Mwyatt\Core\AbstractIterator
             $collection[] = $model->get($property);
         }
         return $collection;
+    }
+
+
+    public function getIds()
+    {
+        return $this->extractProperty('id');
     }
 
 

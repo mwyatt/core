@@ -6,45 +6,39 @@ class User extends \Mwyatt\Core\AbstractService
 {
 
 
-    public function createModel(array $data)
-    {
-        $mapperUser = $this->getMapper('User');
-        return $mapperUser->createModel($data);
-    }
-
-
     public function findLogs(\Mwyatt\Core\Iterator\Model $users)
     {
         $mapperUserLog = $this->getMapper('User\Log');
-        $userIds = $users->extractProperty('id');
-        $userLogs = $mapperUserLog->findByUserIds($userIds);
-
-        foreach ($userLogs as $userLog) {
-            $userGroup = $users->getByPropertyValue('id', $userLog->get('userId'));
-            $user = current($userGroup);
-            if ($user) {
-                $user->logs->append($userLog);
-            }
+        $mapperLog = $this->getMapper('Log');
+        $userLogs = $mapperUserLog->findByUserIds($users->getIds());
+        $logs = $mapperLog->findByIds($userLogs->getIds());
+        foreach ($users as $user) {
+            $userLogSlice = $userLogs->getByPropertyValue('userId', $user->get('id'));
+            $user->logs = $logs->getByPropertyValues('id', $userLogSlice->extractProperty('logId'));
         }
     }
 
 
-    public function insertLog(\Mwyatt\Core\Model\User\Log $userLog)
+    public function insertLog(array $data)
     {
+        $mapperUser = $this->getMapper('User');
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
-        $log = $mapperLog->getModel();
 
         try {
-            $mapperUserLog->beginTransaction();
-            $log->setContent($userLog->getContent());
-            $mapperLog->persist($log);
-            $userLog->setLogId($log->get('id'));
-            $mapperUserLog->insert($userLog);
-            $mapperUserLog->commit();
+            $mapperUser->beginTransaction();
+            $log = $mapperLog->insert($data);
+            $data['logId'] = $log->get('id');
+            $mapperUserLog->insert($data);
+            $mapperUser->commit();
         } catch (\Exception $e) {
-            $mapperUserLog->rollback();
-            throw new \Exception("Unable to insert user log.");
+            echo '<pre>';
+            print_r($e->getMessage());
+            echo '</pre>';
+            exit;
+            
+            $mapperUser->rollback();
+            throw new \Exception("Problem while inserting.");
         }
     }
 
@@ -56,7 +50,8 @@ class User extends \Mwyatt\Core\AbstractService
 
         try {
             $mapperUserLog->beginTransaction();
-            $mapperLog->delete([$userLog]);
+            $logs = $mapperLog->findByIds($userLog->get('logId'));
+            $mapperLog->delete($logs);
             $mapperUserLog->delete([$userLog]);
             $mapperUserLog->commit();
         } catch (\Exception $e) {
@@ -66,17 +61,14 @@ class User extends \Mwyatt\Core\AbstractService
     }
 
 
-    public function register(\Mwyatt\Core\Model\User $user)
+    public function register(array $data)
     {
         $mapperUser = $this->getMapper('User');
-        $mapperUser->persist($user);
-    }
 
+        // handle password creation here?
+        // crypt($data['password'])
 
-    public function update(\Mwyatt\Core\Model\User $user)
-    {
-        $mapperUser = $this->getMapper('User');
-        return $mapperUser->persist($user);
+        return $mapperUser->insert($data);
     }
 
 
@@ -84,25 +76,18 @@ class User extends \Mwyatt\Core\AbstractService
     {
         $mapperUser = $this->getMapper('User');
         $mapperUserLog = $this->getMapper('User\Log');
-        $mapperLog = $this->getMapper('Log');
-        $userLogs = $mapperUserLog->findByUserIds([$user->get('id')]);
-        $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
 
         try {
             $mapperUser->beginTransaction();
-            $mapperUserLog->delete($userLogs);
+            $userLogs = $mapperUserLog->findByUserIds([$user->get('id')]);
+            $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
             $mapperLog->delete($logs);
-            $mapperUser->delete($user);
+            $mapperUserLog->delete($userLogs);
+            $mapperUser->delete([$user]);
+            $mapperUser->commit();
         } catch (\Exception $e) {
-            echo '<pre>';
-            print_r($e->getMessage());
-            echo '</pre>';
-            exit;
-            
             $mapperUser->rollback();
-            return;
+            throw new \Exception("Unable to delete user.");
         }
-
-        return $mapperUser->commit();
     }
 }
