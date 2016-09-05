@@ -76,7 +76,7 @@ class Model extends \Mwyatt\Core\AbstractIterator
 
     /**
      * hmm?
-     * @param  \Mwyatt\Core\ModelInterface $model 
+     * @param  \Mwyatt\Core\ModelInterface $model
      */
     public function append(\Mwyatt\Core\ModelInterface $model)
     {

@@ -83,7 +83,7 @@ abstract class AbstractMapper
     /**
      * get the iterator specific to this class or roll back to the
      * base model iterator
-     * @param  array  $models 
+     * @param  array  $models
      * @return object         iterator
      */
     public function getIterator($models = [])

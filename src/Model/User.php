@@ -18,7 +18,7 @@ class User extends \Mwyatt\Core\AbstractModel
 
     /**
      * ensures that id cannot be set unless coming from db
-     * @param integer $id 
+     * @param integer $id
      */
     public function __construct($id = 0)
     {

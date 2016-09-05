@@ -9,7 +9,7 @@ class User extends \Mwyatt\Core\Iterator\Model
     /**
      * example usage of more specific iterator
      * will tidy the controllers even further
-     * @param  string $value 
+     * @param  string $value
      * @return array        users
      */
     public function getByNameFirst($value)
