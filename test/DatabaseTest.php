@@ -10,14 +10,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
 
     public $database;
-    public $credentials = ['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123'];
-    public $userId;
 
 
     public function setUp()
     {
         $this->database = new \Mwyatt\Core\Database\Pdo;
-        $this->database->connect($this->credentials);
+        $this->database->connect(['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123']);
     }
 
 
@@ -51,7 +49,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
         $this->database->prepare('select * from user;');
         $this->database->execute();
-        $this->assertEquals(1, count($this->database->fetchAll()));
+        $this->assertTrue(count($this->database->fetchAll()) >= 1);
     }
 
 

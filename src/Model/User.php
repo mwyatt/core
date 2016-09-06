@@ -65,4 +65,10 @@ class User extends \Mwyatt\Core\AbstractModel
         $assertionChain->maxLength(255);
         $this->password = $value;
     }
+
+
+    public function validatePassword($value)
+    {
+        return $this->password === crypt($value);
+    }
 }

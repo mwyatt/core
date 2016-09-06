@@ -10,9 +10,8 @@ interface MapperInterface
     public function rollBack();
     public function commit();
     public function getRelativeClassName();
-    public function setFetchType($type);
     public function getModel();
-    public function getIterator($models = [], $relativeClass = '');
+    public function getIterator(array $models, $requestedClassPath = '');
     public function findAll();
     public function findByIds(array $ids);
     public function testArrayKeys(array $keys, array $data);

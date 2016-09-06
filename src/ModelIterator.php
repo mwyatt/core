@@ -1,8 +1,8 @@
 <?php
 
-namespace Mwyatt\Core\Iterator;
+namespace Mwyatt\Core;
 
-class Model extends \Mwyatt\Core\AbstractIterator
+class ModelIterator extends \Mwyatt\Core\AbstractIterator
 {
 
 

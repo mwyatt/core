@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractMapper
+abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
@@ -24,9 +24,6 @@ abstract class AbstractMapper
      * namespace of the model (guessed using class)
      */
     protected $model;
-
-
-    protected $fetchType = \PDO::FETCH_CLASS;
 
 
     public function __construct(\Mwyatt\Core\DatabaseInterface $adapter)
@@ -62,12 +59,6 @@ abstract class AbstractMapper
     }
 
 
-    public function setFetchType($type)
-    {
-        $this->fetchType = $type;
-    }
-
-
     protected function getModelClass()
     {
         return $this->model;
@@ -81,23 +72,29 @@ abstract class AbstractMapper
 
 
     /**
-     * get the iterator specific to this class or roll back to the
-     * base model iterator
-     * or gives the one asked for
-     * @param  array  $models
-     * @return object         iterator
+     * get the iterator specific to this class or a custom one if required
      */
-    public function getIterator($models = [], $relativeClass = '')
+    public function getIterator(array $models, $requestedClassPath = '')
     {
-        $baseClass = '\Mwyatt\Core\Iterator\Model';
-        if (!$relativeClass) {
-            $relativeClass = $this->getRelativeClassName();
+        $basePath = '\\Mwyatt\\Core\\Model';
+        $endPath = 'Iterator';
+
+        if ($requestedClassPath) {
+            $possiblePath = $basePath . '\\' . $this->getRelativeClassName() . $endPath;
+            if (!class_exists($possiblePath)) {
+                throw new \Exception("Unable to find iterator '$possiblePath'");
+            }
         }
-        $chosenClassName = $baseClass . $relativeClass;
-        if (!class_exists($chosenClassName)) {
-            $chosenClassName = $baseClass;
+
+        $possiblePath = $basePath . '\\' . $this->getRelativeClassName() . $endPath;
+
+        if (class_exists($possiblePath)) {
+            $chosenPath = $possiblePath;
+        } else {
+            $chosenPath = $basePath . $endPath;
         }
-        return new $chosenClassName($models);
+
+        return new $chosenPath($models);
     }
 
 

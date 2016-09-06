@@ -85,7 +85,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         ];
         $users = $userService->findAll();
         foreach ($users as $user) {
-            $userService->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
+            $log = $userService->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
         }
         $users = $userService->findAll();
         $userService->findLogs($users);

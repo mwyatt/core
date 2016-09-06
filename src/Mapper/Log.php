@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Mapper;
 
-class Log extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInterface
+class Log extends \Mwyatt\Core\AbstractMapper
 {
 
 

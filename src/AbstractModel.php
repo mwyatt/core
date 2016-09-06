@@ -46,6 +46,9 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
     }
 
 
+    /**
+     * think about how this could be injected
+     */
     protected function getAssertionChain($value)
     {
         return \Assert\that($value);

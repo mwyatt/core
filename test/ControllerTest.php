@@ -11,7 +11,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $this->controller = new \Mwyatt\Core\Controller(
+        $this->controller = new \Mwyatt\Core\Controller\Test(
             new \Pimple\Container,
             new \Mwyatt\Core\View
         );

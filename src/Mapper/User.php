@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Mapper;
 
-class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInterface
+class User extends \Mwyatt\Core\AbstractMapper
 {
 
 
@@ -14,7 +14,7 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
         $model->setNameLast($data['nameLast']);
         $model->setTimeRegistered($data['timeRegistered']);
         $model->setPassword($data['password']);
-        $model->logs = $this->getIterator([], 'Log');
+        $model->logs = $this->getIterator([]);
         return $model;
     }
 
@@ -59,7 +59,6 @@ class User extends \Mwyatt\Core\AbstractMapper implements \Mwyatt\Core\MapperInt
     public function deleteSingle(\Mwyatt\Core\Model\User $user)
     {
         $sql = ['delete', 'from', $this->table, 'where id = ?'];
-
         try {
             $this->adapter->prepare(implode(' ', $sql));
             $this->adapter->bindParam(1, $user->get('id'), $this->adapter->getParamInt());

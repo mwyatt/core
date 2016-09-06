@@ -6,12 +6,20 @@ class User extends \Mwyatt\Core\AbstractService
 {
 
 
-    public function findLogs(\Mwyatt\Core\Iterator\Model $users)
+    public function findLogs(\Mwyatt\Core\AbstractIterator $users)
     {
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
         $userLogs = $mapperUserLog->findByUserIds($users->getIds());
         $logs = $mapperLog->findByIds($userLogs->getIds());
+
+echo '<pre>';
+print_r($userLogs);
+print_r($logs);
+echo '</pre>';
+exit;
+
+
         foreach ($users as $user) {
             $userLogSlice = $userLogs->getByPropertyValue('userId', $user->get('id'));
             $user->logs = $logs->getByPropertyValues('id', $userLogSlice->extractProperty('logId'));
@@ -31,12 +39,8 @@ class User extends \Mwyatt\Core\AbstractService
             $data['logId'] = $log->get('id');
             $mapperUserLog->insert($data);
             $mapperUser->commit();
+            return $log;
         } catch (\Exception $e) {
-            echo '<pre>';
-            print_r($e->getMessage());
-            echo '</pre>';
-            exit;
-            
             $mapperUser->rollback();
             throw new \Exception("Problem while inserting.");
         }
@@ -64,11 +68,17 @@ class User extends \Mwyatt\Core\AbstractService
     public function register(array $data)
     {
         $mapperUser = $this->getMapper('User');
-
-        // handle password creation here?
-        // crypt($data['password'])
-
+        $data['password'] = $this->createPassword($data['password']);
         return $mapperUser->insert($data);
+    }
+
+
+    protected function createPassword($value)
+    {
+        $assertionChain = \Assert\that($value); // better way to get this?
+        $assertionChain->minLength(6);
+        $assertionChain->maxLength(20);
+        return md5($value);
     }
 
 
@@ -76,6 +86,7 @@ class User extends \Mwyatt\Core\AbstractService
     {
         $mapperUser = $this->getMapper('User');
         $mapperUserLog = $this->getMapper('User\Log');
+        $mapperLog = $this->getMapper('Log');
 
         try {
             $mapperUser->beginTransaction();
