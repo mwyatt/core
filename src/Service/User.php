@@ -13,11 +13,11 @@ class User extends \Mwyatt\Core\AbstractService
         $userLogs = $mapperUserLog->findByUserIds($users->getIds());
         $logs = $mapperLog->findByIds($userLogs->getIds());
 
-echo '<pre>';
-print_r($userLogs);
-print_r($logs);
-echo '</pre>';
-exit;
+        echo '<pre>';
+        print_r($userLogs);
+        print_r($logs);
+        echo '</pre>';
+        exit;
 
 
         foreach ($users as $user) {
