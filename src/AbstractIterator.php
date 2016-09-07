@@ -31,7 +31,8 @@ abstract class AbstractIterator extends \ArrayIterator implements JsonSerializab
     // public string unserialize ( string $serialized )
     // public bool valid ( void )
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this->getArrayCopy();
     }
 }
