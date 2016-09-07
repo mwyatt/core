@@ -6,14 +6,11 @@ class User extends \Mwyatt\Core\Controller
 {
 
 
-    public function all($request)
+    public function all()
     {
-        
         $serviceUser = $this->get('User');
-
-
-
-        $this->view->data->offsetSet('users', $serviceUser->getAll());
+        $users = $serviceUser->findAll();
+        $this->view->data->offsetSet('users', $users);
         return $this->response($this->view->getTemplate('user/all'));
     }
 }

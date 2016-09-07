@@ -31,8 +31,12 @@ class User extends \Mwyatt\Core\AbstractMapper
             $this->adapter->bindParam(':nameFirst', $data['nameFirst'], $this->adapter->getParamStr());
             $this->adapter->bindParam(':nameLast', $data['nameLast'], $this->adapter->getParamStr());
             $this->adapter->execute();
-            $data['id'] = $this->adapter->getLastInsertId();
-            return $this->createModel($data);
+            if ($newId = $this->adapter->getLastInsertId()) {
+                $data['id'] = $this->adapter->getLastInsertId();
+                return $this->createModel($data);
+            } else {
+                throw new \PDOException('Unexpected response from storage adapter.');
+            }
         } catch (\PDOException $e) {
             throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
@@ -49,7 +53,9 @@ class User extends \Mwyatt\Core\AbstractMapper
             $this->adapter->bindParam(':nameLast', $model->get('nameLast'), $this->adapter->getParamStr());
             $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
             $this->adapter->execute();
-            return $this->adapter->getRowCount();
+            if ($this->adapter->getRowCount() !== 1) {
+                throw new \PDOException('Unexpected response from storage adapter.');
+            }
         } catch (\PDOException $e) {
             throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }
@@ -63,7 +69,9 @@ class User extends \Mwyatt\Core\AbstractMapper
             $this->adapter->prepare(implode(' ', $sql));
             $this->adapter->bindParam(1, $user->get('id'), $this->adapter->getParamInt());
             $this->adapter->execute();
-            return $this->adapter->getRowCount();
+            if ($this->adapter->getRowCount() !== 1) {
+                throw new \PDOException('Unexpected response from storage adapter.');
+            }
         } catch (\PDOException $e) {
             throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
         }

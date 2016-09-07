@@ -11,15 +11,7 @@ class User extends \Mwyatt\Core\AbstractService
         $mapperUserLog = $this->getMapper('User\Log');
         $mapperLog = $this->getMapper('Log');
         $userLogs = $mapperUserLog->findByUserIds($users->getIds());
-        $logs = $mapperLog->findByIds($userLogs->getIds());
-
-        echo '<pre>';
-        print_r($userLogs);
-        print_r($logs);
-        echo '</pre>';
-        exit;
-
-
+        $logs = $mapperLog->findByIds($userLogs->extractProperty('logId'));
         foreach ($users as $user) {
             $userLogSlice = $userLogs->getByPropertyValue('userId', $user->get('id'));
             $user->logs = $logs->getByPropertyValues('id', $userLogSlice->extractProperty('logId'));

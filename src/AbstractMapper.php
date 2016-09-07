@@ -207,6 +207,8 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
             $rowCount += $this->adapter->getRowCount();
         }
 
-        return $rowCount == count($models);
+        if ($rowCount !== count($models)) {
+            throw new \PDOException('Unexpected response from storage adapter.');
+        }
     }
 }

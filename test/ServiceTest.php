@@ -103,7 +103,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $users = $userService->findAll();
         $userService->findLogs($users);
         foreach ($users as $user) {
-            // $this->assertTrue($user->logs->count() > 0);
+            $this->assertTrue($user->logs->count() > 0);
         }
     }
 
