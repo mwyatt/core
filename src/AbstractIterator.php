@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractIterator extends \ArrayIterator
+abstract class AbstractIterator extends \ArrayIterator implements JsonSerializable
 {
 
     /* Methods */
@@ -30,4 +30,8 @@ abstract class AbstractIterator extends \ArrayIterator
     // public void uksort ( string $cmp_function )
     // public string unserialize ( string $serialized )
     // public bool valid ( void )
+
+    public function jsonSerialize() {
+        return $this->getArrayCopy();
+    }
 }

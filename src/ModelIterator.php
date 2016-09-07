@@ -7,10 +7,10 @@ class ModelIterator extends \Mwyatt\Core\AbstractIterator
 
 
     /**
-     * get the model which matches the property value
+     * get the models which match the property value
      * @param  string $property
      * @param  mixed $value
-     * @return model
+     * @return object ModelIterator
      */
     public function getByPropertyValue($property, $value)
     {
@@ -24,6 +24,12 @@ class ModelIterator extends \Mwyatt\Core\AbstractIterator
     }
 
 
+    /**
+     * get the models which match the property values
+     * @param  string $property
+     * @param  mixed $value
+     * @return object ModelIterator
+     */
     public function getByPropertyValues($property, array $values)
     {
         $models = [];
@@ -95,7 +101,7 @@ class ModelIterator extends \Mwyatt\Core\AbstractIterator
 
 
     /**
-     * hmm?
+     * why would I need this?
      * @param  \Mwyatt\Core\ModelInterface $model
      */
     public function append(\Mwyatt\Core\ModelInterface $model)
