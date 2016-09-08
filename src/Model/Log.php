@@ -11,6 +11,21 @@ class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\Model\LogIn
     protected $timeCreated;
 
 
+    public function __construct(array $data)
+    {
+        $this->checkDataKeys($data, ['content', 'timeCreated']);
+        $this->id = isset($data['id']) ? $data['id'] : '';
+        
+        $this->setContent($data['content']);
+        $this->setTimeCreated($data['timeCreated']);
+
+        return $this;
+    }
+
+
+
+
+
     public function setContent($value)
     {
         $assertionChain = $this->getAssertionChain($value);

@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-interface ServiceInterface
+interface RepositoryInterface
 {
     public function __construct(\Mwyatt\Core\MapperFactory $mapperFactory, \Mwyatt\Core\ModelFactory $modelFactory);
     public function createModel(array $data);

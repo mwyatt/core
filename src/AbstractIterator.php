@@ -2,10 +2,21 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractIterator extends \ArrayIterator implements JsonSerializable
+abstract class AbstractIterator extends \ArrayIterator implements \JsonSerializable
 {
 
-    /* Methods */
+
+    /**
+     * can be extended base functionality
+     * @return array 
+     */
+    public function jsonSerialize()
+    {
+        return $this->getArrayCopy();
+    }
+
+
+    /* Methods from ArrayIterator */
     // public void append ( mixed $value )
     // public void asort ( void )
     // public __construct ([ mixed $array = array() [, int $flags = 0 ]] )
@@ -30,9 +41,4 @@ abstract class AbstractIterator extends \ArrayIterator implements JsonSerializab
     // public void uksort ( string $cmp_function )
     // public string unserialize ( string $serialized )
     // public bool valid ( void )
-
-    public function jsonSerialize()
-    {
-        return $this->getArrayCopy();
-    }
 }

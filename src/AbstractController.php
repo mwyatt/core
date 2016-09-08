@@ -2,23 +2,47 @@
 
 namespace Mwyatt\Core;
 
-abstract class Controller implements \Mwyatt\Core\ControllerInterface
+abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
 {
 
 
-    protected $serviceFactory;
-
-
+    protected $pimpleContainer;
     protected $view;
 
 
-    public function __construct(
-        \Pimple\Container $serviceFactory,
-        \Mwyatt\Core\View $view
-    ) {
-    
-        $this->serviceFactory = $serviceFactory;
+    public function __construct(\Pimple\Container $pimpleContainer, \Mwyatt\Core\View $view) {
+        $this->pimpleContainer = $pimpleContainer;
         $this->view = $view;
+    }
+
+
+
+    /**
+     * 404 not found exception, will be caught in the routing area
+     * @param  string $message what was not found
+     * @return object
+     */
+    public function exceptionNotFound($message = '')
+    {
+        return new Mwyatt\Core\Controller\Exception\NotFound($message);
+    }
+
+
+    /**
+     * get service from the pimple container
+     * @param  string $name
+     * @return object
+     */
+    public function getService($name)
+    {
+        return $this->pimpleContainer[$name];
+    }
+
+
+    public function getRepository($name)
+    {
+        $repositoryFactory = $this->getService('RepositoryFactory');
+        return $repositoryFactory->get($name);
     }
 
 
@@ -31,17 +55,6 @@ abstract class Controller implements \Mwyatt\Core\ControllerInterface
     public function response($content = '', $statusCode = 200)
     {
         return new \Mwyatt\Core\Response($content, $statusCode);
-    }
-
-
-    /**
-     * get service from the pimple container
-     * @param  string $name
-     * @return object
-     */
-    public function get($name)
-    {
-        return $this->serviceFactory[$name];
     }
 
 
@@ -75,16 +88,5 @@ abstract class Controller implements \Mwyatt\Core\ControllerInterface
     public function render($templatePath)
     {
         return $this->view->getTemplate($templatePath);
-    }
-
-
-    /**
-     * 404 not found exception, will be caught in the routing area
-     * @param  string $message what was not found
-     * @return object
-     */
-    public function exceptionNotFound($message = '')
-    {
-        return new Mwyatt\Core\Controller\Exception\NotFound($message);
     }
 }

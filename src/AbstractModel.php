@@ -6,24 +6,32 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
 {
 
 
-    /**
-     * ensures that id cannot be set unless coming from db
-     * sometimes a table will not use this
-     * @param integer $id
-     */
-    public function __construct($id = 0)
+    public function __construct(array $data)
     {
-        if (property_exists($this, 'id') && method_exists($this, 'setId')) {
-            $this->setId($id);
+        
+    }
+
+
+    protected function checkDataKeys($data, $keys)
+    {
+        $missingKeys = [];
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data)) {
+                $missingKeys[] = $key;
+            }
+        }
+        if ($missingKeys) {
+            throw new \Exception('Missing data keys (' . implode(', ', $missingKeys) . ').');
         }
     }
 
 
-    protected function setId($value)
+    /**
+     * think about how this could be injected
+     */
+    protected function getAssertionChain($value)
     {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->integerish();
-        return $this->id = $value;
+        return \Assert\that($value);
     }
 
 
@@ -43,14 +51,5 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
         if (property_exists($this, $property)) {
             return $this->$property;
         }
-    }
-
-
-    /**
-     * think about how this could be injected
-     */
-    protected function getAssertionChain($value)
-    {
-        return \Assert\that($value);
     }
 }

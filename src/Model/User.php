@@ -12,8 +12,22 @@ class User extends \Mwyatt\Core\AbstractModel
     protected $nameLast;
     protected $password;
     protected $timeRegistered;
+    public $logs = [];
 
-    public $logs;
+
+    public function __construct(array $data)
+    {
+        $this->checkDataKeys($data, ['email', 'nameFirst', 'nameLast', 'timeRegistered', 'password']);
+        $this->id = isset($data['id']) ? $data['id'] : '';
+
+        $this->setEmail($data['email']);
+        $this->setNameFirst($data['nameFirst']);
+        $this->setNameLast($data['nameLast']);
+        $this->setTimeRegistered($data['timeRegistered']);
+        $this->setPassword($data['password']);
+        
+        return $this;
+    }
 
 
     public function getNameFull()

@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class ServiceTest extends \PHPUnit_Framework_TestCase
+class RepositoryTest extends \PHPUnit_Framework_TestCase
 {
 
 
@@ -31,15 +31,15 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         };
 
         $container['ModelFactory'] = function ($container) {
-            return new \Mwyatt\Core\ModelFactory;
+            return new \Mwyatt\Core\Factory\Model;
         };
 
         $container['MapperFactory'] = function ($container) {
-            return new \Mwyatt\Core\MapperFactory($container['Database'], $container['ModelFactory']);
+            return new \Mwyatt\Core\Factory\Mapper($container['Database'], $container['ModelFactory']);
         };
 
-        $container['User'] = function ($container) {
-            return new \Mwyatt\Core\Service\User($container['MapperFactory'], $container['ModelFactory']);
+        $container['RepositoryFactory'] = function ($container) {
+            return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
         };
 
         $this->controller = new \Mwyatt\Core\Controller\Test($container, new \Mwyatt\Core\View);
@@ -48,16 +48,16 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $userService = $this->controller->get('User');
-        $user = $userService->register($this->exampleUserData);
+        $userRepo = $this->controller->getRepository('User');
+        $user = $userRepo->register($this->exampleUserData);
         $this->assertTrue($user->get('id') > 0);
     }
 
 
     public function testFindAll()
     {
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
+        $userRepo = $this->controller->getRepository('User');
+        $users = $userRepo->findAll();
         $this->assertTrue($users->count() > 0);
     }
 
@@ -65,12 +65,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testUpdateAndFindById()
     {
         $newName = 'Bart';
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
+        $userRepo = $this->controller->getRepository('User');
+        $users = $userRepo->findAll();
         $user = $users->current();
         $user->setNameFirst($newName);
-        $userService->update($user);
-        $user = $userService->findById($user->get('id'));
+        $userRepo->update($user);
+        $user = $userRepo->findById($user->get('id'));
         $this->assertTrue(is_object($user));
         $this->assertTrue($user->get('nameFirst') === $newName);
     }
@@ -78,17 +78,17 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testInsertLog()
     {
-        $userService = $this->controller->get('User');
+        $userRepo = $this->controller->getRepository('User');
         $userLogData = [
             'userId' => '',
             'contentId' => ''
         ];
-        $users = $userService->findAll();
+        $users = $userRepo->findAll();
         foreach ($users as $user) {
-            $log = $userService->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
+            $log = $userRepo->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
         }
-        $users = $userService->findAll();
-        $userService->findLogs($users);
+        $users = $userRepo->findAll();
+        $userRepo->findLogs($users);
         foreach ($users as $user) {
             foreach ($user->logs as $userLog) {
                 $this->assertTrue($userLog->get('id') > 0);
@@ -99,9 +99,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testFindLog()
     {
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
-        $userService->findLogs($users);
+        $userRepo = $this->controller->getRepository('User');
+        $users = $userRepo->findAll();
+        $userRepo->findLogs($users);
         foreach ($users as $user) {
             $this->assertTrue($user->logs->count() > 0);
         }
@@ -110,10 +110,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $userService = $this->controller->get('User');
-        $users = $userService->findAll();
+        $userRepo = $this->controller->getRepository('User');
+        $users = $userRepo->findAll();
         foreach ($users as $user) {
-            $userService->delete($user);
+            $userRepo->delete($user);
         }
     }
 }

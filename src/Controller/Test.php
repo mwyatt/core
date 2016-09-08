@@ -6,7 +6,7 @@ namespace Mwyatt\Core\Controller;
  * @author Martin Wyatt <martin.wyatt@gmail.com>
  * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
-class Test extends \Mwyatt\Core\Controller
+class Test extends \Mwyatt\Core\AbstractController
 {
 
 

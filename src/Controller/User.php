@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Controller;
 
-class User extends \Mwyatt\Core\Controller
+class User extends \Mwyatt\Core\AbstractController
 {
 
 

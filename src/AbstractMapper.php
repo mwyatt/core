@@ -6,32 +6,21 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
-    /**
-     * the adapter instance
-     * @var object
-     */
     protected $adapter;
+    protected $modelFactory;
+    protected $iteratorFactory;
 
 
-    /**
-     * the name of table being read (guessed using class)
-     * @var string
-     */
-    protected $table;
-
-
-    /**
-     * namespace of the model (guessed using class)
-     */
-    protected $model;
-
-
-    public function __construct(\Mwyatt\Core\DatabaseInterface $adapter)
+    public function __construct(\Mwyatt\Core\DatabaseInterface $adapter, \Mwyatt\Core\Factory\Model $modelFactory)
     {
         $this->adapter = $adapter;
-        $relClassName = $this->getRelativeClassName();
-        $this->table = lcfirst(str_replace('\\', '', $relClassName));
-        $this->model = '\\Mwyatt\\Core\\Model\\' . $relClassName;
+        $this->modelFactory = $modelFactory;
+    }
+
+
+    protected function getTableNameLazy()
+    {
+        return lcfirst(str_replace('\\', '', $this->getRelativeClassName()));
     }
 
 
@@ -53,45 +42,50 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function getRelativeClassName()
+    protected function getRelativeClassName()
     {
         return str_replace('Mwyatt\\Core\\Mapper\\', '', get_class($this));
     }
 
 
-    protected function getModelClass()
+    protected function getModelClassLazy()
     {
-        return $this->model;
+        return $this->modelFactory->getDefaultNamespace() . $this->getRelativeClassName();
     }
 
 
-    public function getModel()
+    protected function getModelLazy(array $data)
     {
-        return new $this->getModelClass();
+        return $this->getModel($this->getRelativeClassName(), $data);
+    }
+
+
+    protected function getModel($name, array $data)
+    {
+        return $this->modelFactory->get($name, $data);
     }
 
 
     /**
      * get the iterator specific to this class or a custom one if required
      */
-    public function getIterator(array $models, $requestedClassPath = '')
+    public function getIterator($models = [], $requestedClassPath = '')
     {
-        $basePath = '\\Mwyatt\\Core\\Model';
-        $endPath = 'Iterator';
+        $basePath = '\\Mwyatt\\Core\\Iterator\\Model';
 
         if ($requestedClassPath) {
-            $possiblePath = $basePath . '\\' . $this->getRelativeClassName() . $endPath;
+            $possiblePath = $basePath . '\\' . $requestedClassPath;
             if (!class_exists($possiblePath)) {
                 throw new \Exception("Unable to find iterator '$possiblePath'");
             }
+        } else {
+            $possiblePath = $basePath . '\\' . $this->getRelativeClassName();
         }
-
-        $possiblePath = $basePath . '\\' . $this->getRelativeClassName() . $endPath;
 
         if (class_exists($possiblePath)) {
             $chosenPath = $possiblePath;
         } else {
-            $chosenPath = $basePath . $endPath;
+            $chosenPath = $basePath;
         }
 
         return new $chosenPath($models);
@@ -106,10 +100,10 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     {
         try {
             $models = [];
-            $this->adapter->prepare("select * from `{$this->table}`");
+            $this->adapter->prepare("select * from `{$this->getTableNameLazy()}`");
             $this->adapter->execute();
             while ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
-                $models[] = $this->createModel($data);
+                $models[] = $this->getModelLazy($data);
             }
             return $this->getIterator($models);
         } catch (\PDOException $e) {
@@ -122,12 +116,12 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     {
         try {
             $models = [];
-            $this->adapter->prepare("select * from `{$this->table}` where `id` = ?");
+            $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `id` = ?");
             foreach ($ids as $id) {
                 $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
                 $this->adapter->execute();
                 if ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
-                    $models[] = $this->createModel($data);
+                    $models[] = $this->getModelLazy($data);
                 }
             }
             return $this->getIterator($models);
@@ -159,7 +153,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
      */
     public function getInsertGenericSql(array $cols)
     {
-        $sql = ['insert into', $this->table, '('];
+        $sql = ['insert into', $this->getTableNameLazy(), '('];
         $sqlCols = [];
         foreach ($cols as $col) {
             $sqlCols[] = "`$col`";
@@ -183,7 +177,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
      */
     public function getUpdateGenericSql(array $cols)
     {
-        $sql = ['update', $this->table, 'set'];
+        $sql = ['update', $this->getTableNameLazy(), 'set'];
         $sqlCols = [];
         foreach ($cols as $col) {
             $sqlCols[] = "`$col` = :$col";
@@ -196,7 +190,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     public function delete($models)
     {
-        $sql = ['delete', 'from', $this->table, 'where id = ?'];
+        $sql = ['delete', 'from', $this->getTableNameLazy(), 'where id = ?'];
         $rowCount = 0;
 
         $this->adapter->prepare(implode(' ', $sql));
