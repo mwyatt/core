@@ -3,4 +3,6 @@
 namespace Mwyatt\Core;
 
 interface MapperInterface
-{}
+{
+
+}

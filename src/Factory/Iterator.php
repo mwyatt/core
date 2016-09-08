@@ -10,7 +10,8 @@ class Iterator extends \Mwyatt\Core\AbstractIterator
     protected $contents;
 
 
-    public function __construct(array $contents) {
+    public function __construct(array $contents)
+    {
         $this->contents = $contents;
     }
 

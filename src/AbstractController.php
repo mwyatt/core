@@ -10,7 +10,8 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     protected $view;
 
 
-    public function __construct(\Pimple\Container $pimpleContainer, \Mwyatt\Core\View $view) {
+    public function __construct(\Pimple\Container $pimpleContainer, \Mwyatt\Core\View $view)
+    {
         $this->pimpleContainer = $pimpleContainer;
         $this->view = $view;
     }

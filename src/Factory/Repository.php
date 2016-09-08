@@ -10,7 +10,8 @@ class Repository extends \Mwyatt\Core\AbstractFactory
     protected $mapperFactory;
 
 
-    public function __construct(\Mwyatt\Core\Factory\Mapper $mapperFactory) {
+    public function __construct(\Mwyatt\Core\Factory\Mapper $mapperFactory)
+    {
         $this->mapperFactory = $mapperFactory;
     }
 

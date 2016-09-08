@@ -8,7 +8,7 @@ abstract class AbstractIterator extends \ArrayIterator implements \JsonSerializa
 
     /**
      * can be extended base functionality
-     * @return array 
+     * @return array
      */
     public function jsonSerialize()
     {

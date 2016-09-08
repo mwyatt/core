@@ -11,7 +11,8 @@ class Mapper extends \Mwyatt\Core\AbstractFactory
     protected $modelFactory;
 
 
-    public function __construct(\Mwyatt\Core\DatabaseInterface $adapter, \Mwyatt\Core\Factory\Model $modelFactory) {
+    public function __construct(\Mwyatt\Core\DatabaseInterface $adapter, \Mwyatt\Core\Factory\Model $modelFactory)
+    {
         $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
     }

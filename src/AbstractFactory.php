@@ -34,7 +34,7 @@ abstract class AbstractFactory
     /**
      * to be extended to inject required objects
      * @param  string $name Name/Space
-     * @return object       
+     * @return object
      */
     public function get($name)
     {
