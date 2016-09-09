@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractRepository
+abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 {
 
 
@@ -37,44 +37,44 @@ abstract class AbstractRepository
     public function findAll()
     {
         $mapper = $this->getMapperLazy();
-        $all = $mapper->findAll();
-        return $all;
+        $modelIterator = $mapper->findAll();
+        return $modelIterator;
     }
 
 
     public function findById($id)
     {
         $mapper = $this->getMapperLazy();
-        $models = $mapper->findByIds([$id]);
-        return $models->current();
+        $modelIterator = $mapper->findByIds([$id]);
+        return $modelIterator->current();
     }
 
 
     public function findByIds(array $ids)
     {
         $mapper = $this->getMapperLazy();
-        $models = $mapper->findByIds($ids);
-        return $models;
+        $modelIterator = $mapper->findByIds($ids);
+        return $modelIterator;
     }
 
 
     public function insert(array $data)
     {
         $mapper = $this->getMapperLazy();
-        $mapper->insert($data);
+        return $mapper->insert($data);
     }
 
 
     public function update(\Mwyatt\Core\ModelInterface $model)
     {
         $mapper = $this->getMapperLazy();
-        $mapper->update($model);
+        return $mapper->update($model);
     }
 
 
     public function delete($models)
     {
         $mapper = $this->getMapperLazy();
-        $mapper->delete($models);
+        return $mapper->delete($models);
     }
 }

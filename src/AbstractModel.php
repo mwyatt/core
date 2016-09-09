@@ -6,28 +6,8 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
 {
 
 
-    public function __construct(array $data)
-    {
-        
-    }
-
-
-    protected function checkDataKeys($data, $keys)
-    {
-        $missingKeys = [];
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $data)) {
-                $missingKeys[] = $key;
-            }
-        }
-        if ($missingKeys) {
-            throw new \Exception('Missing data keys (' . implode(', ', $missingKeys) . ').');
-        }
-    }
-
-
     /**
-     * think about how this could be injected
+     * think about how this could be injected in the factory
      */
     protected function getAssertionChain($value)
     {

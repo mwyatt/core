@@ -6,13 +6,13 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public $container;
+    protected $container;
 
 
-    public $controller;
+    protected $controller;
 
 
-    public $exampleUserData = [
+    protected $userModelData = [
         'email' => 'martin.wyatt@gmail.com',
         'password' => '123123123',
         'nameFirst' => 'Martin',
@@ -23,25 +23,20 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new \Pimple\Container;
-
         $container['Database'] = function ($container) {
             $database = new \Mwyatt\Core\Database\Pdo;
             $database->connect(['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123']);
             return $database;
         };
-
         $container['ModelFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Model;
         };
-
         $container['MapperFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Mapper($container['Database'], $container['ModelFactory']);
         };
-
         $container['RepositoryFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
         };
-
         $this->controller = new \Mwyatt\Core\Controller\Test($container, new \Mwyatt\Core\View);
     }
 
@@ -49,43 +44,81 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function testInsert()
     {
         $userRepo = $this->controller->getRepository('User');
-        $user = $userRepo->register($this->exampleUserData);
+        $database = $this->controller->getService('Database');
+        $database->beginTransaction();
+
+        try {
+            $user = $userRepo->register($this->userModelData);
+            $database->commit();
+        } catch (\Exception $e) {
+            $database->rollback();
+            exit($e->getMessage());
+        }
+
         $this->assertTrue($user->get('id') > 0);
     }
 
 
-    public function testFindAll()
+    public function testFind()
     {
         $userRepo = $this->controller->getRepository('User');
         $users = $userRepo->findAll();
+        $usersCountPrimary = $users->count();
         $this->assertTrue($users->count() > 0);
+
+        $user = $users->current();
+        $users = $userRepo->findByIds($users->getIds());
+        $this->assertTrue($users->count() === $usersCountPrimary);
+
+        $user = $users->current();
+        $userSingle = $userRepo->findById($user->get('id'));
+        $this->assertTrue($user->get('id') === $userSingle->get('id'));
     }
 
 
-    public function testUpdateAndFindById()
+    public function testUpdate()
     {
-        $newName = 'Bart';
         $userRepo = $this->controller->getRepository('User');
+        $database = $this->controller->getService('Database');
+        $database->beginTransaction();
+
         $users = $userRepo->findAll();
         $user = $users->current();
-        $user->setNameFirst($newName);
-        $userRepo->update($user);
+        $newUserNameFirst = $user->get('nameFirst') . 'append';
+
+        try {
+            $user->setNameFirst($newUserNameFirst);
+            $rowCount = $userRepo->update($user);
+            $this->assertTrue($rowCount === 1);
+            $database->commit();
+        } catch (\Exception $e) {
+            $database->rollback();
+            exit($e->getMessage());
+        }
+
         $user = $userRepo->findById($user->get('id'));
-        $this->assertTrue(is_object($user));
-        $this->assertTrue($user->get('nameFirst') === $newName);
+        $this->assertTrue($user->get('nameFirst') === $newUserNameFirst);
     }
 
 
+    /**
+     * example usage of the transaction here
+     * where else could this be placed really?
+     */
     public function testInsertLog()
     {
+        $database = $this->controller->getService('Database');
         $userRepo = $this->controller->getRepository('User');
-        $userLogData = [
-            'userId' => '',
-            'contentId' => ''
-        ];
         $users = $userRepo->findAll();
-        foreach ($users as $user) {
-            $log = $userRepo->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
+        try {
+            $database->beginTransaction();
+            foreach ($users as $user) {
+                $log = $userRepo->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
+            }
+            $database->commit();
+        } catch (\Exception $e) {
+            $database->rollback();
+            exit($e->getMessage());
         }
         $users = $userRepo->findAll();
         $userRepo->findLogs($users);
@@ -110,10 +143,17 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
+        $database = $this->controller->getService('Database');
         $userRepo = $this->controller->getRepository('User');
-        $users = $userRepo->findAll();
-        foreach ($users as $user) {
-            $userRepo->delete($user);
+
+        try {
+            $database->beginTransaction();
+            $users = $userRepo->findAll();
+            $userRepo->delete($users);
+            $database->commit();
+        } catch (\Exception $e) {
+            $database->rollback();
+            exit($e->getMessage());
         }
     }
 }

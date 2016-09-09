@@ -11,6 +11,15 @@ class Log extends \Mwyatt\Core\AbstractModel
     protected $logId;
 
 
+    public function __construct(array $data)
+    {
+        $this->id = isset($data['id']) ? $data['id'] : '';
+        $this->setUserId($data['userId']);
+        $this->setLogId($data['logId']);
+        return $this;
+    }
+
+
     public function setUserId($value)
     {
         return $this->userId = $value;

@@ -123,7 +123,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
     public function testGetByPropertyValue()
     {
         $catBag = new \Mwyatt\Core\ObjectIterator($this->objects);
-        $cats = $catBag->getByPropertyValue('type', 'Tabby');
+        $cats = $catBag->getByPropertyValue('type', ['Tabby']);
         $this->assertTrue(count($cats) == 2);
     }
 

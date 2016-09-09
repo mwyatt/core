@@ -7,20 +7,15 @@ class Model extends \Mwyatt\Core\AbstractIterator
 
 
     /**
-     * get the models which match the property value
-     * @param  string $property
-     * @param  mixed $value
-     * @return object ModelIterator
+     * lazy for getbypropertyvalue
+     * @param  int $id 
+     * @return object     
      */
-    public function getByPropertyValue($property, $value)
+    public function getById($id)
     {
-        $models = [];
-        foreach ($this as $model) {
-            if ($model->get($property) == $value) {
-                $models[] = $model;
-            }
+        if ($models = $this->getByPropertyValues('id', [$id])) {
+            return $models->current();
         }
-        return new $this($models);
     }
 
 

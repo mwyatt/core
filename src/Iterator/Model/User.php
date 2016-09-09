@@ -20,6 +20,6 @@ class User extends \Mwyatt\Core\Iterator\Model
                 $users[] = $user;
             }
         }
-        return $users;
+        return new $this($users);
     }
 }

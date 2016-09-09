@@ -6,26 +6,36 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 {
 
 
-    public $exampleUserData = [
+    protected $modelFactory;
+
+
+    protected $userModelDataGood = [
         'email' => 'martin.wyatt@gmail.com',
+        'timeRegistered' => '8123927829',
         'password' => '123123123',
-        'timeRegistered' => 129038190382392,
         'nameFirst' => 'Martin',
         'nameLast' => 'Wyatt'
     ];
 
 
-    public function testCreate()
+    protected $userModelDataBad = [
+        'email' => 'martinwyattgmailcom',
+        'timeRegistered' => '8123927829',
+        'password' => '123123123',
+        'nameFirst' => 'Martin',
+        'nameLast' => 'Wyatt'
+    ];
+
+
+    public function setUp()
     {
-        $user = new \Mwyatt\Core\Model\User;
+        $this->modelFactory = new \Mwyatt\Core\Factory\Model;
     }
 
 
     public function testSetPass()
     {
-        $user = new \Mwyatt\Core\Model\User;
-        $user->setEmail($this->exampleUserData['email']);
-        $this->assertEquals($user->get('email'), $this->exampleUserData['email']);
+        $user = $this->modelFactory->get('User', $this->userModelDataGood);
     }
 
 
@@ -34,7 +44,13 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetFail()
     {
-        $user = new \Mwyatt\Core\Model\User;
-        $user->setEmail('failureemail.com');
+        $user = $this->modelFactory->get('User', $this->userModelDataBad);
+    }
+
+
+    public function testGet()
+    {
+        $user = $this->modelFactory->get('User', $this->userModelDataGood);
+        $this->assertEquals($user->get('email'), $this->userModelDataGood['email']);
     }
 }

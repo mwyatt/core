@@ -6,6 +6,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
+    protected $defaultNamespace = 'Mwyatt\\Core\\Mapper\\';
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
@@ -24,27 +25,9 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function beginTransaction()
-    {
-        return $this->adapter->beginTransaction();
-    }
-
-
-    public function rollBack()
-    {
-        return $this->adapter->rollBack();
-    }
-
-
-    public function commit()
-    {
-        return $this->adapter->commit();
-    }
-
-
     protected function getRelativeClassName()
     {
-        return str_replace('Mwyatt\\Core\\Mapper\\', '', get_class($this));
+        return str_replace($this->defaultNamespace, '', get_class($this));
     }
 
 
@@ -92,57 +75,30 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    /**
-     * exceptions should be handled at the mapper level, not service?
-     * @return iterator
-     */
     public function findAll()
     {
-        try {
-            $models = [];
-            $this->adapter->prepare("select * from `{$this->getTableNameLazy()}`");
-            $this->adapter->execute();
-            while ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
-                $models[] = $this->getModelLazy($data);
-            }
-            return $this->getIterator($models);
-        } catch (\PDOException $e) {
-            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
+        $models = [];
+        $this->adapter->prepare("select * from `{$this->getTableNameLazy()}`");
+        $this->adapter->execute();
+        while ($data = $this->adapter->fetch()) {
+            $models[] = $this->getModelLazy($data);
         }
+        return $this->getIterator($models);
     }
 
 
     public function findByIds(array $ids)
     {
-        try {
-            $models = [];
-            $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `id` = ?");
-            foreach ($ids as $id) {
-                $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
-                $this->adapter->execute();
-                if ($data = $this->adapter->fetch($this->adapter->getFetchTypeAssoc())) {
-                    $models[] = $this->getModelLazy($data);
-                }
-            }
-            return $this->getIterator($models);
-        } catch (\PDOException $e) {
-            throw new \Mwyatt\Core\DatabaseException("Problem while communicating with database.");
-        }
-    }
-
-
-    /**
-     * may not be needed?
-     * @param  array  $keys
-     * @param  array  $data
-     */
-    public function testArrayKeys(array $keys, array $data)
-    {
-        foreach ($keys as $key) {
-            if (!array_key_exists($key, $data)) {
-                throw new \Exception("Missing data key '$key'.");
+        $models = [];
+        $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `id` = ?");
+        foreach ($ids as $id) {
+            $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
+            $this->adapter->execute();
+            if ($data = $this->adapter->fetch()) {
+                $models[] = $this->getModelLazy($data);
             }
         }
+        return $this->getIterator($models);
     }
 
 
@@ -188,21 +144,19 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function delete($models)
+    public function deleteById(\Mwyatt\Core\AbstractIterator $models)
     {
         $sql = ['delete', 'from', $this->getTableNameLazy(), 'where id = ?'];
         $rowCount = 0;
-
+        $modelCount = count($models);
         $this->adapter->prepare(implode(' ', $sql));
-
         foreach ($models as $model) {
             $this->adapter->bindParam(1, $model->get('id'), $this->adapter->getParamInt());
             $this->adapter->execute();
             $rowCount += $this->adapter->getRowCount();
         }
-
-        if ($rowCount !== count($models)) {
-            throw new \PDOException('Unexpected response from storage adapter.');
+        if ($rowCount !== $modelCount) {
+            throw new \PDOException("Deleted rowCount $rowCount does not match expected $modelCount.");
         }
     }
 }

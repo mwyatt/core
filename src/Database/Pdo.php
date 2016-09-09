@@ -2,12 +2,6 @@
 
 namespace Mwyatt\Core\Database;
 
-/**
- * will act as an interface for any database connection soon
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
- */
 class Pdo implements \Mwyatt\Core\DatabaseInterface
 {
    
@@ -125,9 +119,9 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
-    public function rollBack()
+    public function rollback()
     {
-        return $this->connection->rollBack();
+        return $this->connection->rollback();
     }
 
 
