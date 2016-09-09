@@ -8,8 +8,8 @@ class Model extends \Mwyatt\Core\AbstractIterator
 
     /**
      * lazy for getbypropertyvalue
-     * @param  int $id 
-     * @return object     
+     * @param  int $id
+     * @return object
      */
     public function getById($id)
     {
