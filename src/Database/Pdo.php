@@ -32,8 +32,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
             // set data source name
             $dataSourceName = [
-                'mysql:host' => $credentials['host'],
-                'dbname' => $credentials['basename'],
+                'mysql:host' => $credentials['database.host'],
+                'dbname' => $credentials['database.basename'],
                 'charset' => 'utf8'
             ];
             foreach ($dataSourceName as $key => $value) {
@@ -44,8 +44,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
             // connect
             $this->connection = new \PDO(
                 $dataSourceName,
-                $credentials['username'],
-                $credentials['password']
+                $credentials['database.username'],
+                $credentials['database.password']
             );
 
             // set error mode

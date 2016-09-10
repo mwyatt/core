@@ -15,7 +15,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->database = new \Mwyatt\Core\Database\Pdo;
-        $this->database->connect(['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123']);
+        $config = include (string) (__DIR__ . '/../') . 'config.php';
+        $this->database->connect($config);
     }
 
 
@@ -25,7 +26,9 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testConnectFail()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
-        $database->connect(['host' => '', 'basename' => '', 'username' => '', 'password' => '']);
+        $config = include (string) (__DIR__ . '/../') . 'config.php';
+        $config['database.password'] = 'notThePassword';
+        $database->connect($config);
     }
 
 

@@ -11,10 +11,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $this->controller = new \Mwyatt\Core\Controller\Test(
-            new \Pimple\Container,
-            new \Mwyatt\Core\View
-        );
+        $this->controller = new \Mwyatt\Core\Controller\Test(new \Pimple\Container, new \Mwyatt\Core\View);
     }
 
 
@@ -24,7 +21,12 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testService()
+    public function testGetService()
+    {
+    }
+
+
+    public function testGetRepository()
     {
     }
 
@@ -36,11 +38,4 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller->redirect('does-not-exist');
     }
-
-
-    // public function testRedirectSuccess()
-    // {
-    //     $redirect = $this->controller->redirect();
-    //     $this->assertTrue($redirect);
-    // }
 }

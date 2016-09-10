@@ -70,7 +70,7 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
      */
     public function redirect($key, $config = [], $statusCode = 302)
     {
-        $url = $this->get('Url');
+        $url = $this->getService('Url');
         $urlNew = $url->generate($key, $config);
 
         // generate string to redirect to from url

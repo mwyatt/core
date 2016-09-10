@@ -23,9 +23,13 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new \Pimple\Container;
+        $container['ConfigLocal'] = function ($container) {
+            return include (string) (__DIR__ . '/../') . 'config.php';
+        };
         $container['Database'] = function ($container) {
+            $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect(['host' => '', 'basename' => 'core_1', 'username' => 'root', 'password' => '123']);
+            $database->connect($config);
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
