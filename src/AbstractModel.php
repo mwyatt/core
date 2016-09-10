@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
+abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerializable
 {
 
 
@@ -31,5 +31,11 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface
         if (property_exists($this, $property)) {
             return $this->$property;
         }
+    }
+
+
+    public function jsonSerialize()
+    {
+        return $this;
     }
 }

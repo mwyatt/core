@@ -82,4 +82,11 @@ class User extends \Mwyatt\Core\AbstractModel
     {
         return $this->password === crypt($value);
     }
+
+
+    public function jsonSerialize()
+    {
+        $this->setPassword('');
+        return $this;
+    }
 }

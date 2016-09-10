@@ -92,7 +92,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         try {
             $user->setNameFirst($newUserNameFirst);
-            $rowCount = $userRepo->update($user);
+            $rowCount = $userRepo->updateById($users);
             $this->assertTrue($rowCount === 1);
             $database->commit();
         } catch (\Exception $e) {

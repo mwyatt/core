@@ -18,7 +18,7 @@ class Log extends \Mwyatt\Core\AbstractMapper
     }
 
 
-    public function update(\Mwyatt\Core\Model\Log $model)
+    public function updateById(\Mwyatt\Core\Model\Log $model)
     {
         $this->adapter->prepare($this->getUpdateGenericSql(['content']));
         $this->adapter->bindParam(':content', $model->get('content'), $this->adapter->getParamStr());

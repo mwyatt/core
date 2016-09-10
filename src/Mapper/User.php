@@ -21,15 +21,19 @@ class User extends \Mwyatt\Core\AbstractMapper
     }
 
 
-    public function update(\Mwyatt\Core\Model\User $model)
+    public function updateById(\Mwyatt\Core\AbstractIterator $models)
     {
+        $rowCount = 0;
         $this->adapter->prepare($this->getUpdateGenericSql(['email', 'password', 'nameFirst', 'nameLast']));
-        $this->adapter->bindParam(':email', $model->get('email'), $this->adapter->getParamStr());
-        $this->adapter->bindParam(':password', $model->get('password'), $this->adapter->getParamStr());
-        $this->adapter->bindParam(':nameFirst', $model->get('nameFirst'), $this->adapter->getParamStr());
-        $this->adapter->bindParam(':nameLast', $model->get('nameLast'), $this->adapter->getParamStr());
-        $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
-        $this->adapter->execute();
-        return $this->adapter->getRowCount();
+        foreach ($models as $model) {
+            $this->adapter->bindParam(':email', $model->get('email'), $this->adapter->getParamStr());
+            $this->adapter->bindParam(':password', $model->get('password'), $this->adapter->getParamStr());
+            $this->adapter->bindParam(':nameFirst', $model->get('nameFirst'), $this->adapter->getParamStr());
+            $this->adapter->bindParam(':nameLast', $model->get('nameLast'), $this->adapter->getParamStr());
+            $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
+            $this->adapter->execute();
+            $rowCount += $this->adapter->getRowCount();
+        }
+        return $rowCount;
     }
 }

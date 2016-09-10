@@ -12,6 +12,6 @@ interface RepositoryInterface
     // public function findById($id);
     // public function findByIds(array $ids);
     // public function insert(array $data);
-    // public function update(\Mwyatt\Core\ModelInterface $model);
+    // public function updateById(\Mwyatt\Core\ModelInterface $model);
     // public function delete($models);
 }

@@ -65,16 +65,16 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
-    public function update(\Mwyatt\Core\ModelInterface $model)
+    public function updateById($models)
     {
         $mapper = $this->getMapperLazy();
-        return $mapper->update($model);
+        return $mapper->updateById($models);
     }
 
 
-    public function delete($models)
+    public function deleteById($models)
     {
         $mapper = $this->getMapperLazy();
-        return $mapper->delete($models);
+        return $mapper->deleteById($models);
     }
 }
