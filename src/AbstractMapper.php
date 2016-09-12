@@ -6,7 +6,6 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
 
 
-    protected $defaultNamespace = 'Mwyatt\\Core\\Mapper\\';
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
@@ -25,9 +24,17 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
+    private function getDefaultNamespace()
+    {
+        $match = 'Mapper';
+        $parts = explode($match, get_class($this));
+        return reset($parts) . "$match\\";
+    }
+
+
     protected function getRelativeClassName()
     {
-        return str_replace($this->defaultNamespace, '', get_class($this));
+        return str_replace($this->getDefaultNamespace(), '', get_class($this));
     }
 
 

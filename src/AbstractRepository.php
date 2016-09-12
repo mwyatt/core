@@ -6,7 +6,6 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 {
 
 
-    protected $defaultNamespace = 'Mwyatt\\Core\\Repository\\';
     protected $mapperFactory;
 
 
@@ -22,9 +21,17 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
+    private function getDefaultNamespace()
+    {
+        $match = 'Repository';
+        $parts = explode($match, get_class($this));
+        return reset($parts) . "$match\\";
+    }
+
+
     protected function getRelativeClassName()
     {
-        return str_replace($this->defaultNamespace, '', get_class($this));
+        return str_replace($this->getDefaultNamespace(), '', get_class($this));
     }
 
 
