@@ -29,16 +29,4 @@ abstract class AbstractFactory
     {
         $this->defaultNamespace = $namespace;
     }
-
-
-    /**
-     * to be extended to inject required objects
-     * @param  string $name Name/Space
-     * @return object
-     */
-    public function get($name)
-    {
-        $namespace = $this->getDefaultNamespaceAbs($name);
-        return new $namespace;
-    }
 }

@@ -93,14 +93,4 @@ class Model extends \Mwyatt\Core\AbstractIterator
     {
         return $this->extractProperty('id');
     }
-
-
-    /**
-     * why would I need this?
-     * @param  \Mwyatt\Core\ModelInterface $model
-     */
-    public function append(\Mwyatt\Core\ModelInterface $model)
-    {
-        $this[] = $model;
-    }
 }
