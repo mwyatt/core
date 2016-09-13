@@ -12,7 +12,8 @@
         "swiftmailer/swiftmailer": "5.3.*@dev",
         "tijsverkoyen/css-to-inline-styles": "^1.5",
         "pimple/pimple": "^3.0",
-        "beberlei/assert": "^2.4"
+        "beberlei/assert": "^2.4",
+        "monolog/monolog": "^1.21"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.3",
