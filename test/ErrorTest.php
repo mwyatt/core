@@ -23,12 +23,12 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
         // \Monolog\ErrorHandler::register($log);
 
-$handler = new \Monolog\ErrorHandler($log);
-$handler->registerErrorHandler([], false);
-$handler->registerExceptionHandler();
-$handler->registerFatalHandler();
+        $handler = new \Monolog\ErrorHandler($log);
+        $handler->registerErrorHandler([], false);
+        $handler->registerExceptionHandler();
+        $handler->registerFatalHandler();
 
-echo $hi;
+        echo $hi;
 
         $log->warning('Foo');
         $log->error('Bar');
