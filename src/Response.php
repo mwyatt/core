@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core;
 
-
 class Response implements \Mwyatt\Core\ResponseInterface
 {
 
@@ -18,7 +17,7 @@ class Response implements \Mwyatt\Core\ResponseInterface
      * 100 Continue
      * 101 Switching Protocols
      * 102 Processing
-     * 
+     *
      * 2×× Success
      * 200 OK
      * 201 Created
@@ -30,7 +29,7 @@ class Response implements \Mwyatt\Core\ResponseInterface
      * 207 Multi-Status
      * 208 Already Reported
      * 226 IM Used
-     * 
+     *
      * 3×× Redirection
      * 300 Multiple Choices
      * 301 Moved Permanently
@@ -40,7 +39,7 @@ class Response implements \Mwyatt\Core\ResponseInterface
      * 305 Use Proxy
      * 307 Temporary Redirect
      * 308 Permanent Redirect
-     * 
+     *
      * 4×× Client Error
      * 400 Bad Request
      * 401 Unauthorized
@@ -71,7 +70,7 @@ class Response implements \Mwyatt\Core\ResponseInterface
      * 431 Request Header Fields Too Large
      * 451 Unavailable For Legal Reasons
      * 499 Client Closed Request
-     * 
+     *
      * 5×× Server Error
      * 500 Internal Server Error
      * 501 Not Implemented

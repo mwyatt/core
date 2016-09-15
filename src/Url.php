@@ -75,7 +75,7 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 
     /**
      * return an array representation of the query string
-     * @return array 
+     * @return array
      */
     public function getQueryArray()
     {
@@ -203,9 +203,10 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 
     /**
      * face for object when being json encoded
-     * @return array 
+     * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'base' => $this->getBase(),
             'path' => $this->getPath(),

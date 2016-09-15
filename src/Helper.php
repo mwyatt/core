@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core;
 
-
 /**
  * commonly used and helpful functions
  * static because they should be
