@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Factory;
 
 class Mapper extends \Mwyatt\Core\AbstractFactory
 {
-
-
     protected $defaultNamespace = 'Mwyatt\\Core\\Mapper\\';
     protected $adapter;
     protected $modelFactory;

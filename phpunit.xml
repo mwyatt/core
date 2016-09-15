@@ -4,7 +4,7 @@
 			<file>test/SessionTest.php</file>
 			<file>test/PaginationTest.php</file>
 			<file>test/MailTest.php</file>
-			<file>test/ErrorTest.php</file>
+			<!-- <file>test/ErrorTest.php</file> -->
 			<file>test/CacheTest.php</file>
 			<file>test/DatabaseTest.php</file>
 			<file>test/ControllerTest.php</file>

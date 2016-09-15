@@ -4,14 +4,8 @@ namespace Mwyatt\Core;
 
 class IteratorModelTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $container;
-
-
     public $controller;
-
-
     public $models;
 
 

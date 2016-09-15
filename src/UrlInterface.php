@@ -2,9 +2,6 @@
 
 namespace Mwyatt\Core;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 interface UrlInterface
 {
 	public function __construct($host, $installPathQuery, $install = '');

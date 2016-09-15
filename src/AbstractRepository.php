@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 {
-
-
     protected $mapperFactory;
 
 

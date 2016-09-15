@@ -4,14 +4,8 @@ namespace Mwyatt\Core;
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $pathBase;
-
-
     public $pathBasePackage = '/var/www/html/core/src/../';
-
-
     public $view;
 
 

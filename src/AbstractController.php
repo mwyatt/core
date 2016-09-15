@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
 {
-
-
     protected $pimpleContainer;
     protected $view;
 
@@ -15,7 +13,6 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
         $this->pimpleContainer = $pimpleContainer;
         $this->view = $view;
     }
-
 
 
     /**

@@ -2,13 +2,8 @@
 
 namespace Mwyatt\Core;
 
-/**
- * the database must handle the following and return set data
- */
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $database;
 
 

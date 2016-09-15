@@ -2,10 +2,8 @@
 
 namespace Mwyatt\Core\Model;
 
-class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\Model\LogInterface
+class Log extends \Mwyatt\Core\AbstractModel
 {
-
-    
     protected $id;
     protected $content;
     protected $timeCreated;

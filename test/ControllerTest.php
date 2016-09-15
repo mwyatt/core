@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $controller;
 
 

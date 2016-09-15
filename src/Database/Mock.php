@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Database;
 
 class Mock implements \Mwyatt\Core\DatabaseInterface
 {
-   
-
     protected $connection;
     protected $statement;
 

@@ -4,11 +4,7 @@ namespace Mwyatt\Core;
 
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
-
-
     protected $modelFactory;
-
-
     protected $userModelDataGood = [
         'email' => 'martin.wyatt@gmail.com',
         'timeRegistered' => '8123927829',
@@ -16,8 +12,6 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         'nameFirst' => 'Martin',
         'nameLast' => 'Wyatt'
     ];
-
-
     protected $userModelDataBad = [
         'email' => 'martinwyattgmailcom',
         'timeRegistered' => '8123927829',

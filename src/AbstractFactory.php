@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractFactory
 {
-
-
     protected $defaultNamespace;
 
 

@@ -2,12 +2,10 @@
 
 namespace Mwyatt\Core;
 
+
 /**
- * will concern itself with large collections of objects and or arrays
+ * handle large collections of objects and or arrays
  * these will be easily accessible by storing in files '-' delimiter
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- * @version     0.1
- * @license http://www.php.net/license/3_01.txt PHP License 3.01
  */
 class Cache implements \Mwyatt\Core\CacheInterface
 {

@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Factory;
 
 class Repository extends \Mwyatt\Core\AbstractFactory
 {
-
-
     protected $defaultNamespace = 'Mwyatt\\Core\\Repository\\';
     protected $mapperFactory;
 

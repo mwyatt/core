@@ -1,4 +1,5 @@
 <?php
+
 namespace Mwyatt\Core;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
@@ -12,7 +13,22 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request = new \Mwyatt\Core\Request();
 
         $routes = array_merge(
-            include $view->getPathBasePackage('routes.php')
+            [
+                [
+                    'any', '/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+                    ['id' => 'test.simple']
+                ],
+                [
+                    'any', '/foo/:name/:id/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
+                    ['id' => 'test.params']
+                ],
+                [
+                    'post', '/foo/bar/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+                ]
+            ]
         );
         $router->appendMuxRoutes($routes);
 

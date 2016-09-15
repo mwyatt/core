@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 class MailTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $container;
 
 

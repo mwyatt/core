@@ -1,9 +1,6 @@
 <?php
 namespace Mwyatt\Core;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 class Request implements \Mwyatt\Core\RequestInterface
 {
 

@@ -4,14 +4,8 @@ namespace Mwyatt\Core;
 
 class RepositoryTest extends \PHPUnit_Framework_TestCase
 {
-
-
     protected $container;
-
-
     protected $controller;
-
-
     protected $userModelData = [
         'email' => 'martin.wyatt@gmail.com',
         'password' => '123123123',

@@ -4,14 +4,8 @@ namespace Mwyatt\Core;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $host = '192.168.1.24';
-
-
     public $path = '/core/foo/bar/?foo=bar&so=la';
-
-
     public $pathInstall = 'core/';
 
 
@@ -61,7 +55,22 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $view = new \Mwyatt\Core\View;
         $routes = array_merge(
-            include $view->getPathBasePackage('routes.php')
+            [
+                [
+                    'any', '/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+                    ['id' => 'test.simple']
+                ],
+                [
+                    'any', '/foo/:name/:id/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
+                    ['id' => 'test.params']
+                ],
+                [
+                    'post', '/foo/bar/',
+                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+                ]
+            ]
         );
         $router->appendMuxRoutes($routes);
         $this->url->setRoutes($router->getMux());

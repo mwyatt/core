@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Factory;
 
 class Model extends \Mwyatt\Core\AbstractFactory
 {
-
-
     protected $defaultNamespace = 'Mwyatt\\Core\\Model\\';
 
 

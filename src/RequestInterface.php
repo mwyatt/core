@@ -1,9 +1,7 @@
 <?php
+
 namespace Mwyatt\Core;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 interface RequestInterface
 {
     public function __construct();

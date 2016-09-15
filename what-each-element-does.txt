@@ -1,4 +1,0 @@
-Controller - Handles all api requests
-Model - Defines the structure for a domain object and all validation
-Mapper - Retreives from a database rows and converts to Models
-Service - Retreives Models and arranges?

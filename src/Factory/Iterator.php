@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Factory;
 
 class Iterator extends \Mwyatt\Core\AbstractIterator
 {
-
-
     protected $defaultNamespace = 'Mwyatt\\Core\\Iterator\\';
     protected $contents;
 

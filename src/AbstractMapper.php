@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
-
-
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;

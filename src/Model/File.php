@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Model;
 
 class File extends \Mwyatt\Core\AbstractModel
 {
-
-
     protected $pathAbsolute;
     protected $pathRelative;
     protected $title;

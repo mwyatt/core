@@ -2,9 +2,6 @@
 
 namespace Mwyatt\Core;
 
-/**
- * @author Martin Wyatt <martin.wyatt@gmail.com>
- */
 class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 {
 
@@ -55,17 +52,11 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     public function __construct($host, $installPathQuery, $install = '')
     {
         $installPathQueryParts = explode('?', $installPathQuery);
-
         $host .= '/';
-
         $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';
-
         $installPath = reset($installPathQueryParts);
-
         $path = str_replace($install, '', ltrim($installPath, '/'));
-
         $base = $host . $install;
-
         $this->base = $base;
         $this->path = $path;
         $this->query = $query;

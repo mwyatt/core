@@ -4,8 +4,6 @@ namespace Mwyatt\Core\Model;
 
 class User extends \Mwyatt\Core\AbstractModel
 {
-
-
     protected $id;
     protected $email;
     protected $nameFirst;
