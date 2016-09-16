@@ -121,9 +121,9 @@ abstract class AbstractView implements \ArrayIterator, \Mwyatt\Core\ViewInterfac
 
     /**
      * adds a value to an offset array, if there is an array
-     * @param  mixed $index 
-     * @param  mixed $value 
-     * @return bool        
+     * @param  mixed $index
+     * @param  mixed $value
+     * @return bool
      */
     public function offsetAppend($index, $value)
     {
