@@ -18,8 +18,8 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 
     public function testDataOffset()
     {
-        $this->view->data->offsetSet('foo', 'bar');
-        $this->assertEquals('bar', $this->view->data->offsetGet('foo'));
+        $this->view->offsetSet('foo', 'bar');
+        $this->assertEquals('bar', $this->view->offsetGet('foo'));
     }
 
 

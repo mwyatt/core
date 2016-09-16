@@ -2,15 +2,8 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractView implements \Mwyatt\Core\ViewInterface
+abstract class AbstractView implements \ArrayIterator, \Mwyatt\Core\ViewInterface
 {
-
-
-    /**
-     * the main data store for view information
-     * @var object \ArrayIterator
-     */
-    public $data;
 
 
     /**
@@ -35,86 +28,12 @@ abstract class AbstractView implements \Mwyatt\Core\ViewInterface
 
 
     /**
-     * the types of asset allowed
-     * @var array
-     */
-    protected $assetTypes = ['mst', 'css', 'js'];
-
-
-    /**
      * define data and pathbasepackage
      */
     public function __construct()
     {
-        $this->data = new \ArrayIterator;
         $this->pathBasePackage = (string) __DIR__ . '/../';
         $this->appendTemplatePath($this->getPathBasePackage('template/'));
-        $this->setupDataAsset();
-    }
-
-
-    /**
-     * stores data['asset.mustache'] = []
-     * @return null
-     */
-    protected function setupDataAsset()
-    {
-        foreach ($this->assetTypes as $assetType) {
-            $this->data->offsetSet($this->getDataAssetKey($assetType), []);
-        }
-    }
-
-
-    protected function getDataAssetKey($type)
-    {
-        return 'asset' . ucfirst($type);
-    }
-
-
-    /**
-     * stores the path for the dependee
-     * @param string $path
-     */
-    public function setPathBase($path)
-    {
-        $this->pathBase = $path;
-        $this->appendTemplatePath($path);
-    }
-
-
-    /**
-     * gets just the base file path
-     * named nicer for templates but does this make sense?
-     * @param  string $append
-     * @return string
-     */
-    public function getPathBase($append = '')
-    {
-        return $this->pathBase . $append;
-    }
-
-
-    /**
-     * base path for the package
-     * @param  string $append
-     * @return string
-     */
-    public function getPathBasePackage($append = '')
-    {
-        return $this->pathBasePackage . $append;
-    }
-
-
-    /**
-     * ensures that the path is a directory
-     * @param  string $path
-     * @return null       may throw exception
-     */
-    protected function testTemplatePath($path)
-    {
-        if (!is_dir($path)) {
-            throw new \Exception("path '$path' does not exist");
-        }
     }
 
 
@@ -161,7 +80,7 @@ abstract class AbstractView implements \Mwyatt\Core\ViewInterface
         }
 
         // push stored into method scope
-        extract($this->data->getArrayCopy());
+        extract($this->getArrayCopy());
 
         // start output buffer
         // @todo start this at the start of the app?
@@ -201,21 +120,66 @@ abstract class AbstractView implements \Mwyatt\Core\ViewInterface
 
 
     /**
-     * allows easy registering of additional asset paths
-     * these can be then added in order inside the skin
-     * header/footer
-     * @param  string $type must be in assetTypes
-     * @param  string $path the asset path
-     * @return null
+     * adds a value to an offset array, if there is an array
+     * @param  mixed $index 
+     * @param  mixed $value 
+     * @return bool        
      */
-    public function appendAsset($type, $path)
+    public function offsetAppend($index, $value)
     {
-        if (!in_array($type, $this->assetTypes)) {
-            throw new \Exception("type '$path' is not a registered asset type");
+        $itemOffset = $this->offsetGet($index);
+        $items = $itemOffset ? $itemOffset : [];
+        if (!is_array($items)) {
+            throw new \Exception("View offset $index is not an array.");
         }
-        $key = $this->getDataAssetKey($type);
-        $paths = $this->data->offsetGet($key);
-        $paths[] = $path;
-        $this->data->offsetSet($key, $paths);
+        $items[] = $value;
+        return $this->offsetSet($index, $items);
+    }
+
+
+    /**
+     * gets just the base file path
+     * named nicer for templates but does this make sense?
+     * @param  string $append
+     * @return string
+     */
+    public function getPathBase($append = '')
+    {
+        return $this->pathBase . $append;
+    }
+
+
+    /**
+     * stores the path for the dependee
+     * @param string $path
+     */
+    public function setPathBase($path)
+    {
+        $this->pathBase = $path;
+        $this->appendTemplatePath($path);
+    }
+
+
+    /**
+     * base path for the package
+     * @param  string $append
+     * @return string
+     */
+    public function getPathBasePackage($append = '')
+    {
+        return $this->pathBasePackage . $append;
+    }
+
+
+    /**
+     * ensures that the path is a directory
+     * @param  string $path
+     * @return null       may throw exception
+     */
+    protected function testTemplatePath($path)
+    {
+        if (!is_dir($path)) {
+            throw new \Exception("path '$path' does not exist");
+        }
     }
 }
