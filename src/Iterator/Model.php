@@ -7,6 +7,16 @@ class Model extends \Mwyatt\Core\AbstractIterator
 
 
     /**
+     * lazy extract
+     * @return array 
+     */
+    public function getIds()
+    {
+        return $this->extractProperty('id');
+    }
+
+    
+    /**
      * lazy for getbypropertyvalue
      * @param  int $id
      * @return object
@@ -16,6 +26,21 @@ class Model extends \Mwyatt\Core\AbstractIterator
         if ($models = $this->getByPropertyValues('id', [$id])) {
             return $models->current();
         }
+    }
+
+
+    /**
+     * get a collection of values from property
+     * @param  string $property
+     * @return array
+     */
+    public function extractProperty($property)
+    {
+        $collection = [];
+        foreach ($this as $model) {
+            $collection[] = $model->get($property);
+        }
+        return $collection;
     }
 
 
@@ -71,26 +96,5 @@ class Model extends \Mwyatt\Core\AbstractIterator
             $keyed[$model->get($property)][] = $model;
         }
         return $keyed;
-    }
-
-
-    /**
-     * get a collection of values from property
-     * @param  string $property
-     * @return array
-     */
-    public function extractProperty($property)
-    {
-        $collection = [];
-        foreach ($this as $model) {
-            $collection[] = $model->get($property);
-        }
-        return $collection;
-    }
-
-
-    public function getIds()
-    {
-        return $this->extractProperty('id');
     }
 }

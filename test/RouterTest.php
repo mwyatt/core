@@ -4,6 +4,22 @@ namespace Mwyatt\Core;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    public $routes = [
+        [
+            'any', '/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+            ['id' => 'test.simple']
+        ],
+        [
+            'any', '/foo/:name/:id/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
+            ['id' => 'test.params']
+        ],
+        [
+            'post', '/foo/bar/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+        ]
+    ];
 
 
     public function testGetSimple()
@@ -12,24 +28,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new \Mwyatt\Core\Router(new \Pux\Mux);
         $request = new \Mwyatt\Core\Request();
 
-        $routes = array_merge(
-            [
-                [
-                    'any', '/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
-                    ['id' => 'test.simple']
-                ],
-                [
-                    'any', '/foo/:name/:id/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
-                    ['id' => 'test.params']
-                ],
-                [
-                    'post', '/foo/bar/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
-                ]
-            ]
-        );
+        $routes = array_merge($this->routes);
         $router->appendMuxRoutes($routes);
 
 

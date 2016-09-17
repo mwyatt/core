@@ -12,7 +12,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $_GET['foo'] = 'bar';
         $_POST['foo'] = 'bar';
         $_SESSION['foo'] = 'bar';
-        $this->request = new \Mwyatt\Core\Request;
+        $container = new \Pimple\Container;
+        $container['Request'] = function ($container) {
+            $cookie = new \Mwyatt\Core\Cookie;
+            $session = new \Mwyatt\Core\Session;
+            return new \Mwyatt\Core\Request($session, $cookie);
+        };
+        $this->request = $container['Request'];
     }
 
 

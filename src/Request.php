@@ -1,13 +1,11 @@
 <?php
+
 namespace Mwyatt\Core;
 
 class Request implements \Mwyatt\Core\RequestInterface
 {
-
-    // should these be protected?
     public $session;
     public $cookie;
-
     protected $query;
     protected $post;
     protected $server;
@@ -16,17 +14,14 @@ class Request implements \Mwyatt\Core\RequestInterface
     protected $files = [];
 
 
-    /**
-     * init all properties to be accessed during request
-     */
-    public function __construct()
+    public function __construct($session = null, $cookie = null)
     {
         $this->query = $_GET;
         $this->post = $_POST;
-        $this->cookie = new \Mwyatt\Core\Cookie;
-        $this->session = new \Mwyatt\Core\Session;
         $this->server = $_SERVER;
         $this->files = $this->setFiles($_FILES);
+        $this->session = $session;
+        $this->cookie = $cookie;
     }
 
 
@@ -34,7 +29,7 @@ class Request implements \Mwyatt\Core\RequestInterface
      * store the request files in a nice way
      * @param array $files
      */
-    public function setFiles(array $files)
+    protected function setFiles(array $files)
     {
         foreach ($files as $associativeName => $details) {
             foreach ($details as $fileKey => $detail) {
@@ -44,20 +39,33 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
-    /**
-     * deprecated for 'getQuery'
-     * @param  string $key
-     * @return string
-     */
-    public function get($key, $default = null)
-    {
-        return $this->getQuery($key);
-    }
-
-
     public function getQuery($key, $default = null)
     {
         return $this->getPropKey('query', $key, $default);
+    }
+
+
+    public function getPost($key, $default = null)
+    {
+        return $this->getPropKey('post', $key, $default);
+    }
+
+
+    public function getCookie($key, $default = null)
+    {
+        return $this->getPropKey('cookie', $key, $default);
+    }
+
+
+    public function setCookie($key, $value, $time)
+    {
+        setcookie($key, $value, $time);
+    }
+
+
+    public function getServer($key, $default = null)
+    {
+        return $this->getPropKey('server', $key, $default);
     }
 
 
@@ -83,30 +91,6 @@ class Request implements \Mwyatt\Core\RequestInterface
                 $this->setUrlVar($key, $value);
             }
         }
-    }
-
-
-    public function getPost($key, $default = null)
-    {
-        return $this->getPropKey('post', $key, $default);
-    }
-
-
-    public function getCookie($key, $default = null)
-    {
-        return $this->getPropKey('cookie', $key, $default);
-    }
-
-
-    public function setCookie($key, $value, $time)
-    {
-        setcookie($key, $value, $time);
-    }
-
-
-    public function getServer($key, $default = null)
-    {
-        return $this->getPropKey('server', $key, $default);
     }
 
 
@@ -149,10 +133,6 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
-    /**
-     * is this a post request?
-     * @return boolean
-     */
     public function isPost()
     {
         return $_POST;

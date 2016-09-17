@@ -4,22 +4,12 @@ namespace Mwyatt\Core;
 
 class Router implements \Mwyatt\Core\RouterInterface
 {
-    private $controllerNamespace = '\\Mwyatt\\Core\\Controller\\';
 
 
-    /**
-     * \Pux\Mux
-     * @var object
-     */
-    public $mux;
-
-
+    private $mux;
     private $muxRouteCurrent;
 
 
-    /**
-     * init mux
-     */
     public function __construct(\Pux\Mux $mux)
     {
         $this->mux = $mux;
@@ -45,7 +35,6 @@ class Router implements \Mwyatt\Core\RouterInterface
             $controller = $route[2];
             $method = $route[3];
             $options = empty($route[4]) ? [] : $route[4];
-            
             $this->mux->$requestType($urlPath, [$controller, $method], $options);
         }
     }
@@ -60,26 +49,26 @@ class Router implements \Mwyatt\Core\RouterInterface
         $path = '/' . $path;
         $path = str_replace('//', '/', $path);
         $route = $this->mux->dispatch($path);
-        $this->setMuxRouteCurrent($route);
-        return $route;
-    }
-
-
-    public function setMuxRouteCurrent($route)
-    {
         $this->muxRouteCurrent = $route;
+        return $route;
     }
 
 
     public function getMuxRouteCurrentController()
     {
-        return $this->muxRouteCurrent[2][0];
+        if (!$this->muxRouteCurrent) {
+            throw new \Exception('No mux route has been chosen yet.');
+        }
+        return isset($this->muxRouteCurrent[2][0]) ? $this->muxRouteCurrent[2][0] : '';
     }
 
 
     public function getMuxRouteCurrentControllerMethod()
     {
-        return $this->muxRouteCurrent[2][1];
+        if (!$this->muxRouteCurrent) {
+            throw new \Exception('No mux route has been chosen yet.');
+        }
+        return isset($this->muxRouteCurrent[2][1]) ? $this->muxRouteCurrent[2][1] : '';
     }
 
 
@@ -90,60 +79,8 @@ class Router implements \Mwyatt\Core\RouterInterface
 
 
     /**
-     * return a key > path pair for use when generating urls
-     * \Mwyatt\Core\Url
-     * @return array
-     */
-    public function getUrlRoutes()
-    {
-        $response = [];
-        foreach ($this->mux->getRoutes() as $route) {
-            $response[$route[3]['id']] = empty($route[3]['pattern']) ? $route[1] : $route[3]['pattern'];
-        }
-        return $response;
-    }
-
-
-    /**
-     * obtain response
-     * perhaps store a base controller so that you are able to control
-     * the 404 and 500 responses?
-     * currently unused here, will be used in a abstracted dispatch file
-     * @return object Response
-     */
-    private function dispatchRoute($route)
-    {
-        $route = $this->mux->dispatch($path);
-        $response = new \Mwyatt\Core\Response('');
-
-        // found route
-        if ($route) {
-            // do controller->method
-            try {
-                $response = \Pux\Executor::execute($route);
-
-            // 500 - unexpected error
-            } catch (\Exception $exception) {
-                $response = $controller->e500($exception);
-            }
-
-        // 404 - not found
-        } else {
-            $response->setStatusCode(404);
-        }
-
-        // 404 content, could have been defined in a found route
-        if ($response->getStatusCode() == 404) {
-            $response = $controller->e404($response);
-        }
-
-        // the response
-        return $response;
-    }
-
-
-    /**
      * just response code for now
+     * is the response was more detailed this could be setup further
      */
     public function setHeaders(\Mwyatt\Core\ResponseInterface $response)
     {
