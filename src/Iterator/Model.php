@@ -8,7 +8,7 @@ class Model extends \Mwyatt\Core\AbstractIterator
 
     /**
      * lazy extract
-     * @return array 
+     * @return array
      */
     public function getIds()
     {
