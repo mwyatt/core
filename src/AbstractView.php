@@ -41,8 +41,8 @@ abstract class AbstractView extends \Mwyatt\Core\AbstractIterator implements \Mw
     /**
      * converts stored key values in iterator to output from
      * template path requested
-     * @param  string $templatePath 
-     * @return string               
+     * @param  string $templatePath
+     * @return string
      */
     public function getTemplate($templatePath)
     {
@@ -76,7 +76,7 @@ abstract class AbstractView extends \Mwyatt\Core\AbstractIterator implements \Mw
 
     /**
      * throws exception if invalid
-     * @param  string $directory 
+     * @param  string $directory
      */
     protected function validateTemplateDirectory($directory)
     {
