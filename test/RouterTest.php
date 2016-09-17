@@ -20,6 +20,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
         ]
     ];
+    public $controller;
+
+
+    public function setUp()
+    {
+        $container = new \Pimple\Container;
+        $container['PuxMux'] = function ($container) {
+            return new \Pux\Mux;
+        };
+        $container['Router'] = function ($container) {
+            return new \Mwyatt\Core\Router($container['PuxMux']);
+        };
+        $this->router = $container['Router'];
+    }
 
 
     public function testGetSimple()

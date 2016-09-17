@@ -7,7 +7,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public $controller;
 
 
-    public function __construct()
+    public function setUp()
     {
         $container = new \Pimple\Container;
         $container['DefaultTemplateDirectory'] = function ($container) {

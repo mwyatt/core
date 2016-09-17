@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 class Router implements \Mwyatt\Core\RouterInterface
 {
-
-
     private $mux;
     private $muxRouteCurrent;
 
@@ -13,12 +11,6 @@ class Router implements \Mwyatt\Core\RouterInterface
     public function __construct(\Pux\Mux $mux)
     {
         $this->mux = $mux;
-    }
-
-
-    public function getMux()
-    {
-        return $this->mux;
     }
 
 
@@ -85,5 +77,11 @@ class Router implements \Mwyatt\Core\RouterInterface
     public function setHeaders(\Mwyatt\Core\ResponseInterface $response)
     {
         http_response_code($response->getStatusCode());
+    }
+
+
+    public function getMux()
+    {
+        return $this->mux;
     }
 }
