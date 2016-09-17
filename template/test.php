@@ -1,1 +1,1 @@
-<p>test</p>
+<?php echo $foo ?><p>test</p>

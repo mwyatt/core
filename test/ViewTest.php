@@ -4,97 +4,47 @@ namespace Mwyatt\Core;
 
 class ViewTest extends \PHPUnit_Framework_TestCase
 {
-    public $pathBase;
-    public $pathBasePackage = '/var/www/html/core/src/../';
     public $view;
 
 
     public function __construct()
     {
-        $this->pathBase = (string) __DIR__ . '/../';
-        $this->view = new \Mwyatt\Core\View;
-    }
-
-
-    public function testDataOffset()
-    {
-        $this->view->offsetSet('foo', 'bar');
-        $this->assertEquals('bar', $this->view->offsetGet('foo'));
-    }
-
-
-    public function testPathBasePackage()
-    {
-        $this->assertEquals($this->pathBasePackage . 'append/', $this->view->getPathBasePackage('append/'));
-    }
-
-
-    public function testGetPathBase()
-    {
-        $this->view->setPathBase($this->pathBase);
-        ;
-        $this->assertEquals($this->pathBase . 'append/', $this->view->getPathBase('append/'));
-    }
-
-
-    public function testAppendTemplatePath()
-    {
-        $this->view->appendTemplatePath($this->view->getPathBasePackage('template/'));
-    }
-
-
-    public function testPrependTemplatePath()
-    {
-        $this->assertTrue($this->view->prependTemplatePath($this->view->getPathBasePackage('template/')));
+        $container = new \Pimple\Container;
+        $container['View'] = function ($container) {
+            return new \Mwyatt\Core\View((string) __DIR__ . '/../' . 'template/');
+        };
+        $this->view = $container['View'];
     }
 
 
     /**
      * @expectedException \Exception
      */
-    public function testAppendTemplatePathFail()
+    public function testAppendTemplateDirectoryException()
     {
-        $this->view->appendTemplatePath('foo/bar/');
+        $this->view->appendTemplateDirectory('not-found/');
     }
 
 
-    public function testGetPathTemplate()
+    public function testAppendTemplateDirectory()
     {
-        $this->view->appendTemplatePath($this->view->getPathBasePackage('template/'));
-        $this->assertEquals($this->pathBasePackage . 'template/test.php', $this->view->getPathTemplate('test'));
+        $this->assertTrue($this->view->getTemplateDirectoriesTotal() === 1);
+        $this->view->appendTemplateDirectory('template/');
+        $this->assertTrue($this->view->getTemplateDirectoriesTotal() === 2);
     }
 
 
-    /**
-     * @expectedException \Exception
-     */
-    public function testGetPathTemplateFail()
+    public function testPrependTemplateDirectory()
     {
-        $this->view->appendTemplatePath($this->view->getPathBasePackage('template/'));
-        $this->view->getPathTemplate('foo/bar');
+        $this->view->prependTemplateDirectory('template/');
+        $this->assertTrue($this->view->getTemplateDirectoriesTotal() === 2);
     }
 
 
     public function testGetTemplate()
     {
-        $this->view->appendTemplatePath($this->view->getPathBasePackage('template/'));
-        $this->assertEquals('<p>test</p>', $this->view->getTemplate('test'));
-    }
-
-
-    public function testAppendAsset()
-    {
-        $this->view->appendAsset('mst', 'foo/bar');
-        $data = $this->view->data;
-        $this->assertEquals($data['assetMst'][0], 'foo/bar');
-    }
-
-
-    /**
-     * @expectedException \Exception
-     */
-    public function testAppendAssetFail()
-    {
-        $this->view->appendAsset('foo', 'foo/bar');
+        $this->view->offsetSet('foo', 'bar');
+        $this->assertTrue('bar' === $this->view->offsetGet('foo'));
+        $this->assertTrue('bar<p>test</p>' === $this->view->getTemplate('test'));
     }
 }

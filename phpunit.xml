@@ -1,28 +1,27 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
-		<testsuite name="stable">
+		<testsuite name="core">
 			<file>test/SessionTest.php</file>
 			<file>test/PaginationTest.php</file>
 			<file>test/MailTest.php</file>
-			<!-- <file>test/ErrorTest.php</file> -->
 			<file>test/CacheTest.php</file>
 			<file>test/DatabaseTest.php</file>
 			<file>test/ControllerTest.php</file>
 			<file>test/HelperTest.php</file>
 			<file>test/UrlTest.php</file>
-			<file>test/ViewTest.php</file>
 			<file>test/RequestTest.php</file>
 			<file>test/ResponseTest.php</file>
 			<file>test/RouterTest.php</file>
+			<file>test/ViewTest.php</file>
+			<file>test/IteratorTest.php</file>
+			<file>test/MonologTest.php</file>
 		</testsuite>
 		<testsuite name="repository">
 			<file>test/RepositoryTest.php</file>
 			<file>test/ModelTest.php</file>
-			<!-- <file>test/MapperTest.php</file> -->
+			<file>test/MapperTest.php</file>
 		</testsuite>
-		<testsuite name="plan">
-		</testsuite>
-		<testsuite name="dev">
+		<testsuite name="in-development">
 			<!-- <file>test/FileSystemTest.php</file> -->
 		</testsuite>
 		<testsuite name="unable-to-test">

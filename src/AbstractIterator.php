@@ -4,14 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractIterator extends \ArrayIterator implements \JsonSerializable
 {
-
-
-    public function jsonSerialize()
-    {
-        return $this->getArrayCopy();
-    }
-
-
     // \ArrayIterator
     // public void append ( mixed $value )
     // public void asort ( void )
@@ -37,4 +29,28 @@ abstract class AbstractIterator extends \ArrayIterator implements \JsonSerializa
     // public void uksort ( string $cmp_function )
     // public string unserialize ( string $serialized )
     // public bool valid ( void )
+
+
+    /**
+     * adds a value to an offset array, if there is an array
+     * @param  mixed $index
+     * @param  mixed $value
+     * @return bool
+     */
+    public function offsetAppend($index, $value)
+    {
+        $itemOffset = $this->offsetGet($index);
+        $items = $itemOffset ? $itemOffset : [];
+        if (!is_array($items)) {
+            throw new \Exception("View offset $index is not an array.");
+        }
+        $items[] = $value;
+        $this->offsetSet($index, $items);
+    }
+
+
+    public function jsonSerialize()
+    {
+        return $this->getArrayCopy();
+    }
 }

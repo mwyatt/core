@@ -16,17 +16,6 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
 
 
     /**
-     * 404 not found exception, will be caught in the routing area
-     * @param  string $message what was not found
-     * @return object
-     */
-    public function exceptionNotFound($message = '')
-    {
-        return new Mwyatt\Core\Controller\Exception\NotFound($message);
-    }
-
-
-    /**
      * get service from the pimple container
      * @param  string $name
      * @return object
@@ -41,6 +30,13 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     {
         $repositoryFactory = $this->getService('RepositoryFactory');
         return $repositoryFactory->get($name);
+    }
+
+
+    public function getView($name)
+    {
+        $viewFactory = $this->getService('ViewFactory');
+        return $viewFactory->get($name);
     }
 
 
