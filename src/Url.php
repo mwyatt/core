@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core;
 
-
 /**
  * central hub for all url creation and manipulation
  * requires routes so that it can generate urls using that layout
