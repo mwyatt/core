@@ -7,19 +7,39 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     public $host = '192.168.1.24';
     public $path = '/core/foo/bar/?foo=bar&so=la';
     public $pathInstall = 'core/';
+    public $url;
+    public $routes = [
+        [
+            'any', '/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+            ['id' => 'test.simple']
+        ],
+        [
+            'any', '/foo/:name/:id/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
+            ['id' => 'test.params']
+        ],
+        [
+            'post', '/foo/bar/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+        ]
+    ];
 
 
-    public function __construct()
+    public function setUp()
     {
-        $this->url = new \Mwyatt\Core\Url($this->host, $this->path, $this->pathInstall);
+        $container = new \Pimple\Container;
+        $container['Url'] = function ($container) {
+            return new \Mwyatt\Core\Url($this->host, $this->path, $this->pathInstall);
+        };
+        $this->url = $container['Url'];
+        $this->url->setRoutes($this->routes);
     }
 
 
     public function testGetPath()
     {
         $this->assertEquals('foo/bar/', $this->url->getPath());
-        $urlAlt = new \Mwyatt\Core\Url($this->host, '/core/', $this->pathInstall);
-        $this->assertEquals('', $urlAlt->getPath());
     }
 
 
@@ -35,61 +55,23 @@ class UrlTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerate()
     {
-        $this->testSetRoutes();
         $this->assertEquals('http://192.168.1.24/core/foo/bar/1/', $this->url->generate('test.params', ['name' => 'bar', 'id' => 1]));
         $this->assertEquals('http://192.168.1.24/core/', $this->url->generate('test.simple'));
+        $this->assertEquals('http://192.168.1.24/core/?hi=there', $this->url->generate('test.simple', [], ['hi' => 'there']));
     }
 
 
     /**
      * @expectedException \Exception
      */
-    public function testGenerateFail()
+    public function testGenerateException()
     {
         $this->assertEquals('http://192.168.1.24/core/foo/bar/1/', $this->url->generate('route.not.exist'));
     }
 
 
-    public function testSetRoutes()
-    {
-        $router = new \Mwyatt\Core\Router(new \Pux\Mux);
-        $view = new \Mwyatt\Core\View;
-        $routes = array_merge(
-            [
-                [
-                    'any', '/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
-                    ['id' => 'test.simple']
-                ],
-                [
-                    'any', '/foo/:name/:id/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testParams',
-                    ['id' => 'test.params']
-                ],
-                [
-                    'post', '/foo/bar/',
-                    '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
-                ]
-            ]
-        );
-        $router->appendMuxRoutes($routes);
-        $this->url->setRoutes($router->getMux());
-    }
-
-
-    public function testGetRoutes()
-    {
-        $this->testSetRoutes();
-        
-        // testing that the route without the id is not stored here
-        // as produces a bug when json encoding
-        $this->assertCount(2, $this->url->getRoutes());
-    }
-
-
     public function testJsonSerialize()
     {
-        $this->testSetRoutes();
         $this->assertTrue(strlen(json_encode($this->url)) > 120);
     }
 
@@ -101,5 +83,14 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     public function testGenerateVersioned()
     {
         $this->assertContains('http://' . $this->host . '/' . $this->pathInstall . 'asset/test.css', $this->url->generateVersioned((string) __DIR__ . '/../', 'asset/test.css'));
+    }
+
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testGenerateVersionedException()
+    {
+        $this->url->generateVersioned((string) __DIR__ . '/../', 'asset/bad-url.css');
     }
 }

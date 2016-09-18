@@ -2,46 +2,18 @@
 
 namespace Mwyatt\Core;
 
+
+/**
+ * central hub for all url creation and manipulation
+ * requires routes so that it can generate urls using that layout
+ */
 class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 {
-
-
-    /**
-     * /install/directory/
-     * static string set in config somewhere
-     * @var string
-     */
-    protected $base;
-
-
-    /**
-     * foo/bar/
-     * @var string
-     */
-    protected $path;
-
-
-    /**
-     * foo=bar&bar=fo
-     * @var string
-     */
-    protected $query;
-
-
-    /**
-     * storage of routes once collected by Route
-     * used to build urls later on
-     * @var array
-     */
-    protected $routes = [];
-
-
-    /**
-     * cached representation of the protocol
-     * js will review this object so will need to know
-     * @var string 'http://'
-     */
     protected $protocol;
+    protected $base;
+    protected $path;
+    protected $query;
+    protected $routes = [];
 
 
     /**
@@ -64,9 +36,6 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     }
 
 
-    /**
-     * @return string
-     */
     public function getPath()
     {
         return $this->path;
@@ -83,44 +52,78 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         return $queryArray;
     }
 
-
-    /**
-     * @return string
-     */
-    private function getBase()
-    {
-        return $this->base;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
-    }
-    
-
-    private function getRoute($key)
-    {
-        return empty($this->routes[$key]) ? null : $this->routes[$key];
-    }
-
     
     /**
-     * store routes found in mux as id => route/:foo/
+     * store routes as id => route/:foo/
      * some routes wont have an id as they are post or something
      * these do not need to be stored as they wont need generating
      * @param array $routes
      */
-    public function setRoutes(\Pux\Mux $mux)
+    public function setRoutes(array $routes)
     {
-        foreach ($mux->getRoutes() as $routeMux) {
-            if (!empty($routeMux[3]['id'])) {
-                $this->routes[$routeMux[3]['id']] = empty($routeMux[3]['pattern']) ? $routeMux[1] : $routeMux[3]['pattern'];
+        foreach ($routes as $route) {
+            $requestType = $route[0];
+            $urlPath = $route[1];
+            $controller = $route[2];
+            $method = $route[3];
+            $options = empty($route[4]) ? [] : $route[4];
+            if (!empty($options['id'])) {
+                $this->routes[$options['id']] = $urlPath;
             }
         }
+    }
+
+
+    /**
+     * builds a url based on the plans stored
+     * swap :key for $config[$key]
+     * @param  string $key
+     * @param  array $config key, value
+     * @param  array $query key, value
+     * @return string         url/path/
+     */
+    public function generate($key = '', $config = [], array $query = [])
+    {
+        $queryString = '';
+        if (!$key) {
+            return $this->protocol . $this->base;
+        }
+        if (!$route = $this->getRoute($key)) {
+            throw new \Exception("route '$key' cannot be generated");
+        }
+        $path = ltrim($route, '/');
+        foreach ($config as $key => $value) {
+            $path = str_replace(':' . $key, $value, $path);
+        }
+        if ($query) {
+            $queryString = '?' . http_build_query($query);
+        }
+        return $this->protocol . $this->base . $path . $queryString;
+    }
+
+
+    /**
+     * gets absolute path of a single file with cache busting powers!
+     * @param  string $path
+     * @return string
+     */
+    public function generateVersioned($pathBase, $pathAppend)
+    {
+        $pathAbsolute = $pathBase . $pathAppend;
+        if (!file_exists($pathAbsolute)) {
+            throw new \Exception("cannot get cache busting path for file '$pathAbsolute'");
+        }
+
+        // get mod time
+        $timeModified = filemtime($pathAbsolute);
+
+        // return url to asset with modified time as query var
+        return $this->generate() . $pathAppend . '?' . $timeModified;
+    }
+
+    private function getRoute($key)
+    {
+        return empty($this->routes[$key]) ? null : $this->routes[$key];
     }
 
 
@@ -152,66 +155,13 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     }
 
 
-
-    /**
-     * builds a url based on the plans stored
-     * swap :key for $config[$key]
-     * @param  string $key
-     * @param  array $config key, value
-     * @return string         url/path/
-     */
-    public function generate($key = '', $config = [])
-    {
-
-        // home if no key
-        if (!$key) {
-            return $this->getProtocol() . $this->getBase();
-        }
-
-        if (!array_key_exists($key, $this->routes)) {
-            throw new \Exception("route '$key' cannot be generated");
-        }
-
-        $route = $this->routes[$key];
-        $path = ltrim($route, '/');
-        foreach ($config as $key => $value) {
-            $path = str_replace(':' . $key, $value, $path);
-        }
-        return $this->getProtocol() . $this->getBase() . $path;
-    }
-
-
-    /**
-     * gets absolute path of a single file with cache busting powers!
-     * @param  string $path
-     * @return string
-     */
-    public function generateVersioned($pathBase, $pathAppend)
-    {
-        $pathAbsolute = $pathBase . $pathAppend;
-        if (!file_exists($pathAbsolute)) {
-            throw new \Exception("cannot get cache busting path for file '$pathAbsolute'");
-        }
-
-        // get mod time
-        $timeModified = filemtime($pathAbsolute);
-
-        // return url to asset with modified time as query var
-        return $this->generate() . $pathAppend . '?' . $timeModified;
-    }
-
-
-    /**
-     * face for object when being json encoded
-     * @return array
-     */
     public function jsonSerialize()
     {
         return [
-            'base' => $this->getBase(),
-            'path' => $this->getPath(),
-            'routes' => $this->getRoutes(),
-            'protocol' => $this->getProtocol()
+            'base' => $this->base,
+            'path' => $this->path,
+            'routes' => $this->routes,
+            'protocol' => $this->protocol
         ];
     }
 }

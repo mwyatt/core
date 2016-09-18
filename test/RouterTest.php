@@ -20,7 +20,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
         ]
     ];
-    public $controller;
+    public $router;
+    public $request;
 
 
     public function setUp()
@@ -32,58 +33,39 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $container['Router'] = function ($container) {
             return new \Mwyatt\Core\Router($container['PuxMux']);
         };
+        $container['Request'] = function ($container) {
+            $cookie = new \Mwyatt\Core\Cookie;
+            $session = new \Mwyatt\Core\Session;
+            return new \Mwyatt\Core\Request($session, $cookie);
+        };
+        $this->request = $container['Request'];
         $this->router = $container['Router'];
+        $this->router->appendRoutes($this->routes);
     }
 
 
-    public function testGetSimple()
+    public function testGetMatch()
     {
-        $view = new \Mwyatt\Core\View;
-        $router = new \Mwyatt\Core\Router(new \Pux\Mux);
-        $request = new \Mwyatt\Core\Request();
-
-        $routes = array_merge($this->routes);
-        $router->appendMuxRoutes($routes);
-
-
-        /**
-         * simple
-         */
-        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/', 'core/');
-        $route = $router->getMuxRouteCurrent($url->getPath());
-        $request->setMuxUrlVars($route);
-        
-        $controllerNs = $router->getMuxRouteCurrentController();
-        $controllerMethod = $router->getMuxRouteCurrentControllerMethod();
-
-        $this->assertEquals('\Mwyatt\Core\Controller\Test', $controllerNs);
-        $this->assertEquals('testSimple', $controllerMethod);
-
-        $controller = new $controllerNs(new \Pimple\Container, $view);
-        $response = $controller->$controllerMethod($request);
-
-        $this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $response);
-        $this->assertEquals('testSimpleContent', $response->getContent());
-        $this->assertEquals(200, $response->getStatusCode());
+        $route = $this->router->getMatch('/flob/');
+        $this->assertTrue(is_null($route));
+        $route = $this->router->getMatch('/');
+        $this->assertTrue(is_array($route));
+    }
 
 
-        /**
-         * params
-         */
-        $url = new \Mwyatt\Core\Url('192.168.1.24/', '/core/foo/bar-boo/197/', 'core/');
-        $route = $router->getMuxRouteCurrent($url->getPath());
-        $request->setMuxUrlVars($route);
-        
-        $controllerNs = $router->getMuxRouteCurrentController();
-        $controllerMethod = $router->getMuxRouteCurrentControllerMethod();
+    public function testGetDetails()
+    {
+        $route = $this->router->getMatch('/');
+        $this->assertTrue($this->router->getRouteControllerName($route) === '\Mwyatt\Core\Controller\Test');
+        $this->assertTrue($this->router->getRouteControllerMethod($route) === 'testSimple');
+    }
 
-        $this->assertEquals('\Mwyatt\Core\Controller\Test', $controllerNs);
-        $this->assertEquals('testParams', $controllerMethod);
 
-        $response = $controller->$controllerMethod($request);
-
-        $this->assertInstanceOf('\Mwyatt\Core\ResponseInterface', $response);
-        $this->assertEquals('testParamsContent, bar-boo, 197', $response->getContent());
-        $this->assertEquals(500, $response->getStatusCode());
+    public function testUrlVars()
+    {
+        $route = $this->router->getMatch('/foo/david/123/');
+        $this->request->setMuxUrlVars($route);
+        $this->assertTrue($this->request->getUrlVar('name') === 'david');
+        $this->assertTrue($this->request->getUrlVar('id') === '123');
     }
 }

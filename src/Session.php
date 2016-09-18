@@ -11,7 +11,9 @@ class Session
      */
     public function __construct()
     {
-        session_start();
+        if (!headers_sent()) {
+            session_start();
+        }
     }
 
 
