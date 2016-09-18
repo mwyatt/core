@@ -35,7 +35,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $container['RepositoryFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
         };
-        $this->controller = new \Mwyatt\Core\Controller\Test($container, new \Mwyatt\Core\View);
+        $container['View'] = function ($container) {
+            return new \Mwyatt\Core\View((string) __DIR__ . '/../' . 'template/');
+        };
+        $this->controller = new \Mwyatt\Core\Controller\Test($container, $container['View']);
     }
 
 

@@ -6,17 +6,6 @@ class Session
 {
 
 
-    /**
-     * good idea?
-     */
-    public function __construct()
-    {
-        if (!headers_sent()) {
-            session_start();
-        }
-    }
-
-
     public function get($key, $default = null)
     {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
