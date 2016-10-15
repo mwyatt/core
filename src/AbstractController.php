@@ -75,6 +75,22 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
 
 
     /**
+     * just refresh the page
+     */
+    public function redirectRefresh()
+    {
+        $url = $this->getService('Url');
+        // $urlNew = $url->generate($key, $config);
+
+        // generate string to redirect to from url
+        // header('location:' . $urlNew, true, $statusCode);
+
+        // must exit because otherwise the script will continue
+        // exit;
+    }
+
+
+    /**
      * renders a template and returns the string
      * @param  string $templatePath
      * @return string
