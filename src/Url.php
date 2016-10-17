@@ -24,8 +24,8 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         $host,
         $installPathQuery,
         $install = ''
-    )
-    {
+    ) {
+    
         $installPathQueryParts = explode('?', $installPathQuery);
         $host .= '/';
         $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';

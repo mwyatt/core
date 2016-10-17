@@ -11,8 +11,8 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     public function __construct(
         \Pimple\Container $pimpleContainer,
         \Mwyatt\Core\View $view
-    )
-    {
+    ) {
+    
         $this->pimpleContainer = $pimpleContainer;
         $this->view = $view;
     }
