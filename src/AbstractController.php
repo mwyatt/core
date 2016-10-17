@@ -8,7 +8,10 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     protected $view;
 
 
-    public function __construct(\Pimple\Container $pimpleContainer, \Mwyatt\Core\View $view)
+    public function __construct(
+        \Pimple\Container $pimpleContainer,
+        \Mwyatt\Core\View $view
+    )
     {
         $this->pimpleContainer = $pimpleContainer;
         $this->view = $view;
@@ -79,6 +82,8 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
      */
     public function redirectRefresh()
     {
+        throw new \Exception('Unable to redirectRefresh.');
+        
         $url = $this->getService('Url');
         // $urlNew = $url->generate($key, $config);
 
