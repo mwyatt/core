@@ -14,8 +14,8 @@ class Mapper extends \Mwyatt\Core\AbstractFactory
         \Mwyatt\Core\DatabaseInterface $adapter,
         \Mwyatt\Core\Factory\Model $modelFactory,
         \Mwyatt\Core\Factory\Iterator $iteratorFactory
-    )
-    {
+    ) {
+    
         $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
         $this->iteratorFactory = $iteratorFactory;
