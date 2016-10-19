@@ -13,66 +13,88 @@ class User extends \Mwyatt\Core\AbstractModel
     public $logs = [];
 
 
-    public function __construct(array $data)
+    /**
+     * this is an issue, how to solve?
+     * should not be able to set this
+     */
+    public function setId($value)
     {
-        $this->id = isset($data['id']) ? $data['id'] : '';
-        $this->setEmail($data['email']);
-        $this->setNameFirst($data['nameFirst']);
-        $this->setNameLast($data['nameLast']);
-        $this->setTimeRegistered($data['timeRegistered']);
-        $this->setPassword($data['password']);
-        return $this;
+        $value = $value + 0;
+        if (!$value) {
+            throw new \Exception("User id '$value' is invalid.");
+        }
+        $this->id = $value;
     }
 
 
-    public function getNameFull()
+    /**
+     * needed because when inserting it needs to be in the model
+     * it should not be possible to set this
+     * @return int 
+     */
+    public function getTimeRegistered()
     {
-        return $this->nameFirst . ' ' . $this->nameLast;
-    }
-
-
-    public function setTimeRegistered($value)
-    {
-        $this->timeRegistered = $value;
+        if (!$this->timeRegistered) {
+            $this->timeRegistered = time();
+        }
+        return $this->timeRegistered;
     }
 
 
     public function setEmail($value)
     {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->maxLength(50);
-        $assertionChain->email($value);
+        $value = trim($value);
+        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("User email '$value' is invalid.");
+        } elseif (strlen($value) > 50) {
+            throw new \Exception("User email '$value' is invalid.");
+        }
         $this->email = $value;
-    }
-
-
-    protected function assertName($value)
-    {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->minLength(3);
-        $assertionChain->maxLength(75);
-        $assertionChain->string($value);
-        return $value;
     }
 
 
     public function setNameFirst($value)
     {
-        $this->nameFirst = $this->assertName($value);
+        $value = trim($value);
+        if (strlen($value) < 3) {
+            throw new \Exception("User first name '$value' is too short.");
+        } elseif (strlen($value) > 75) {
+            throw new \Exception("User first name '$value' is too long.");
+        }
+        $this->nameFirst = $value;
     }
 
 
     public function setNameLast($value)
     {
-        $this->nameLast = $this->assertName($value);
+        $value = trim($value);
+        if (strlen($value) < 3) {
+            throw new \Exception("User last name '$value' is too short.");
+        } elseif (strlen($value) > 75) {
+            throw new \Exception("User last name '$value' is too long.");
+        }
+        $this->nameLast = $value;
     }
 
 
     public function setPassword($value)
     {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->maxLength(255);
+        if (strlen($value) > 255) {
+            throw new \Exception("User password is too long.");
+        }
         $this->password = $value;
+    }
+
+
+    public function createPassword($value)
+    {
+        if (strlen($value) < 6) {
+            throw new \Exception("User password is too short.");
+        } elseif (strlen($value) > 20) {
+            throw new \Exception("User password is too long.");
+        }
+        $value = md5($value);
+        $this->setPassword($value);
     }
 
 
@@ -82,9 +104,15 @@ class User extends \Mwyatt\Core\AbstractModel
     }
 
 
+    public function getNameFull()
+    {
+        return $this->get('nameFirst') . ' ' . $this->get('nameLast');
+    }
+
+
     public function jsonSerialize()
     {
-        $this->setPassword('');
+        $this->password = null;
         return $this;
     }
 }

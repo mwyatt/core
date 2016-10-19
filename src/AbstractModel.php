@@ -7,15 +7,6 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
 
 
     /**
-     * think about how this could be injected in the factory
-     */
-    protected function getAssertionChain($value)
-    {
-        return \Assert\that($value);
-    }
-
-
-    /**
      * get property via method if in place or just the property
      * @param  string $property
      * @return mixed

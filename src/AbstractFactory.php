@@ -13,7 +13,20 @@ abstract class AbstractFactory
     }
 
 
-    protected function getDefaultNamespaceAbs($append = '')
+    /**
+     * inside a project this will be overridden
+     * @param string $value Mwyatt\Core\Mapper\
+     */
+    public function setDefaultNamespace($value)
+    {
+        $this->defaultNamespace = $value;
+    }
+
+
+    /**
+     * exposed so mapper can do clever things
+     */
+    public function getDefaultNamespaceAbs($append = '')
     {
         $namespace = '\\' . $this->getDefaultNamespace($append);
         if (!class_exists($namespace)) {

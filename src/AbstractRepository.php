@@ -13,9 +13,16 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
-    protected function getMapper($name)
+    protected function getMapper($name = null)
     {
-        return $this->mapperFactory->get($name);
+        return $this->mapperFactory->get($name ? $name : $this->getRelativeClassName());
+    }
+
+
+    protected function getModel($name = null)
+    {
+        $mapper = $this->getMapper($name);
+        return $mapper->getModel($name);
     }
 
 
@@ -33,15 +40,9 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
-    protected function getMapperLazy()
-    {
-        return $this->mapperFactory->get($this->getRelativeClassName());
-    }
-
-
     public function findAll()
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         $modelIterator = $mapper->findAll();
         return $modelIterator;
     }
@@ -49,7 +50,7 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 
     public function findById($id)
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         $modelIterator = $mapper->findByIds([$id]);
         return $modelIterator->current();
     }
@@ -57,7 +58,7 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 
     public function findByIds(array $ids)
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         $modelIterator = $mapper->findByIds($ids);
         return $modelIterator;
     }
@@ -65,21 +66,21 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 
     public function insert(array $data)
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         return $mapper->insert($data);
     }
 
 
     public function updateById($models)
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         return $mapper->updateById($models);
     }
 
 
     public function deleteById($models)
     {
-        $mapper = $this->getMapperLazy();
+        $mapper = $this->getMapper();
         return $mapper->deleteById($models);
     }
 }

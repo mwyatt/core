@@ -143,6 +143,12 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     }
 
 
+    public function getFetchTypeClass()
+    {
+        return \PDO::FETCH_CLASS;
+    }
+
+
     public function getParamInt()
     {
         return \PDO::PARAM_INT;

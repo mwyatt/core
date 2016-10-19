@@ -6,34 +6,53 @@ class User extends \Mwyatt\Core\AbstractMapper
 {
 
 
-    public function insert(array $data)
+    /**
+     * not all models will require this
+     */
+    private function validateModel(\Mwyatt\Core\AbstractModel $model)
     {
-        $data['timeRegistered'] = time();
-        $this->adapter->prepare($this->getInsertGenericSql(['email', 'password', 'timeRegistered', 'nameFirst', 'nameLast']));
-        $this->adapter->bindParam(':email', $data['email'], $this->adapter->getParamStr());
-        $this->adapter->bindParam(':password', $data['password'], $this->adapter->getParamStr());
-        $this->adapter->bindParam(':timeRegistered', $data['timeRegistered'], $this->adapter->getParamInt());
-        $this->adapter->bindParam(':nameFirst', $data['nameFirst'], $this->adapter->getParamStr());
-        $this->adapter->bindParam(':nameLast', $data['nameLast'], $this->adapter->getParamStr());
-        $this->adapter->execute();
-        $data['id'] = $this->adapter->getLastInsertId();
-        return $this->getModelLazy($data);
+        $errors = [];
+        if (strlen($model->get('password')) < 1) {
+            $errors[] = 'Must have a password.';
+        } elseif (strlen($model->get('email')) < 1) {
+            $errors[] = 'Email must be filled.';
+        }
+        if ($errors) {
+            throw new \Exception('User validation errors: ' . implode(' ', $errors));
+        }
     }
 
 
-    public function updateById(\Mwyatt\Core\AbstractIterator $models)
+    /**
+     * this avoids a lot of the duplication which appeared in
+     * the insert/update combo
+     * is there always a rowCount?
+     * @param  \Mwyatt\Core\AbstractModel $model 
+     * @return bool                            
+     */
+    public function persist(\Mwyatt\Core\Model\User $model)
     {
-        $rowCount = 0;
-        $this->adapter->prepare($this->getUpdateGenericSql(['email', 'password', 'nameFirst', 'nameLast']));
-        foreach ($models as $model) {
-            $this->adapter->bindParam(':email', $model->get('email'), $this->adapter->getParamStr());
-            $this->adapter->bindParam(':password', $model->get('password'), $this->adapter->getParamStr());
-            $this->adapter->bindParam(':nameFirst', $model->get('nameFirst'), $this->adapter->getParamStr());
-            $this->adapter->bindParam(':nameLast', $model->get('nameLast'), $this->adapter->getParamStr());
-            $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
-            $this->adapter->execute();
-            $rowCount += $this->adapter->getRowCount();
+        $this->validateModel($model);
+        $isUpdate = $model->get('id');
+        $method = $isUpdate ? 'getUpdateGenericSql' : 'getInsertGenericSql';
+        $cols = [
+            $this->adapter->getParamStr() => 'email',
+            $this->adapter->getParamStr() => 'password',
+            $this->adapter->getParamInt() => 'timeRegistered',
+            $this->adapter->getParamStr() => 'nameFirst',
+            $this->adapter->getParamStr() => 'nameLast'
+        ];
+        $this->adapter->prepare($this->$method($cols));
+        foreach ($cols as $type => $col) {
+            $this->adapter->bindParam(":$col", $model->get($col), $type);
         }
-        return $rowCount;
+        if ($isUpdate) {
+            $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
+        }
+        $this->adapter->execute();
+        if (!$isUpdate) {
+            $model->setId($this->adapter->getLastInsertId());
+        }
+        return $this->adapter->getRowCount();
     }
 }

@@ -6,20 +6,14 @@ class User extends \Mwyatt\Core\AbstractRepository
 {
 
 
-    public function register(array $data)
+    public function register($email, $password)
     {
-        $userMapper = $this->getMapper('User');
-        $data['password'] = $this->createPassword($data['password']);
-        return $userMapper->insert($data);
-    }
-
-
-    protected function createPassword($value)
-    {
-        $assertionChain = \Assert\that($value); // better way to get this?
-        $assertionChain->minLength(6);
-        $assertionChain->maxLength(20);
-        return md5($value);
+        $userMapper = $this->getMapper();
+        $user = $this->getModel();
+        $user->setEmail($email);
+        $user->createPassword($password);
+        $userMapper->persist($user);
+        return $user;
     }
 
 

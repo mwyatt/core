@@ -1,10 +1,10 @@
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(50) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL DEFAULT '',
-  `timeRegistered` int(10) unsigned DEFAULT NULL,
-  `nameFirst` varchar(75) NOT NULL DEFAULT '',
-  `nameLast` varchar(75) NOT NULL DEFAULT '',
+  `email` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `timeRegistered` int(10) unsigned NOT NULL,
+  `nameFirst` varchar(75) DEFAULT NULL,
+  `nameLast` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -17,7 +17,7 @@ CREATE TABLE `userLog` (
 
 CREATE TABLE `log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL DEFAULT '',
-  `timeCreated` int(10) unsigned DEFAULT NULL,
+  `content` text NOT NULL,
+  `timeCreated` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -20,10 +20,11 @@ class Log extends \Mwyatt\Core\AbstractModel
 
     public function setContent($value)
     {
-        $assertionChain = $this->getAssertionChain($value);
-        $assertionChain->minLength(3);
-        $assertionChain->maxLength(255);
-        $assertionChain->string($value);
+        if (strlen($value) < 3) {
+            return;
+        } elseif (strlen($value) > 255) {
+            return;
+        }
         $this->content = $value;
     }
 

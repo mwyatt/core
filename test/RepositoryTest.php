@@ -49,13 +49,15 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $database->beginTransaction();
 
         try {
-            $user = $userRepo->register($this->userModelData);
+            $user = $userRepo->register(
+                $this->userModelData['email'],
+                $this->userModelData['password']
+            );
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
             exit($e->getMessage());
         }
-
         $this->assertTrue($user->get('id') > 0);
     }
 
@@ -64,6 +66,11 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $userRepo = $this->controller->getRepository('User');
         $users = $userRepo->findAll();
+        echo '<pre>';
+        print_r($users);
+        echo '</pre>';
+        exit;
+        
         $usersCountPrimary = $users->count();
         $this->assertTrue($users->count() > 0);
 
