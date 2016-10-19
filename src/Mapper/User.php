@@ -27,8 +27,8 @@ class User extends \Mwyatt\Core\AbstractMapper
      * this avoids a lot of the duplication which appeared in
      * the insert/update combo
      * is there always a rowCount?
-     * @param  \Mwyatt\Core\AbstractModel $model 
-     * @return bool                            
+     * @param  \Mwyatt\Core\AbstractModel $model
+     * @return bool
      */
     public function persist(\Mwyatt\Core\Model\User $model)
     {

@@ -30,7 +30,7 @@ class User extends \Mwyatt\Core\AbstractModel
     /**
      * needed because when inserting it needs to be in the model
      * it should not be possible to set this
-     * @return int 
+     * @return int
      */
     public function getTimeRegistered()
     {

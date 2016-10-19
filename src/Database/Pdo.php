@@ -29,7 +29,6 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
         }
 
         try {
-
             // set data source name
             $dataSourceName = [
                 'mysql:host' => $credentials['database.host'],
