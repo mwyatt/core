@@ -14,11 +14,9 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
     public function get($property)
     {
         $proposedMethod = 'get' . ucfirst($property);
-
         if (method_exists($this, $proposedMethod)) {
             return $this->$proposedMethod();
         }
-
         if (property_exists($this, $property)) {
             return $this->$property;
         }
