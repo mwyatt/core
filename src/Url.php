@@ -20,8 +20,12 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
      * @param string $installPathQuery  usually from $_SERVER['REQUEST_URI']
      * @param string $install           foo/bar/
      */
-    public function __construct($host, $installPathQuery, $install = '')
-    {
+    public function __construct(
+        $host,
+        $installPathQuery,
+        $install = ''
+    ) {
+    
         $installPathQueryParts = explode('?', $installPathQuery);
         $host .= '/';
         $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';
