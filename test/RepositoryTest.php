@@ -29,8 +29,15 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $container['ModelFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Model;
         };
+        $container['IteratorFactory'] = function ($container) {
+            return new \Mwyatt\Core\Factory\Iterator;
+        };
         $container['MapperFactory'] = function ($container) {
-            return new \Mwyatt\Core\Factory\Mapper($container['Database'], $container['ModelFactory']);
+            return new \Mwyatt\Core\Factory\Mapper(
+                $container['Database'],
+                $container['ModelFactory'],
+                $container['IteratorFactory']
+            );
         };
         $container['RepositoryFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
@@ -66,10 +73,6 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     {
         $userRepo = $this->controller->getRepository('User');
         $users = $userRepo->findAll();
-        echo '<pre>';
-        print_r($users);
-        echo '</pre>';
-        exit;
         
         $usersCountPrimary = $users->count();
         $this->assertTrue($users->count() > 0);
@@ -96,8 +99,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         try {
             $user->setNameFirst($newUserNameFirst);
-            $rowCount = $userRepo->updateById($users);
-            $this->assertTrue($rowCount === 1);
+            foreach ($users as $user) {
+                $rowCount = $userRepo->persist($users);
+                $this->assertTrue($rowCount === 1);
+            }
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();

@@ -64,21 +64,14 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
-    public function insert(array $data)
+    public function persist(\Mwyatt\Core\ModelInterface $model)
     {
         $mapper = $this->getMapper();
-        return $mapper->insert($data);
+        return $mapper->persist($model);
     }
 
 
-    public function updateById($models)
-    {
-        $mapper = $this->getMapper();
-        return $mapper->updateById($models);
-    }
-
-
-    public function deleteById($models)
+    public function deleteById(\Mwyatt\Core\ModelInterface $model)
     {
         $mapper = $this->getMapper();
         return $mapper->deleteById($models);

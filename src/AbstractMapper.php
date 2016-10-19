@@ -9,11 +9,15 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     protected $iteratorFactory;
 
 
-    public function __construct(\Mwyatt\Core\DatabaseInterface $adapter, \Mwyatt\Core\Factory\Model $modelFactory)
+    public function __construct(
+        \Mwyatt\Core\DatabaseInterface $adapter,
+        \Mwyatt\Core\Factory\Model $modelFactory,
+        \Mwyatt\Core\Factory\Iterator $iteratorFactory
+    )
     {
         $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
-        $this->modelFactory = $modelFactory;
+        $this->iteratorFactory = $iteratorFactory;
     }
 
 
@@ -54,7 +58,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
                 throw new \Exception("Unable to find iterator '$possiblePath'");
             }
         } else {
-            $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs($this->getRelativeClassName());
+            $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs('Model\\' . $this->getRelativeClassName());
         }
 
         if (class_exists($possiblePath)) {
@@ -138,19 +142,12 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function deleteById(\Mwyatt\Core\AbstractIterator $models)
+    public function deleteById(\Mwyatt\Core\ModelInterface $model)
     {
         $sql = ['delete', 'from', $this->getTableNameLazy(), 'where id = ?'];
-        $rowCount = 0;
-        $modelCount = count($models);
         $this->adapter->prepare(implode(' ', $sql));
-        foreach ($models as $model) {
-            $this->adapter->bindParam(1, $model->get('id'), $this->adapter->getParamInt());
-            $this->adapter->execute();
-            $rowCount += $this->adapter->getRowCount();
-        }
-        if ($rowCount !== $modelCount) {
-            throw new \PDOException("Deleted rowCount $rowCount does not match expected $modelCount.");
-        }
+        $this->adapter->bindParam(1, $model->get('id'), $this->adapter->getParamInt());
+        $this->adapter->execute();
+        return $this->adapter->getRowCount();
     }
 }
