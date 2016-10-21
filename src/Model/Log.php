@@ -2,19 +2,29 @@
 
 namespace Mwyatt\Core\Model;
 
-class Log extends \Mwyatt\Core\AbstractModel
+class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInterface
 {
     protected $id;
     protected $content;
     protected $timeCreated;
 
 
-    public function __construct(array $data)
+    public function setId($value)
     {
-        $this->id = isset($data['id']) ? $data['id'] : '';
-        $this->setContent($data['content']);
-        $this->setTimeCreated($data['timeCreated']);
-        return $this;
+        $value = $value + 0;
+        if (!$value) {
+            throw new \Exception("Log id '$value' is invalid.");
+        }
+        $this->id = $value;
+    }
+
+
+    public function getTimeCreated()
+    {
+        if (!$this->timeCreated) {
+            $this->timeCreated = time();
+        }
+        return $this->timeCreated;
     }
 
 

@@ -2,21 +2,17 @@
 
 namespace Mwyatt\Core\Model;
 
-class User extends \Mwyatt\Core\AbstractModel
+class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInterface
 {
     protected $id;
     protected $email;
     protected $nameFirst;
     protected $nameLast;
     protected $password;
-    protected $timeRegistered;
+    protected $timeCreated;
     public $logs = [];
 
 
-    /**
-     * this is an issue, how to solve?
-     * should not be able to set this
-     */
     public function setId($value)
     {
         $value = $value + 0;
@@ -27,17 +23,12 @@ class User extends \Mwyatt\Core\AbstractModel
     }
 
 
-    /**
-     * needed because when inserting it needs to be in the model
-     * it should not be possible to set this
-     * @return int
-     */
-    public function getTimeRegistered()
+    public function getTimeCreated()
     {
-        if (!$this->timeRegistered) {
-            $this->timeRegistered = time();
+        if (!$this->timeCreated) {
+            $this->timeCreated = time();
         }
-        return $this->timeRegistered;
+        return $this->timeCreated;
     }
 
 

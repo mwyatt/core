@@ -11,7 +11,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
             'email' => 'example@exmple.com',
             'nameFirst' => 'Martin',
             'nameLast' => 'Wyatt',
-            'timeRegistered' => 1474113942,
+            'timeCreated' => 1474113942,
             'password' => 'ojfdgodfig'
         ],
         [
@@ -19,7 +19,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
             'email' => 'example@exmple.coms',
             'nameFirst' => 'Steve',
             'nameLast' => 'Smith',
-            'timeRegistered' => 1474113942,
+            'timeCreated' => 1474113942,
             'password' => 'ojfdgodfig'
         ]
     ];

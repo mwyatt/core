@@ -63,7 +63,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            exit('testInsert ' . $e->getMessage());
         }
         $this->assertTrue($user->get('id') > 0);
     }
@@ -96,17 +96,16 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         $users = $userRepo->findAll();
         $user = $users->current();
         $newUserNameFirst = $user->get('nameFirst') . 'append';
-
         try {
-            $user->setNameFirst($newUserNameFirst);
             foreach ($users as $user) {
-                $rowCount = $userRepo->persist($users);
+                $user->setNameFirst($newUserNameFirst);
+                $rowCount = $userRepo->persist($user);
                 $this->assertTrue($rowCount === 1);
             }
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            exit('testUpdate ' . $e->getMessage());
         }
 
         $user = $userRepo->findById($user->get('id'));
@@ -131,7 +130,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            exit('testInsertLog ' . $e->getMessage());
         }
         $users = $userRepo->findAll();
         $userRepo->findLogs($users);
@@ -166,7 +165,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            exit('testDelete ' . $e->getMessage());
         }
     }
 }

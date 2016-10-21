@@ -29,7 +29,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
 
     public function testPrepareExecuteRowCount()
     {
-        $this->assertInstanceOf('\PDOStatement', $this->database->prepare("insert into user (email, password, timeRegistered, nameFirst, nameLast) values ('martin.wyatt@gmail.com', '123123123', '123123123', 'Martin', 'Wyatt');"));
+        $this->assertInstanceOf('\PDOStatement', $this->database->prepare("insert into user (email, password, timeCreated, nameFirst, nameLast) values ('martin.wyatt@gmail.com', '123123123', '123123123', 'Martin', 'Wyatt');"));
 
         $this->assertTrue($this->database->execute());
 
@@ -43,7 +43,7 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $this->database->prepare('select * from user;');
         $this->database->execute();
-        $this->assertTrue(\Mwyatt\Core\Helper::arrayKeyExists(['id', 'email', 'password', 'timeRegistered', 'nameFirst', 'nameLast'], $this->database->fetch()));
+        $this->assertTrue(\Mwyatt\Core\Helper::arrayKeyExists(['id', 'email', 'password', 'timeCreated', 'nameFirst', 'nameLast'], $this->database->fetch()));
 
         $this->database->prepare('select * from user;');
         $this->database->execute();

@@ -22,10 +22,13 @@ class User extends \Mwyatt\Core\AbstractRepository
         $userMapper = $this->getMapper('User');
         $userLogMapper = $this->getMapper('User\Log');
         $logMapper = $this->getMapper('Log');
-
-        $log = $logMapper->insert($data);
-        $data['logId'] = $log->get('id');
-        $userLogMapper->insert($data);
+        $log = $this->getModel('Log');
+        $userLog = $this->getModel('User\Log');
+        $log->setContent($data['content']);
+        $logMapper->persist($log);
+        $userLog->setUserId($data['userId']);
+        $userLog->setLogId($log->get('id'));
+        $userLogMapper->persist($userLog);
         return $log;
     }
 

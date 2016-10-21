@@ -4,28 +4,37 @@ namespace Mwyatt\Core\Mapper\User;
 
 class Log extends \Mwyatt\Core\AbstractMapper
 {
+    protected $publicCols = [
+        'userId' => \PDO::PARAM_INT,
+        'logId' => \PDO::PARAM_INT
+    ];
 
 
-    public function insert(array $data)
+    private function validateModel(\Mwyatt\Core\ModelInterface $model)
     {
-        $this->adapter->prepare($this->getInsertGenericSql(['userId', 'logId']));
-        $this->adapter->bindParam(':userId', $data['userId'], $this->adapter->getParamInt());
-        $this->adapter->bindParam(':logId', $data['logId'], $this->adapter->getParamInt());
-        $this->adapter->execute();
-        $data['id'] = $this->adapter->getLastInsertId();
-        return $this->getModelLazy($data);
+        $errors = [];
+        if (strlen($model->get('userId')) < 1) {
+            $errors[] = 'Must have userId.';
+        }
+        if (strlen($model->get('logId')) < 1) {
+            $errors[] = 'Must have logId.';
+        }
+        if ($errors) {
+            throw new \Exception('Log validation errors: ' . implode(' ', $errors));
+        }
     }
 
 
     public function findByUserIds(array $userIds)
     {
+        $modelClassAbs = $this->modelFactory->getDefaultNamespaceAbs($this->getRelativeClassName());
         $models = [];
-        $this->adapter->prepare("select * from `userLog` where `userId` = ?");
+        $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `userId` = ?");
         foreach ($userIds as $userId) {
-            $this->adapter->bindParam(1, $userId, $this->adapter->getParamInt());
+            $this->adapter->bindParam(1, $userId, $this->publicCols['userId']);
             $this->adapter->execute();
-            while ($data = $this->adapter->fetch()) {
-                $models[] = $this->getModelLazy($data);
+            while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $modelClassAbs)) {
+                $models[] = $model;
             }
         }
         return $this->getIterator($models);

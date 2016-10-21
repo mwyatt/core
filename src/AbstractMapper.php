@@ -7,6 +7,8 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
+    protected $protectedCols = ['id'];
+    protected $publicCols = [];
 
 
     public function __construct(
@@ -18,6 +20,32 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
         $this->iteratorFactory = $iteratorFactory;
+    }
+
+
+    private function validateModel(\Mwyatt\Core\ModelInterface $model)
+    {
+
+    }
+
+
+    public function persist(\Mwyatt\Core\ModelInterface $model)
+    {
+        $this->validateModel($model);
+        $isUpdate = $model->get('id');
+        $method = $isUpdate ? 'getUpdateGenericSql' : 'getInsertGenericSql';
+        $this->adapter->prepare($this->$method(array_keys($this->publicCols)));
+        foreach ($this->publicCols as $col => $type) {
+            $this->adapter->bindParam(":$col", $model->get($col), $type);
+        }
+        if ($isUpdate) {
+            $this->adapter->bindParam(":id", $model->get('id'), $this->adapter->getParamInt());
+        }
+        $this->adapter->execute();
+        if (!$isUpdate) {
+            $model->setId($this->adapter->getLastInsertId());
+        }
+        return $this->adapter->getRowCount();
     }
 
 

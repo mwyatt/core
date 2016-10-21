@@ -2,19 +2,20 @@
 
 namespace Mwyatt\Core\Model\User;
 
-class Log extends \Mwyatt\Core\AbstractModel
+class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInterface
 {
     protected $id;
     protected $userId;
     protected $logId;
 
 
-    public function __construct(array $data)
+    public function setId($value)
     {
-        $this->id = isset($data['id']) ? $data['id'] : '';
-        $this->setUserId($data['userId']);
-        $this->setLogId($data['logId']);
-        return $this;
+        $value = $value + 0;
+        if (!$value) {
+            throw new \Exception("Log id '$value' is invalid.");
+        }
+        $this->id = $value;
     }
 
 
