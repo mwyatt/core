@@ -25,7 +25,6 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     private function validateModel(\Mwyatt\Core\ModelInterface $model)
     {
-
     }
 
 
