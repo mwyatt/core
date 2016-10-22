@@ -4,7 +4,12 @@ namespace Mwyatt\Core;
 
 interface DatabaseInterface
 {
-    public function connect(array $credentials);
+    public function connect(
+        $host,
+        $basename,
+        $username,
+        $password
+    );
     public function disconnect();
     public function prepare($sql, $options = []);
     public function execute($parameters = []);

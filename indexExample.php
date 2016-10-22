@@ -4,8 +4,6 @@ define('PATH_BASE', (string) (__DIR__ . '/'));
 include PATH_BASE . 'vendor/autoload.php';
 $kernel = new \Mwyatt\Core\Http\Kernel(PATH_BASE);
 
-
-
 if (!empty($config['errorReporting'])) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);

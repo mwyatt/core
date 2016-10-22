@@ -81,7 +81,7 @@ class Request implements \Mwyatt\Core\RequestInterface
     }
 
 
-    public function setMuxUrlVars(array $route)
+    public function setMuxUrlVars(array $route = [])
     {
         if (empty($route[3]['vars'])) {
             return;

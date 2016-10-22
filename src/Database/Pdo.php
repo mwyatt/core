@@ -20,7 +20,12 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     protected $statement;
 
 
-    public function connect(array $credentials)
+    public function connect(
+        $host,
+        $basename,
+        $username,
+        $password
+    )
     {
 
         // already connected
@@ -31,8 +36,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
         try {
             // set data source name
             $dataSourceName = [
-                'mysql:host' => $credentials['database.host'],
-                'dbname' => $credentials['database.basename'],
+                'mysql:host' => $host,
+                'dbname' => $basename,
                 'charset' => 'utf8'
             ];
             foreach ($dataSourceName as $key => $value) {
@@ -43,8 +48,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
             // connect
             $this->connection = new \PDO(
                 $dataSourceName,
-                $credentials['database.username'],
-                $credentials['database.password']
+                $username,
+                $password
             );
 
             // set error mode
