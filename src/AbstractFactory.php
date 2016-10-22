@@ -30,7 +30,7 @@ abstract class AbstractFactory
     {
         $namespace = '\\' . $this->getDefaultNamespace($append);
         if (!class_exists($namespace)) {
-            throw new \Exception("'$namespace' does not exist.");
+            // throw new \Exception("'$namespace' does not exist.");
         }
         return $namespace;
     }

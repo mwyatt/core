@@ -33,7 +33,7 @@ class User extends \Mwyatt\Core\AbstractRepository
     }
 
 
-    public function findLogs(\Mwyatt\Core\AbstractIterator $users)
+    public function findLogs(\Mwyatt\Core\Iterator\Model $users)
     {
         $userLogMapper = $this->getMapper('User\Log');
         $logMapper = $this->getMapper('Log');
@@ -46,22 +46,28 @@ class User extends \Mwyatt\Core\AbstractRepository
     }
 
 
-    public function deleteLogs(\Mwyatt\Core\AbstractIterator $userLogs)
+    public function deleteLogs(\Mwyatt\Core\Iterator\Model $userLogs)
     {
         $userLogMapper = $this->getMapper('User\Log');
         $logMapper = $this->getMapper('Log');
         $logs = $logMapper->findByIds($userLogs->extractProperty('logId'));
-        $logMapper->deleteById($logs);
-        $userLogMapper->deleteById($userLogs);
+        foreach ($logs as $log) {
+            $logMapper->deleteById($log);
+        }
+        foreach ($userLogs as $userLog) {
+            $userLogMapper->deleteById($userLog);
+        }
     }
 
 
-    public function delete(\Mwyatt\Core\AbstractIterator $users)
+    public function delete(\Mwyatt\Core\Iterator\Model $users)
     {
         $userMapper = $this->getMapper('User');
         $userLogMapper = $this->getMapper('User\Log');
         $userLogs = $userLogMapper->findByUserIds($users->getIds());
         $this->deleteLogs($userLogs);
-        $userMapper->deleteById($users);
+        foreach ($users as $user) {
+            $userMapper->deleteById($user);
+        }
     }
 }

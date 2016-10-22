@@ -74,6 +74,6 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     public function deleteById(\Mwyatt\Core\ModelInterface $model)
     {
         $mapper = $this->getMapper();
-        return $mapper->deleteById($models);
+        return $mapper->deleteById($model);
     }
 }

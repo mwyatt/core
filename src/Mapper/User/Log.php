@@ -27,13 +27,12 @@ class Log extends \Mwyatt\Core\AbstractMapper
 
     public function findByUserIds(array $userIds)
     {
-        $modelClassAbs = $this->modelFactory->getDefaultNamespaceAbs($this->getRelativeClassName());
         $models = [];
         $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `userId` = ?");
         foreach ($userIds as $userId) {
             $this->adapter->bindParam(1, $userId, $this->publicCols['userId']);
             $this->adapter->execute();
-            while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $modelClassAbs)) {
+            while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $this->getModelClassAbs())) {
                 $models[] = $model;
             }
         }

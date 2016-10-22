@@ -74,6 +74,12 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
+    public function getModelClassAbs($name = null)
+    {
+        return $this->modelFactory->getDefaultNamespaceAbs($name ? $name : $this->getRelativeClassName());
+    }
+
+
     /**
      * get the iterator specific to this class or a custom one if required
      */
@@ -87,24 +93,22 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         } else {
             $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs('Model\\' . $this->getRelativeClassName());
         }
-
         if (class_exists($possiblePath)) {
             $chosenPath = $possiblePath;
         } else {
-            $chosenPath = $basePath;
+            $chosenPath = $this->iteratorFactory->getDefaultNamespaceAbs('Model');
         }
-
+        rtrim($chosenPath, '\\');
         return new $chosenPath($models);
     }
 
 
     public function findAll()
     {
-        $modelClassAbs = $this->modelFactory->getDefaultNamespaceAbs($this->getRelativeClassName());
         $models = [];
         $this->adapter->prepare("select * from `{$this->getTableNameLazy()}`");
         $this->adapter->execute();
-        while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $modelClassAbs)) {
+        while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $this->getModelClassAbs())) {
             $models[] = $model;
         }
         return $this->getIterator($models);
@@ -113,13 +117,12 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     public function findByIds(array $ids)
     {
-        $modelClassAbs = $this->modelFactory->getDefaultNamespaceAbs($this->getRelativeClassName());
         $models = [];
         $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `id` = ?");
         foreach ($ids as $id) {
             $this->adapter->bindParam(1, $id, $this->adapter->getParamInt());
             $this->adapter->execute();
-            if ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $modelClassAbs)) {
+            if ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $this->getModelClassAbs())) {
                 $models[] = $model;
             }
         }
