@@ -25,8 +25,8 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
         $basename,
         $username,
         $password
-    )
-    {
+    ) {
+    
 
         // already connected
         if ($this->connection) {

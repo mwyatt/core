@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core\Http;
 
-
 /**
  * incorporate maintenance mode, how?
  */
