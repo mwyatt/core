@@ -139,7 +139,6 @@ class Kernel
 
     private function runMiddlewarePost()
     {
-        
     }
 
 
@@ -162,7 +161,6 @@ class Kernel
         if ($config->getSetting('core.maintenance')) {
             $response = $controllerError->maintenance($request);
         } elseif ($route) {
-
             $this->runMiddleware();
 
             $controllerNs = '\\' . $router->getMuxRouteCurrentController();
