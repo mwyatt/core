@@ -21,8 +21,8 @@ class AbstractMiddleware
     public function terminate(
         \Mwyatt\Core\RequestInterface $request,
         \Mwyatt\Core\ResponseInterface $response
-    )
-    {
+    ) {
+    
         // does something?
     }
 }
