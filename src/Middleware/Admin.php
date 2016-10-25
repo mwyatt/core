@@ -1,14 +1,14 @@
 <?php
 
-namespace Mwyatt\Core;
+namespace Mwyatt\Core\Middleware;
 
-class AbstractMiddleware extends \Mwyatt\Core\AbstractController
+class Admin extends \Mwyatt\Core\AbstractMiddleware
 {
 
 
     public function handle(\Mwyatt\Core\RequestInterface $request)
     {
-        // does something or redirects?
+        
     }
 
 

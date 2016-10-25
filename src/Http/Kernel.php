@@ -9,6 +9,8 @@ class Kernel
 {
     private $projectPath;
     private $services;
+    private $middleware = [];
+    private $middlewarePost = [];
 
     
     public function __construct($projectPath)
@@ -16,6 +18,12 @@ class Kernel
         $this->projectPath = $projectPath;
         $this->setServices();
         $this->route();
+    }
+
+
+    public function registerMiddleware($config)
+    {
+        $this->middleware = $config;
     }
 
 
@@ -117,49 +125,65 @@ class Kernel
     }
 
 
+    private function runMiddleware()
+    {
+        foreach ($this->middleware as $key => $className) {
+            $middleware = new $className(
+                $this->services,
+                $this->services['View']
+            );
+            $middleware->handle($this->services['Request']);
+        }
+    }
+
+
+    private function runMiddlewarePost()
+    {
+        
+    }
+
+
     private function route()
     {
+        $config = $this->services['Config'];
         $url = $this->services['Url'];
         $request = $this->services['Request'];
         $router = $this->services['Router'];
         $view = $this->services['View'];
         $routes = $this->services['Routes'];
-
+        $controllerError = new \Mwyatt\Core\Controller\Error(
+            $this->services,
+            $view
+        );
+        $response = false;
         $route = $router->getMuxRouteCurrent('/' . $url->getPath());
         $request->setMuxUrlVars($route);
-        
-        // pre middleware?
 
-        $controllerError = new \Mwyatt\Elttl\Controller\Error($this->services, $view);
-        if ($route) {
+        if ($config->getSetting('core.maintenance')) {
+            $response = $controllerError->maintenance($request);
+        } elseif ($route) {
+
+            $this->runMiddleware();
+
             $controllerNs = '\\' . $router->getMuxRouteCurrentController();
             $controllerMethod = $router->getMuxRouteCurrentControllerMethod();
             $controller = new $controllerNs(
                 $this->services,
                 $view
             );
+
             try {
                 $response = $controller->$controllerMethod($request);
             } catch (\Exception $e) {
-
-                // server error 500
-                // $response = $controllerError->server($e->getMessage());
+                $response = $controllerError->e500($e->getMessage());
             }
         } else {
-
-            // undefined route error
-            // $response = $controllerError->route();
+            $response = $controllerError->e404();
         }
 
         http_response_code($response->getStatusCode());
-
-        // allow way to set more headers?
-
         echo $response->getContent();
-        
 
-        // post middleware?
-
-
+        $this->runMiddlewarePost();
     }
 }
