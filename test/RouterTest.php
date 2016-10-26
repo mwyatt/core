@@ -4,7 +4,7 @@ namespace Mwyatt\Core;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
-    public $routes = [
+    private $routes = [
         [
             'any', '/',
             '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
@@ -20,8 +20,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
         ]
     ];
-    public $router;
-    public $request;
+    private $router;
+    private $request;
 
 
     public function setUp()

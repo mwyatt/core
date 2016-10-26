@@ -19,4 +19,10 @@ class Config
             return $this->data[$key];
         }
     }
+
+
+    public function setSetting($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
 }
