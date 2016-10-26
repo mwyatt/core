@@ -119,7 +119,6 @@ class Kernel
     public function registerServices(array $services = [])
     {
         foreach ($services as $key => $value) {
-            
         }
     }
 
@@ -144,7 +143,7 @@ class Kernel
 
         $this->services['Request'] = function ($services) {
             $request = new \Mwyatt\Core\Request(
-                new \Mwyatt\Core\Session, 
+                new \Mwyatt\Core\Session,
                 new \Mwyatt\Core\Cookie
             );
             return $request;
@@ -232,7 +231,8 @@ class Kernel
 
                 $controllerName = $router->getRouteControllerName($route);
                 if (!class_exists($controllerName)) {
-                    throw new \Exception("Controller '$controllerName' does not exist.");;
+                    throw new \Exception("Controller '$controllerName' does not exist.");
+                    ;
                 }
                 $controllerMethod = $router->getRouteControllerMethod($route);
                 $controller = new $controllerName(
@@ -240,7 +240,8 @@ class Kernel
                     $view
                 );
                 if (!method_exists($controller, $controllerMethod)) {
-                    throw new \Exception("Controller method '$controllerMethod' does not exist.");;
+                    throw new \Exception("Controller method '$controllerMethod' does not exist.");
+                    ;
                 }
                 $response = $controller->$controllerMethod($request);
             } catch (\Exception $e) {
