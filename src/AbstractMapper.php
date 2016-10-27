@@ -96,8 +96,9 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         if (class_exists($possiblePath)) {
             $chosenPath = $possiblePath;
         } else {
-            $chosenPath = \Mwyatt\Core\Iterator\Model::class;
+            $chosenPath = '\\Mwyatt\\Core\\Iterator\\Model';
         }
+        echo "$chosenPath>>>>>";
         rtrim($chosenPath, '\\');
         return new $chosenPath($models);
     }

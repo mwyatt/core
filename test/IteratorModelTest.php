@@ -29,7 +29,13 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
     {
         $models = [];
         foreach ($this->datas as $data) {
-            $models[] = new \Mwyatt\Core\Model\User($data);
+            $model = new \Mwyatt\Core\Model\User;
+            $model->setId('id');
+            $model->setEmail('email');
+            $model->setNameFirst('nameFirst');
+            $model->setNameLast('nameLast');
+            $model->setPassword('password');
+            $models[] = $model;
         }
         $this->iterator = new \Mwyatt\Core\Iterator\Model($models);
     }
