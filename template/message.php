@@ -4,7 +4,7 @@
     <h1><?php echo $title ?></h1>
     <p><?php echo $description ?></p>
 
-<?php if (!empty($systemError)): ?>
+<?php if (!empty($systemError)) : ?>
 
     <p><?php echo $systemError ?></p>
     

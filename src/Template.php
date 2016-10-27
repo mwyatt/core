@@ -11,8 +11,8 @@ class Template
     public function __construct(
         $projectPath,
         \Mwyatt\Core\ViewInterface $view
-    )
-    {
+    ) {
+    
         $this->projectPath = $projectPath;
         $this->view = $view;
     }
