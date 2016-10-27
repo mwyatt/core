@@ -1,6 +1,7 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
 		<testsuite name="core">
+			<file>test/KernelTest.php</file>
 			<file>test/CacheTest.php</file>
 			<file>test/ControllerTest.php</file>
 			<!-- <file>test/CookieTest.php</file> -->
