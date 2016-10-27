@@ -59,10 +59,10 @@ abstract class AbstractView extends \Mwyatt\Core\AbstractIterator implements \Mw
     }
 
 
-    protected function getTemplateFilePath($filename, $ext = 'php')
+    public function getTemplateFilePath($filename, $ext = 'php')
     {
         $templateDirectories = $this->templateDirectories;
-        $end = strtolower($filename) . '.' . $ext;
+        $end = $filename . '.' . $ext;
         $proposedPath = '';
         foreach ($templateDirectories as $templateDirectory) {
             $proposedPath = $templateDirectory . $end;

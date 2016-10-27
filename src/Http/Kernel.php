@@ -12,11 +12,9 @@ class Kernel
     private $middlewarePost = [];
 
     
-    public function __construct($projectPath)
+    public function __construct()
     {
         $this->services = new \Pimple\Container;
-        $this->services['ProjectPath'] = $projectPath;
-        $this->registerServicesGlobal();
     }
 
 
@@ -26,13 +24,13 @@ class Kernel
     }
 
 
-    public function registerMiddleware($config)
+    public function setMiddleware($config)
     {
         $this->middleware = $config;
     }
 
 
-    public function registerSettings(array $settings)
+    public function setSettings(array $settings)
     {
         $config = $this->services['Config'];
         foreach ($settings as $key => $value) {
@@ -41,7 +39,7 @@ class Kernel
     }
 
 
-    public function registerServicesOptional()
+    public function setServicesOptional()
     {
         $this->services['ErrorHandler'] = function ($services) {
             $config = $services['Config'];
@@ -56,36 +54,37 @@ class Kernel
             return $log;
         };
 
-        \Monolog\ErrorHandler::register($this->services['ErrorHandler']);
+        \Monolog\ErrorHandler::set($this->services['ErrorHandler']);
 
         $this->services['ModelFactory'] = function ($services) {
             $config = $services['Config'];
             $modelFactory = new \Mwyatt\Core\Factory\Model;
-            $modelFactory->setDefaultNamespace($config->getSetting('model.factory.namespace'));
+            $modelFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Model\\');
             return $modelFactory;
         };
 
         $this->services['IteratorFactory'] = function ($services) {
             $config = $services['Config'];
             $iteratorFactory = new \Mwyatt\Core\Factory\Iterator;
-            $iteratorFactory->setDefaultNamespace($config->getSetting('iterator.factory.namespace'));
+            $iteratorFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Iterator\\');
             return $iteratorFactory;
         };
 
         $this->services['MapperFactory'] = function ($services) {
+            $config = $services['Config'];
             $mapperFactory = new \Mwyatt\Core\Factory\Mapper(
                 $services['Database'],
                 $services['ModelFactory'],
                 $services['IteratorFactory']
             );
-            $mapperFactory->setDefaultNamespace($config->getSetting('mapper.factory.namespace'));
+            $mapperFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Mapper\\');
             return $mapperFactory;
         };
 
         $this->services['RepositoryFactory'] = function ($services) {
             $config = $services['Config'];
             $repositoryFactory = new \Mwyatt\Core\Factory\Repository($services['MapperFactory']);
-            $repositoryFactory->setDefaultNamespace($config->getSetting('repository.factory.namespace'));
+            $repositoryFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Repository\\');
             return $repositoryFactory;
         };
 
@@ -116,14 +115,22 @@ class Kernel
     }
 
 
-    public function registerServices(array $services = [])
+    public function setServices($path)
     {
-        foreach ($services as $key => $value) {
+        if (!file_exists($path)) {
+            throw new \Exception("Path '$path' does not exist.");
         }
+        include $path;
     }
 
 
-    private function registerServicesGlobal()
+    public function setServiceProjectPath($projectPath)
+    {
+        $this->services['ProjectPath'] = $projectPath;
+    }
+
+
+    public function setServicesEssential()
     {
         $this->services['Config'] = function ($services) {
             return new \Mwyatt\Core\Http\Config(include $services['ProjectPath'] . 'config.php');
@@ -133,6 +140,14 @@ class Kernel
             $router = new \Mwyatt\Core\Router(new \Pux\Mux);
             $router->appendRoutes($services['Routes']);
             return $router;
+        };
+
+        $this->services['Template'] = function ($services) {
+            $template = new \Mwyatt\Core\Template(
+                $services['ProjectPath'],
+                $services['View']
+            );
+            return $template;
         };
 
         $this->services['Route'] = function ($services) {
@@ -149,13 +164,6 @@ class Kernel
             return $request;
         };
 
-        $this->services['ControllerError'] = function ($services) {
-            return new \Mwyatt\Core\Controller\Error(
-                $services,
-                $services['View']
-            );
-        };
-
         $this->services['Url'] = function ($services) {
             $routes = $services['Routes'];
             $request = $services['Request'];
@@ -168,16 +176,11 @@ class Kernel
             $url->setRoutes($routes);
             return $url;
         };
+        
 
         $this->services['View'] = function ($services) {
-            $url = $services['Url'];
             $view = new \Mwyatt\Core\View($services['ProjectPath'] . 'template/');
             $view->appendTemplateDirectory((string) (__DIR__ . '/../../') . 'template/');
-
-            // global view values
-            // better place for this?
-            $view->offsetSet('url', $url);
-
             return $view;
         };
     }
@@ -205,6 +208,20 @@ class Kernel
 
     public function route()
     {
+        $config = $this->services['Config'];
+        try {
+            $this->doRoute();
+        } catch (\Exception $e) {
+            echo 'Kernel Error';
+            if ($config->getSetting('core.displayErrors')) {
+                echo ': ' . $e->getMessage();
+            }
+        }
+    }
+
+
+    private function doRoute()
+    {
         if (!headers_sent()) {
             session_start();
         }
@@ -216,8 +233,15 @@ class Kernel
         $router = $this->services['Router'];
         $route = $this->services['Route'];
         $view = $this->services['View'];
-        $controllerError = $this->services['ControllerError'];
+        $controllerError = new \Mwyatt\Core\Controller\Error(
+            $this->services,
+            $view
+        );
         $response = false;
+
+        $view->offsetSet('config', $config);
+        $view->offsetSet('url', $url);
+        $view->offsetSet('template', $this->services['Template']);
 
         if ($config->getSetting('core.maintenance') || !$routes) {
             $response = $controllerError->maintenance($request);
@@ -245,7 +269,12 @@ class Kernel
                 }
                 $response = $controller->$controllerMethod($request);
             } catch (\Exception $e) {
-                $response = $controllerError->e500();
+                if ($config->getSetting('core.displayErrors')) {
+                    $message = $e->getMessage();
+                } else {
+                    $message = '';
+                }
+                $response = $controllerError->e500($message);
             }
         } else {
             $response = $controllerError->e404();

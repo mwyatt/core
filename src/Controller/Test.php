@@ -6,6 +6,12 @@ class Test extends \Mwyatt\Core\AbstractController
 {
 
 
+    public function index()
+    {
+        return $this->response($this->view->getTemplate('testMiddle'));
+    }
+
+
     public function testSimple()
     {
         return $this->response('testSimpleContent', 200);
