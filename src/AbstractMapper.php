@@ -85,20 +85,24 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
      */
     public function getIterator($models = [], $requestedClassPath = '')
     {
+        $possiblePath = '';
         if ($requestedClassPath) {
             $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs($requestedClassPath);
             if (!class_exists($possiblePath)) {
                 throw new \Exception("Unable to find iterator '$possiblePath'");
             }
         } else {
-            $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs('Model\\' . $this->getRelativeClassName());
+            try {
+                $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs('Model\\' . $this->getRelativeClassName());
+            } catch (\Exception $e) {
+                
+            }
         }
         if (class_exists($possiblePath)) {
             $chosenPath = $possiblePath;
         } else {
             $chosenPath = '\\Mwyatt\\Core\\Iterator\\Model';
         }
-        echo "$chosenPath>>>>>";
         rtrim($chosenPath, '\\');
         return new $chosenPath($models);
     }

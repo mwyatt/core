@@ -4,8 +4,8 @@ namespace Mwyatt\Core;
 
 class IteratorModelTest extends \PHPUnit_Framework_TestCase
 {
-    public $iterator;
-    public $datas = [
+    private $modelIterator;
+    private $datas = [
         [
             'id' => 1,
             'email' => 'example@exmple.com',
@@ -30,27 +30,27 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
         $models = [];
         foreach ($this->datas as $data) {
             $model = new \Mwyatt\Core\Model\User;
-            $model->setId('id');
-            $model->setEmail('email');
-            $model->setNameFirst('nameFirst');
-            $model->setNameLast('nameLast');
-            $model->setPassword('password');
+            $model->setId($data['id']);
+            $model->setEmail($data['email']);
+            $model->setNameFirst($data['nameFirst']);
+            $model->setNameLast($data['nameLast']);
+            $model->setPassword($data['password']);
             $models[] = $model;
         }
-        $this->iterator = new \Mwyatt\Core\Iterator\Model($models);
+        $this->modelIterator = new \Mwyatt\Core\Iterator\Model($models);
     }
 
 
     public function testGetById()
     {
-        $model = $this->iterator->getById(1);
+        $model = $this->modelIterator->getById(1);
         $this->assertTrue($model->get('id') === 1);
     }
 
 
     public function testGetByPropertyValues()
     {
-        $iterator = $this->iterator->getByPropertyValues('nameFirst', ['Martin', 'David']);
+        $iterator = $this->modelIterator->getByPropertyValues('nameFirst', ['Martin', 'David']);
         $model = $iterator->current();
         $this->assertTrue($model->get('nameFirst') === 'Martin');
     }
@@ -58,7 +58,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyedByProperty()
     {
-        $keyedByNameLast = $this->iterator->getKeyedByProperty('nameLast');
+        $keyedByNameLast = $this->modelIterator->getKeyedByProperty('nameLast');
         $keys = array_keys($keyedByNameLast);
         $this->assertTrue($keys[0] === 'Wyatt');
         $this->assertTrue($keys[1] === 'Smith');
@@ -67,7 +67,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyedByPropertyMulti()
     {
-        $keyedByNameLast = $this->iterator->getKeyedByPropertyMulti('nameLast');
+        $keyedByNameLast = $this->modelIterator->getKeyedByPropertyMulti('nameLast');
         $keys = array_keys($keyedByNameLast);
         $this->assertTrue($keys[0] === 'Wyatt');
         $this->assertTrue($keys[1] === 'Smith');
@@ -76,7 +76,7 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
 
     public function testExtractProperty()
     {
-        $values = $this->iterator->extractProperty('nameFirst');
+        $values = $this->modelIterator->extractProperty('nameFirst');
         $this->assertTrue($values[0] === 'Martin');
         $this->assertTrue($values[1] === 'Steve');
     }

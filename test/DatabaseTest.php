@@ -11,7 +11,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     {
         $this->database = new \Mwyatt\Core\Database\Pdo;
         $config = include (string) (__DIR__ . '/../') . 'config.php';
-        $this->database->connect($config);
+        $this->database->connect(
+            $config['database.host'],
+            $config['database.basename'],
+            $config['database.username'],
+            $config['database.password']
+        );
     }
 
 
@@ -23,7 +28,12 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $database = new \Mwyatt\Core\Database\Pdo;
         $config = include (string) (__DIR__ . '/../') . 'config.php';
         $config['database.password'] = 'notThePassword';
-        $database->connect($config);
+        $database->connect(
+            $config['database.host'],
+            $config['database.basename'],
+            $config['database.username'],
+            $config['database.password']
+        );
     }
 
 

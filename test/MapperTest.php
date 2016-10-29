@@ -23,14 +23,26 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         $container['Database'] = function ($container) {
             $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect($config);
+            $database->connect(
+                $config['database.host'],
+                $config['database.basename'],
+                $config['database.username'],
+                $config['database.password']
+            );
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Model;
         };
+        $container['IteratorFactory'] = function ($container) {
+            return new \Mwyatt\Core\Factory\Iterator;
+        };
         $container['MapperFactory'] = function ($container) {
-            return new \Mwyatt\Core\Factory\Mapper($container['Database'], $container['ModelFactory']);
+            return new \Mwyatt\Core\Factory\Mapper(
+                $container['Database'],
+                $container['ModelFactory'],
+                $container['IteratorFactory']
+            );
         };
         $container['RepositoryFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
@@ -49,7 +61,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         $database->beginTransaction();
 
         try {
-            $user = $userRepo->register($this->userModelData);
+            $user = $userRepo->register($this->userModelData['email'], $this->userModelData['password']);
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
@@ -79,6 +91,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
+        $rowCount = 0;
         $userRepo = $this->controller->getRepository('User');
         $database = $this->controller->getService('Database');
         $database->beginTransaction();
@@ -89,7 +102,9 @@ class MapperTest extends \PHPUnit_Framework_TestCase
 
         try {
             $user->setNameFirst($newUserNameFirst);
-            $rowCount = $userRepo->updateById($users);
+            foreach ($users as $user) {
+                $rowCount += $userRepo->persist($user);
+            }
             $this->assertTrue($rowCount === 1);
             $database->commit();
         } catch (\Exception $e) {

@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Iterator;
 
-class Model extends \Mwyatt\Core\AbstractIterator
+class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterator\ModelInterface
 {
 
 

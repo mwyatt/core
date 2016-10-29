@@ -8,7 +8,7 @@ class KernelTest extends \PHPUnit_Framework_TestCase
 
     public function testIt()
     {
-        $basePath = (string) (__DIR__ . '/');
+        $basePath = (string) (__DIR__ . '/../');
         include $basePath . 'vendor/autoload.php';
         $kernel = new \Mwyatt\Core\Http\Kernel;
         $kernel->setServiceProjectPath($basePath);
@@ -33,6 +33,6 @@ class KernelTest extends \PHPUnit_Framework_TestCase
             'common' => \Mwyatt\Core\Middleware\Common::class,
             'admin.auth' => \Mwyatt\Core\Middleware\Admin::class
         ]);
-        $kernel->route();
+        // $kernel->route();
     }
 }

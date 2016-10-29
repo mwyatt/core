@@ -19,14 +19,26 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $container['Database'] = function ($container) {
             $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect($config);
+            $database->connect(
+                $config['database.host'],
+                $config['database.basename'],
+                $config['database.username'],
+                $config['database.password']
+            );
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Model;
         };
+        $container['IteratorFactory'] = function ($container) {
+            return new \Mwyatt\Core\Factory\Iterator;
+        };
         $container['MapperFactory'] = function ($container) {
-            return new \Mwyatt\Core\Factory\Mapper($container['Database'], $container['ModelFactory']);
+            return new \Mwyatt\Core\Factory\Mapper(
+                $container['Database'],
+                $container['ModelFactory'],
+                $container['IteratorFactory']
+            );
         };
         $container['RepositoryFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);

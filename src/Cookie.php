@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class Cookie
+class Cookie implements \Mwyatt\Core\CookieInterface
 {
 
 
