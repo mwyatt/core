@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 class FileSystem
 {
-
-
     private $pathBase;
 
 

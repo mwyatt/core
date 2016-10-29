@@ -51,14 +51,4 @@ class Router implements \Mwyatt\Core\RouterInterface
     {
         return isset($route[2][1]) ? $route[2][1] : '';
     }
-
-
-    /**
-     * just response code for now
-     * is the response was more detailed this could be setup further
-     */
-    public function setHeaders(\Mwyatt\Core\ResponseInterface $response)
-    {
-        http_response_code($response->getStatusCode());
-    }
 }

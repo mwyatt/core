@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class Session
+class Session implements \Mwyatt\Core\SessionInterface
 {
 
 

@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core\Middleware;
 
-class Admin extends \Mwyatt\Core\AbstractMiddleware
+class Admin implements \Mwyatt\Core\MiddlewareInterface
 {
 
 

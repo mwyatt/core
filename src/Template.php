@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class Template
+class Template implements \Mwyatt\Core\TemplateInterface
 {
     protected $projectPath;
     protected $view;

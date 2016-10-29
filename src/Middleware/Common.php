@@ -2,11 +2,11 @@
 
 namespace Mwyatt\Core\Middleware;
 
-class Common extends \Mwyatt\Core\AbstractMiddleware
+class Common implements \Mwyatt\Core\MiddlewareInterface
 {
 
 
-    public function handle()
+    public function handle(\Mwyatt\Core\RequestInterface $request)
     {
     }
 }

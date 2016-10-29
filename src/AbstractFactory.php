@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractFactory
+abstract class AbstractFactory implements \Mwyatt\Core\FactoryInterface
 {
     protected $defaultNamespace;
 

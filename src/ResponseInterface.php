@@ -8,4 +8,5 @@ interface ResponseInterface
     public function getContent();
     public function getStatusCode();
     public function setStatusCode($statusCode);
+    public function setHeader($header);
 }
