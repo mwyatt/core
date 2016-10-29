@@ -17,8 +17,8 @@ class Request implements \Mwyatt\Core\RequestInterface
     public function __construct(
         \Mwyatt\Core\SessionInterface $session,
         \Mwyatt\Core\CookieInterface $cookie
-    )
-    {
+    ) {
+    
         $this->query = $_GET;
         $this->post = $_POST;
         $this->server = $_SERVER;
