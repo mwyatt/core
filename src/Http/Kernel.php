@@ -2,10 +2,7 @@
 
 namespace Mwyatt\Core\Http;
 
-/**
- * incorporate maintenance mode, how?
- */
-class Kernel
+class Kernel implements \Mwyatt\Core\Http\KernelInterface
 {
     private $services;
     private $middleware = [];
