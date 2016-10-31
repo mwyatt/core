@@ -70,7 +70,7 @@ abstract class AbstractView extends \Mwyatt\Core\AbstractIterator implements \Mw
                 return $proposedPath;
             }
         }
-        throw new \Exception("Template '$path' does not exist.");
+        throw new \Exception("Template '$filename' does not exist.");
     }
 
 
