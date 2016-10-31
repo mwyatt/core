@@ -14,10 +14,13 @@ abstract class AbstractIterator extends \ArrayIterator implements \Mwyatt\Core\I
      */
     public function offsetAppend($index, $value)
     {
-        $itemOffset = $this->offsetGet($index);
-        $items = $itemOffset ? $itemOffset : [];
-        if (!is_array($items)) {
-            throw new \Exception("View offset $index is not an array.");
+        $items = [];
+        if ($this->offsetExists($index)) {
+            $items = $this->offsetGet($index);
+            if (!is_array($items)) {
+                $itemsType = gettype($items);
+                throw new \Exception("View offset '$index' is '$itemsType' and must be array to append.");
+            }
         }
         $items[] = $value;
         $this->offsetSet($index, $items);
