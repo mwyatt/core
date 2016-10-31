@@ -51,7 +51,7 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
             return $log;
         };
 
-        \Monolog\ErrorHandler::set($this->services['ErrorHandler']);
+        \Monolog\ErrorHandler::register($this->services['ErrorHandler']);
 
         $this->services['ModelFactory'] = function ($services) {
             $config = $services['Config'];
