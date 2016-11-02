@@ -15,6 +15,12 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     }
 
 
+    public function getService($key)
+    {
+        return $this->services[$key];
+    }
+
+
     public function setRoutes(array $routes)
     {
         $this->services['Routes'] = $routes;

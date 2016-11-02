@@ -5,6 +5,7 @@ namespace Mwyatt\Core\Http;
 interface KernelInterface
 {
     public function __construct();
+    public function getService($key);
     public function setRoutes(array $routes);
     public function setMiddleware($config);
     public function setSettings(array $settings);
