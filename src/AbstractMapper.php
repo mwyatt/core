@@ -100,7 +100,6 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
             try {
                 $possiblePath = $this->iteratorFactory->getDefaultNamespaceAbs('Model\\' . $this->getRelativeClassName());
             } catch (\Exception $e) {
-                
             }
         }
         if (class_exists($possiblePath)) {
