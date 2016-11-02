@@ -7,6 +7,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
+    protected $tableName;
     protected $protectedCols = ['id'];
     protected $publicCols = [];
 
@@ -50,7 +51,11 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     protected function getTableNameLazy()
     {
-        return lcfirst(str_replace('\\', '', $this->getRelativeClassName()));
+        if ($this->tableName) {
+            return $this->tableName;
+        } else {
+            return lcfirst(str_replace('\\', '', $this->getRelativeClassName()));
+        }
     }
 
 
