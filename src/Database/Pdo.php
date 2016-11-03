@@ -72,6 +72,12 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     {
         return $this->statement = $this->connection->prepare($sql, $options);
     }
+
+
+    public function query($sql)
+    {
+        return $this->statement = $this->connection->query($sql);
+    }
     
     
     public function execute($parameters = [])
