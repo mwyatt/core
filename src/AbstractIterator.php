@@ -27,6 +27,13 @@ abstract class AbstractIterator extends \ArrayIterator implements \Mwyatt\Core\I
     }
 
 
+    public function getFirst()
+    {
+        $this->rewind();
+        return $this->current();
+    }
+
+
     public function jsonSerialize()
     {
         return $this->getArrayCopy();

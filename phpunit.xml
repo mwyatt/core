@@ -9,6 +9,7 @@
 			<file>test/FactoryTest.php</file>
 			<!-- <file>test/FileSystemTest.php</file> -->
 			<file>test/HelperTest.php</file>
+			<file>test/ModelTest.php</file>
 			<file>test/IteratorModelTest.php</file>
 			<file>test/IteratorTest.php</file>
 			<file>test/MailTest.php</file>

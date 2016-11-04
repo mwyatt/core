@@ -13,6 +13,12 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     public $logs = [];
 
 
+    public function __construct()
+    {
+        $this->timeCreated = time();
+    }
+
+
     public function setId($value)
     {
         $value = $value + 0;
@@ -23,24 +29,24 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     }
 
 
-    public function getTimeCreated()
-    {
-        if (!$this->timeCreated) {
-            $this->timeCreated = time();
-        }
-        return $this->timeCreated;
-    }
-
-
     public function setEmail($value)
     {
         $value = trim($value);
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new \Exception("User email '$value' is invalid.");
-        } elseif (strlen($value) > 50) {
-            throw new \Exception("User email '$value' is invalid.");
-        }
         $this->email = $value;
+    }
+
+
+    private function validateEmail()
+    {
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $this->errors[] = "Email '{$this->email}' is invalid.";
+        }
+        if (strlen($this->email) > 50) {
+            $this->errors[] = "Email is longer than 50 characters.";
+        }
+        if (strlen($this->email) < 1) {
+            $this->errors[] = "Email is required.";
+        }
     }
 
 
@@ -98,6 +104,13 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     public function getNameFull()
     {
         return $this->get('nameFirst') . ' ' . $this->get('nameLast');
+    }
+
+
+    public function validate()
+    {
+        $this->validateEmail();
+        return $this->errors;
     }
 
 
