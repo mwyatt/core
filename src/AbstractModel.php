@@ -27,8 +27,8 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
 
     /**
      * set via method or just property
-     * @param string $property 
-     * @param mixed $value    
+     * @param string $property
+     * @param mixed $value
      */
     public function __set($property, $value)
     {
