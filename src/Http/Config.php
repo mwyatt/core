@@ -4,7 +4,10 @@ namespace Mwyatt\Core\Http;
 
 class Config
 {
-    protected $data;
+    protected $data = [
+        'projectBaseNamespace' => 'Mwyatt\\Core\\',
+        'controllerErrorClass' => \Mwyatt\Core\Controller\Error::class,
+    ];
     
 
     public function __construct(array $data)

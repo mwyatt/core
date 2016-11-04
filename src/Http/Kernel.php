@@ -236,7 +236,8 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
         $router = $this->services['Router'];
         $route = $this->services['Route'];
         $view = $this->services['View'];
-        $controllerError = new \Mwyatt\Core\Controller\Error(
+        $controllerErrorClass = $config->getSetting('controllerErrorClass');
+        $controllerError = new $controllerErrorClass(
             $this->services,
             $view
         );

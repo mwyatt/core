@@ -7,7 +7,8 @@ $kernel->setServiceProjectPath($basePath);
 $kernel->setServicesEssential();
 $kernel->setServices($basePath . 'services.php');
 $kernel->setSettings([
-    'projectBaseNamespace' => 'Mwyatt\\Core\\'
+    'projectBaseNamespace' => 'Mwyatt\\Core\\',
+    'controllerErrorClass' => \Mwyatt\Core\Controller\Error::class,
 ]);
 $kernel->setRoutes([
     [
