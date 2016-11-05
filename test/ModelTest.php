@@ -46,4 +46,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->model->email = 'invalid';
         $this->assertTrue(count($this->model->validate()) == 1);
     }
+
+
+    public function testLegacyGet()
+    {
+        $this->assertTrue($this->model->get('nameFirst') === 'Steve');
+    }
 }

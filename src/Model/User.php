@@ -4,7 +4,8 @@ namespace Mwyatt\Core\Model;
 
 class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInterface
 {
-    protected $id;
+    use \Mwyatt\Core\Model\IdTrait;
+
     protected $email;
     protected $nameFirst;
     protected $nameLast;
@@ -19,20 +20,57 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     }
 
 
-    public function setId($value)
-    {
-        $value = $value + 0;
-        if (!$value) {
-            throw new \Exception("User id '$value' is invalid.");
-        }
-        $this->id = $value;
-    }
-
-
     public function setEmail($value)
     {
         $value = trim($value);
         $this->email = $value;
+    }
+
+
+    public function setNameFirst($value)
+    {
+        $value = trim($value);
+        if (strlen($value) < 3) {
+            $this->errors[] = "First name '$value' is too short.";
+        } elseif (strlen($value) > 75) {
+            $this->errors[] = "First name '$value' is too long.";
+        }
+        $this->nameFirst = $value;
+    }
+
+
+    public function setNameLast($value)
+    {
+        $value = trim($value);
+        if (strlen($value) < 3) {
+            $this->errors[] = "Last name '$value' is too short.";
+        } elseif (strlen($value) > 75) {
+            $this->errors[] = "Last name '$value' is too long.";
+        }
+        $this->nameLast = $value;
+    }
+
+
+    public function setPassword($value)
+    {
+        $this->password = $value;
+    }
+
+
+    public function createPassword($value)
+    {
+        if (strlen($value) < 6) {
+            $this->errors[] = "Password is too short.";
+        } elseif (strlen($value) > 20) {
+            $this->errors[] = "Password is too long.";
+        }
+        $this->password = md5($value);
+    }
+
+
+    public function checkPassword($value)
+    {
+        return $this->password === crypt($value);
     }
 
 
@@ -50,54 +88,44 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     }
 
 
-    public function setNameFirst($value)
+    private function validatePassword()
     {
-        $value = trim($value);
-        if (strlen($value) < 3) {
-            throw new \Exception("User first name '$value' is too short.");
-        } elseif (strlen($value) > 75) {
-            throw new \Exception("User first name '$value' is too long.");
+        if (strlen($this->password) > 255) {
+            $this->errors[] = "Password is too long.";
         }
-        $this->nameFirst = $value;
+        if (strlen($this->password) < 1) {
+            $this->errors[] = "Password is too short.";
+        }
     }
 
 
-    public function setNameLast($value)
+    private function validateNameFirst()
     {
-        $value = trim($value);
-        if (strlen($value) < 3) {
-            throw new \Exception("User last name '$value' is too short.");
-        } elseif (strlen($value) > 75) {
-            throw new \Exception("User last name '$value' is too long.");
+        if (strlen($this->nameFirst) > 75) {
+            $this->errors[] = "First name is too long.";
         }
-        $this->nameLast = $value;
+        if (strlen($this->nameFirst) < 1) {
+            $this->errors[] = "First name is too short.";
+        }
     }
 
 
-    public function setPassword($value)
+    private function validateNameLast()
     {
-        if (strlen($value) > 255) {
-            throw new \Exception("User password is too long.");
+        if (strlen($this->nameLast) > 75) {
+            $this->errors[] = "Last name is too long.";
         }
-        $this->password = $value;
+        if (strlen($this->nameLast) < 1) {
+            $this->errors[] = "Last name is too short.";
+        }
     }
 
 
-    public function createPassword($value)
+    private function validateTimeCreated()
     {
-        if (strlen($value) < 6) {
-            throw new \Exception("User password is too short.");
-        } elseif (strlen($value) > 20) {
-            throw new \Exception("User password is too long.");
+        if ($this->timeCreated < 1) {
+            $this->errors[] = "Time created is invalid.";
         }
-        $value = md5($value);
-        $this->setPassword($value);
-    }
-
-
-    public function validatePassword($value)
-    {
-        return $this->password === crypt($value);
     }
 
 
@@ -109,7 +137,12 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
 
     public function validate()
     {
+        $this->validateId();
+        $this->validatePassword();
         $this->validateEmail();
+        $this->validateNameFirst();
+        $this->validateNameLast();
+        $this->validateTimeCreated();
         return $this->errors;
     }
 

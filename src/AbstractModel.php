@@ -4,7 +4,7 @@ namespace Mwyatt\Core;
 
 abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerializable
 {
-    private $errors = [];
+    protected $errors = [];
 
 
     /**
@@ -62,3 +62,4 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
         return $this->__get($property);
     }
 }
+    
