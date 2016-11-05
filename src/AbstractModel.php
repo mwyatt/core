@@ -45,8 +45,17 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
 
     public function validate()
     {
-        // $this->validateSomething();
+        $this->errors = [];
+        $this->validateRules();
         return $this->errors;
+    }
+
+
+    protected function validateRules()
+    {
+        // $this->validateProperty();
+        // $this->validateProperty();
+        // $this->validateProperty();
     }
 
 

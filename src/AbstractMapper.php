@@ -24,14 +24,8 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    private function validateModel(\Mwyatt\Core\ModelInterface $model)
-    {
-    }
-
-
     public function persist(\Mwyatt\Core\ModelInterface $model)
     {
-        $this->validateModel($model);
         $isUpdate = $model->get('id');
         $method = $isUpdate ? 'getUpdateGenericSql' : 'getInsertGenericSql';
         $this->adapter->prepare($this->$method(array_keys($this->publicCols)));

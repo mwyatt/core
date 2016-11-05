@@ -30,11 +30,6 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     public function setNameFirst($value)
     {
         $value = trim($value);
-        if (strlen($value) < 3) {
-            $this->errors[] = "First name '$value' is too short.";
-        } elseif (strlen($value) > 75) {
-            $this->errors[] = "First name '$value' is too long.";
-        }
         $this->nameFirst = $value;
     }
 
@@ -42,11 +37,6 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     public function setNameLast($value)
     {
         $value = trim($value);
-        if (strlen($value) < 3) {
-            $this->errors[] = "Last name '$value' is too short.";
-        } elseif (strlen($value) > 75) {
-            $this->errors[] = "Last name '$value' is too long.";
-        }
         $this->nameLast = $value;
     }
 
@@ -88,6 +78,26 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     }
 
 
+    public function validateNameFirst()
+    {
+        if (strlen($this->nameFirst) < 3) {
+            $this->errors[] = "First name '$this->nameFirst' is too short.";
+        } elseif (strlen($this->nameFirst) > 75) {
+            $this->errors[] = "First name '$this->nameFirst' is too long.";
+        }
+    }
+
+
+    public function validateNameLast()
+    {
+        if (strlen($this->nameLast) < 3) {
+            $this->errors[] = "Last name '$this->nameLast' is too short.";
+        } elseif (strlen($this->nameLast) > 75) {
+            $this->errors[] = "Last name '$this->nameLast' is too long.";
+        }
+    }
+
+
     private function validatePassword()
     {
         if (strlen($this->password) > 255) {
@@ -95,28 +105,6 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
         }
         if (strlen($this->password) < 1) {
             $this->errors[] = "Password is too short.";
-        }
-    }
-
-
-    private function validateNameFirst()
-    {
-        if (strlen($this->nameFirst) > 75) {
-            $this->errors[] = "First name is too long.";
-        }
-        if (strlen($this->nameFirst) < 1) {
-            $this->errors[] = "First name is too short.";
-        }
-    }
-
-
-    private function validateNameLast()
-    {
-        if (strlen($this->nameLast) > 75) {
-            $this->errors[] = "Last name is too long.";
-        }
-        if (strlen($this->nameLast) < 1) {
-            $this->errors[] = "Last name is too short.";
         }
     }
 
@@ -135,7 +123,7 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     }
 
 
-    public function validate()
+    protected function validateRules()
     {
         $this->validateId();
         $this->validatePassword();
@@ -143,7 +131,6 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
         $this->validateNameFirst();
         $this->validateNameLast();
         $this->validateTimeCreated();
-        return $this->errors;
     }
 
 

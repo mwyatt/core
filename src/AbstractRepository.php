@@ -66,6 +66,9 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
 
     public function persist(\Mwyatt\Core\ModelInterface $model)
     {
+        if ($errors = $model->validate()) {
+            throw new \Exception(implode(' ', $errors));
+        }
         $mapper = $this->getMapper();
         return $mapper->persist($model);
     }
