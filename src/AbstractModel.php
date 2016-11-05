@@ -62,4 +62,3 @@ abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \JsonSerial
         return $this->__get($property);
     }
 }
-    
