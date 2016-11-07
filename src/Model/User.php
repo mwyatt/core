@@ -80,6 +80,9 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
 
     public function validateNameFirst()
     {
+        if (!strlen($this->nameFirst)) {
+            return;
+        }
         if (strlen($this->nameFirst) < 3) {
             $this->errors[] = "First name '$this->nameFirst' is too short.";
         } elseif (strlen($this->nameFirst) > 75) {
@@ -90,6 +93,9 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
 
     public function validateNameLast()
     {
+        if (!strlen($this->nameLast)) {
+            return;
+        }
         if (strlen($this->nameLast) < 3) {
             $this->errors[] = "Last name '$this->nameLast' is too short.";
         } elseif (strlen($this->nameLast) > 75) {
