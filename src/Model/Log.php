@@ -4,19 +4,10 @@ namespace Mwyatt\Core\Model;
 
 class Log extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInterface
 {
-    protected $id;
+    use \Mwyatt\Core\Model\IdTrait;
+
     protected $content;
     protected $timeCreated;
-
-
-    public function setId($value)
-    {
-        $value = $value + 0;
-        if (!$value) {
-            throw new \Exception("Log id '$value' is invalid.");
-        }
-        $this->id = $value;
-    }
 
 
     public function getTimeCreated()
