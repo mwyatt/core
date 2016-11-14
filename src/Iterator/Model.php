@@ -37,7 +37,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
     public function getById($id)
     {
         if ($models = $this->getByPropertyValues('id', [$id])) {
-            return $models->current();
+            return $models->getFirst();
         }
     }
 
