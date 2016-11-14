@@ -87,4 +87,14 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
         $values = $this->modelIterator->extractPropertyUnique('timeCreated');
         $this->assertTrue(count($values) == 1);
     }
+
+
+    public function testGetFirst()
+    {
+        foreach ($this->modelIterator as $model) {
+            // get iterator pointer to the end
+        }
+        $model = $this->modelIterator->getFirst();
+        $this->assertTrue($model->nameFirst == 'Martin');
+    }
 }

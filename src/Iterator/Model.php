@@ -7,6 +7,19 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
 
 
     /**
+     * often iterators are looped through but they are only
+     * rewinded once the next loop begins, this will force a rewind
+     * when occasionally trying to access the first item
+     * @return object|null Model
+     */
+    public function getFirst()
+    {
+        $this->rewind();
+        return $this->current();
+    }
+
+
+    /**
      * lazy extract
      * @return array
      */

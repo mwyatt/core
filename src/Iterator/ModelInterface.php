@@ -4,6 +4,7 @@ namespace Mwyatt\Core\Iterator;
 
 interface ModelInterface
 {
+    public function getFirst();
     public function getIds();
     public function getById($id);
     public function extractProperty($property);
