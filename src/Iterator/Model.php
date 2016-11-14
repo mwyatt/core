@@ -40,6 +40,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
         foreach ($this as $model) {
             $collection[] = $model->get($property);
         }
+        $this->rewind();
         return $collection;
     }
 
@@ -60,6 +61,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
                 }
             }
         }
+        $this->rewind();
         return new $this($models);
     }
 
@@ -76,6 +78,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
         foreach ($this as $model) {
             $keyed[$model->get($property)] = $model;
         }
+        $this->rewind();
         return $keyed;
     }
 
@@ -95,6 +98,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
             }
             $keyed[$model->get($property)][] = $model;
         }
+        $this->rewind();
         return $keyed;
     }
 }
