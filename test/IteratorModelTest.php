@@ -80,4 +80,11 @@ class IteratorModelTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($values[0] === 'Martin');
         $this->assertTrue($values[1] === 'Steve');
     }
+
+
+    public function testExtractPropertyUnique()
+    {
+        $values = $this->modelIterator->extractPropertyUnique('timeCreated');
+        $this->assertTrue(count($values) == 1);
+    }
 }

@@ -46,6 +46,27 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
 
 
     /**
+     * get a collection of values from property unique
+     * @param  string $property
+     * @return array
+     */
+    public function extractPropertyUnique($property)
+    {
+        $collection = [];
+        $uniqueRecord = [];
+        foreach ($this as $model) {
+            $propertyVal = $model->$property;
+            if (!in_array($propertyVal, $uniqueRecord)) {
+                $collection[] = $propertyVal;
+            }
+            $uniqueRecord[] = $propertyVal;
+        }
+        $this->rewind();
+        return $collection;
+    }
+
+
+    /**
      * get the models which match the property values
      * @param  string $property
      * @param  mixed $value
