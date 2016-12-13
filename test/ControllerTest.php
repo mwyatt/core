@@ -13,18 +13,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $container['DefaultTemplateDirectory'] = function ($container) {
             return (string) __DIR__ . '/../' . 'template/';
         };
-        $container['ConfigLocal'] = function ($container) {
-            return include (string) (__DIR__ . '/../') . 'config.php';
-        };
         $container['Database'] = function ($container) {
-            $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect(
-                $config['database.host'],
-                $config['database.basename'],
-                $config['database.username'],
-                $config['database.password']
-            );
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
@@ -59,8 +49,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetService()
     {
-        $config = $this->controller->getService('ConfigLocal');
-        $this->assertTrue(is_array($config));
+        $config = $this->controller->getService('DefaultTemplateDirectory');
+        $this->assertTrue(is_string($config));
     }
 
 

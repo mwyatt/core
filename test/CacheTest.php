@@ -4,8 +4,6 @@ namespace Mwyatt\Core;
 
 class CacheTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public $fileName = 'bar.foo';
 
 

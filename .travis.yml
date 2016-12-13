@@ -2,5 +2,5 @@ language: php
 php:
 - 5.5
 - 5.4
-script: phpunit
+script: phpunit --configuration phpunit.xml --testsuite core
 install: composer install
