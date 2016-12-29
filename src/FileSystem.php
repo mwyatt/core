@@ -111,4 +111,10 @@ class FileSystem
         }
         return $paths;
     }
+
+
+    public function uploadFile()
+    {
+        # code...
+    }
 }
