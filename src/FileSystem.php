@@ -50,16 +50,14 @@ class FileSystem
     {
         $pathAbsolute = $this->pathBase . $pathRelative;
         $this->validatePath($pathAbsolute);
-
         $files = [];
-        
         $paths = glob($pathAbsolute . '/*');
 
         foreach ($paths as $path) {
             $files[] = $this->getFile($path);
         }
 
-        return new \Mwyatt\Core\ObjectIterator($files);
+        return new \Mwyatt\Core\Iterator($files);
     }
 
 
@@ -74,15 +72,12 @@ class FileSystem
     public function deleteDirectory($path)
     {
         $this->validatePath($path);
-
         if (!is_dir($path)) {
             throw new \Exception("'$path' is not a directory.");
         }
-
         if (count(scandir($dir)) !== 2) {
             throw new \Exception("'$path' is not empty.");
         }
-
         return rmdir($path);
     }
 
@@ -113,8 +108,31 @@ class FileSystem
     }
 
 
-    public function uploadFile()
+    public function tidyFilesGlobal(array $filesGlobal)
     {
-        # code...
+        $filesTidy = [];
+        $missingKeys = [];
+        $requiredKeys = [
+            'name',
+            'tmp_name',
+            'size',
+            'error',
+        ];
+        foreach ($filesGlobal as $key => $files) {
+            foreach ($files as $position => $value) {
+                $filesTidy[$position][$key] = $value;
+            }
+        }
+        foreach ($filesTidy as $file) {
+            foreach ($requiredKeys as $requiredKey) {
+                if (!isset($file[$requiredKey])) {
+                    $missingKeys[$requiredKey] = $requiredKey;
+                }
+            }
+        }
+        if ($missingKeys) {
+            throw new \Exception('File array is missing keys: ' . implode(', ', $missingKeys) . '.');
+        }
+        return $filesTidy;
     }
 }

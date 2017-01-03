@@ -13,6 +13,7 @@
 			<file>test/MapperTest.php</file>
 			<file>test/MonologTest.php</file>
 			<file>test/PaginationTest.php</file>
+			<file>test/FileSystemTest.php</file>
 			<file>test/RepositoryTest.php</file>
 			<file>test/RequestTest.php</file>
 			<file>test/ResponseTest.php</file>
