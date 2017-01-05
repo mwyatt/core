@@ -124,6 +124,7 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         return $this->generate() . $pathAppend . '?' . $timeModified;
     }
 
+
     private function getRoute($key)
     {
         return empty($this->routes[$key]) ? null : $this->routes[$key];
