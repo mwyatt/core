@@ -76,7 +76,7 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     /**
      * must be renamed to redirect in next major version
      * @param  string  $url        absolute
-     * @param  integer $statusCode 
+     * @param  integer $statusCode
      */
     public function redirectAbs($url, $statusCode = 302)
     {
