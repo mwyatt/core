@@ -13,6 +13,6 @@ interface ControllerInterface
     public function getView($name);
     public function response($content = '', $statusCode = 200);
     public function redirect($key, $config = [], $statusCode = 302);
-    public function redirectRefresh();
+    public function redirectAbs($url, $statusCode = 302);
     public function render($templatePath);
 }

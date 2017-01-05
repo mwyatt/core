@@ -63,42 +63,25 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
 
 
     /**
-     * redirects the user to another url and terminates
-     * utilising the generator from symfony
-     * could this be a static function?
-     * should this be moved to Router? as it has been needed outside of controllers
-     * @param  string $key      routeKey
-     * @param  array $config if required
-     * @return null
+     * deprecated and must use redirectAbs
      */
     public function redirect($key, $config = [], $statusCode = 302)
     {
         $url = $this->getService('Url');
         $urlNew = $url->generate($key, $config);
-
-        // generate string to redirect to from url
-        header('location:' . $urlNew, true, $statusCode);
-
-        // must exit because otherwise the script will continue
-        exit;
+        $this->redirectAbs($urlNew, $statusCode);
     }
 
 
     /**
-     * just refresh the page
+     * must be renamed to redirect in next major version
+     * @param  string  $url        absolute
+     * @param  integer $statusCode 
      */
-    public function redirectRefresh()
+    public function redirectAbs($url, $statusCode = 302)
     {
-        throw new \Exception('Unable to redirectRefresh.');
-        
-        $url = $this->getService('Url');
-        // $urlNew = $url->generate($key, $config);
-
-        // generate string to redirect to from url
-        // header('location:' . $urlNew, true, $statusCode);
-
-        // must exit because otherwise the script will continue
-        // exit;
+        header('location:' . $url, true, $statusCode);
+        exit;
     }
 
 
