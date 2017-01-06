@@ -46,14 +46,22 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     {
         $this->services['ErrorHandler'] = function ($services) {
             $config = $services['Config'];
-            $log = new \Monolog\Logger('system');
+            $projectPath = $services['ProjectPath'];
+            $log = new \Monolog\Logger('error');
+            $lineFormatter = new \Monolog\Formatter\LineFormatter;
             if ($config->getSetting('core.displayErrors')) {
                 // ini_set('display_errors', 1);
                 // ini_set('display_startup_errors', 1);
                 // error_reporting(E_ALL);
                 $log->pushHandler(new \Monolog\Handler\BrowserConsoleHandler);
             }
-            $log->pushHandler(new \Monolog\Handler\StreamHandler($services['ProjectPath'] . 'error.txt', \Monolog\Logger::DEBUG));
+            $files = new \Monolog\Handler\RotatingFileHandler(
+                $projectPath . 'cache/log/error.log',
+                30
+            );
+            $lineFormatter->includeStacktraces();
+            $files->setFormatter($lineFormatter);
+            $log->pushHandler($files);
             return $log;
         };
 

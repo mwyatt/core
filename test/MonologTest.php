@@ -4,26 +4,33 @@ namespace Mwyatt\Core;
 
 class MonologTest extends \PHPUnit_Framework_TestCase
 {
+    private $basePath;
+
+
+    public function setUp()
+    {
+        $this->basePath = (string) __DIR__ . '/../';
+        $paths = glob($this->basePath . 'cache/log/*');
+        foreach ($paths as $path) {
+            unlink($path);
+        }
+    }
 
 
     public function testTrigger()
     {
-        $basePath = (string) __DIR__ . '/../';
-        $log = new \Monolog\Logger('core');
-        $handler = new \Monolog\ErrorHandler($log);
-        $log->pushHandler(new \Monolog\Handler\StreamHandler((string) (__DIR__ . '/../') . 'error.txt', \Monolog\Logger::WARNING));
-        // \Monolog\ErrorHandler::register($log);
-        $handler->registerErrorHandler([], false);
-        $handler->registerExceptionHandler();
-        $handler->registerFatalHandler();
+        $log = new \Monolog\Logger('error');
+        $files = new \Monolog\Handler\RotatingFileHandler(
+            $this->basePath . 'cache/log/error.log',
+            30
+        );
+        $lineFormatter = new \Monolog\Formatter\LineFormatter;
+        $lineFormatter->includeStacktraces();
+        $files->setFormatter($lineFormatter);
+        $log->pushHandler($files);
         $log->warning('Foo');
         $log->error('Bar');
-
-        // if (!file_exists($basePath . 'log/')) {
-        //     mkdir($basePath . 'log/');
-        // }
-        // if (!file_exists($)) {
-        //     # code...
-        // }
+        $paths = glob($this->basePath . 'cache/log/*');
+        $this->assertTrue(count($paths) === 1);
     }
 }
