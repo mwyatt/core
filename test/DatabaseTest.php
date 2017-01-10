@@ -2,21 +2,59 @@
 
 namespace Mwyatt\Core;
 
-class DatabaseTest extends \PHPUnit_Framework_TestCase
+class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 {
-    public $database;
+    protected $pdo = null;
+
+    
+    /**
+     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
+     */
+    public function getConnection()
+    {
+       if (null === $this->pdo) {
+           $this->pdo = new \PDO('sqlite::memory:');
+           $tableDefinitions = include (string) __DIR__ . '/../definition.sql';
+           echo '<pre>';
+           print_r($tableDefinitions);
+           echo '</pre>';
+           exit;
+           
+           $this->pdo->exec('create table [tablename]([table-definition])');
+       }
+       return $this->createDefaultDBConnection($this->pdo, ':memory:');
+    }
+
+    /**
+     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
+     */
+    public function getDataSet()
+    {
+       return $this->createXMLDataSet('[path/to/xml-seed-file]');
+    }
+
+
+    public function testDatabaseConnection()
+    {
+       $pdo = $this->getConnection()->getConnection();
+       echo '<pre>';
+       print_r($pdo);
+       echo '</pre>';
+       exit;
+       
+       // Do your database-tests here using the required pdo-object
+    }
 
 
     public function setUp()
     {
-        $this->database = new \Mwyatt\Core\Database\Pdo;
-        $config = include (string) (__DIR__ . '/../') . 'config.php';
-        $this->database->connect(
-            $config['database.host'],
-            $config['database.basename'],
-            $config['database.username'],
-            $config['database.password']
-        );
+        // $this->database = 
+        $connection = $this->getConnection();
+        echo '<pre>';
+        print_r($connection);
+        echo '</pre>';
+        exit;
+        
     }
 
 
