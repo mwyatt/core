@@ -12,17 +12,17 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getConnection()
     {
-       if (null === $this->pdo) {
-           $this->pdo = new \PDO('sqlite::memory:');
-           $tableDefinitions = include (string) __DIR__ . '/../definition.sql';
-           echo '<pre>';
-           print_r($tableDefinitions);
-           echo '</pre>';
-           exit;
+        if (null === $this->pdo) {
+            $this->pdo = new \PDO('sqlite::memory:');
+            $tableDefinitions = include (string) __DIR__ . '/../definition.sql';
+            echo '<pre>';
+            print_r($tableDefinitions);
+            echo '</pre>';
+            exit;
            
-           $this->pdo->exec('create table [tablename]([table-definition])');
-       }
-       return $this->createDefaultDBConnection($this->pdo, ':memory:');
+            $this->pdo->exec('create table [tablename]([table-definition])');
+        }
+        return $this->createDefaultDBConnection($this->pdo, ':memory:');
     }
 
     /**
@@ -30,17 +30,17 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-       return $this->createXMLDataSet('[path/to/xml-seed-file]');
+        return $this->createXMLDataSet('[path/to/xml-seed-file]');
     }
 
 
     public function testDatabaseConnection()
     {
-       $pdo = $this->getConnection()->getConnection();
-       echo '<pre>';
-       print_r($pdo);
-       echo '</pre>';
-       exit;
+        $pdo = $this->getConnection()->getConnection();
+        echo '<pre>';
+        print_r($pdo);
+        echo '</pre>';
+        exit;
        
        // Do your database-tests here using the required pdo-object
     }
@@ -48,13 +48,12 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 
     public function setUp()
     {
-        // $this->database = 
+        // $this->database =
         $connection = $this->getConnection();
         echo '<pre>';
         print_r($connection);
         echo '</pre>';
         exit;
-        
     }
 
 
