@@ -21,10 +21,10 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
 
 
     public function connect(
-        $host,
-        $basename,
-        $username,
-        $password
+        $host = null,
+        $basename = null,
+        $username = null,
+        $password = null
     ) {
     
 
@@ -34,16 +34,19 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
         }
 
         try {
-            // set data source name
-            $dataSourceName = [
-                'mysql:host' => $host,
-                'dbname' => $basename,
-                'charset' => 'utf8'
-            ];
-            foreach ($dataSourceName as $key => $value) {
-                $dataSourceNameStrings[] = $key . '=' . $value;
+            if (!$host && !$basename && !$username && !$password) {
+                $dataSourceName = 'sqlite::memory:';
+            } else {
+                $dataSourceName = [
+                    'mysql:host' => $host,
+                    'dbname' => $basename,
+                    'charset' => 'utf8'
+                ];
+                foreach ($dataSourceName as $key => $value) {
+                    $dataSourceNameStrings[] = $key . '=' . $value;
+                }
+                $dataSourceName = implode(';', $dataSourceNameStrings);
             }
-            $dataSourceName = implode(';', $dataSourceNameStrings);
             
             // connect
             $this->connection = new \PDO(
@@ -77,6 +80,16 @@ class Pdo implements \Mwyatt\Core\DatabaseInterface
     public function query($sql)
     {
         return $this->statement = $this->connection->query($sql);
+    }
+    
+    
+    /**
+     * returns the number of rows that were modified or deleted by the SQL
+     * statement you issued. If no rows were affected, PDO::exec() returns 0.
+     */
+    public function exec($sql)
+    {
+        return $this->connection->exec($sql);
     }
     
     

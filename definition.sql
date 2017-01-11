@@ -1,26 +1,23 @@
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `timeCreated` int(10) unsigned NOT NULL,
-  `nameFirst` varchar(75) DEFAULT NULL,
-  `nameLast` varchar(75) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table if not exists `user` (
+  `id` integer primary key not null,
+  `email` varchar(50) not null,
+  `password` varchar(255) not null,
+  `timeCreated` unsigned int(10) not null,
+  `nameFirst` varchar(75) default null,
+  `nameLast` varchar(75) default null/*,
+  primary key (`id`)*/
+)/* engine=InnoDB default charset=utf8*/;
 
-DROP TABLE IF EXISTS `userLog`;
-CREATE TABLE `userLog` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `userId` int(10) unsigned DEFAULT NULL,
-  `logId` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table if not exists `userLog` (
+  `id` integer primary key not null,
+  `userId` unsigned int(10) default null,
+  `logId` unsigned int(10) default null/*,
+  primary key (`id`)*/
+)/* engine=InnoDB default charset=utf8*/;
 
-DROP TABLE IF EXISTS `log`;
-CREATE TABLE `log` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL,
-  `timeCreated` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table if not exists `log` (
+  `id` integer primary key not null,
+  `content` text not null,
+  `timeCreated` unsigned int(10) not null/*,
+  primary key (`id`)*/
+)/* engine=InnoDB default charset=utf8*/;

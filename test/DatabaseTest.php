@@ -2,58 +2,18 @@
 
 namespace Mwyatt\Core;
 
-class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
+class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
-    protected $pdo = null;
-
-    
-    /**
-     * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
-     */
-    public function getConnection()
-    {
-        if (null === $this->pdo) {
-            $this->pdo = new \PDO('sqlite::memory:');
-            $tableDefinitions = include (string) __DIR__ . '/../definition.sql';
-            echo '<pre>';
-            print_r($tableDefinitions);
-            echo '</pre>';
-            exit;
-           
-            $this->pdo->exec('create table [tablename]([table-definition])');
-        }
-        return $this->createDefaultDBConnection($this->pdo, ':memory:');
-    }
-
-    /**
-     * @return PHPUnit_Extensions_Database_DataSet_IDataSet
-     */
-    public function getDataSet()
-    {
-        return $this->createXMLDataSet('[path/to/xml-seed-file]');
-    }
-
-
-    public function testDatabaseConnection()
-    {
-        $pdo = $this->getConnection()->getConnection();
-        echo '<pre>';
-        print_r($pdo);
-        echo '</pre>';
-        exit;
-       
-       // Do your database-tests here using the required pdo-object
-    }
+    private $database;
 
 
     public function setUp()
     {
-        // $this->database =
-        $connection = $this->getConnection();
-        echo '<pre>';
-        print_r($connection);
-        echo '</pre>';
-        exit;
+        $this->database = new \Mwyatt\Core\Database\Pdo;
+        $this->database->connect();
+        $basePath = (string) __DIR__ . '/../';
+        $this->database->exec(file_get_contents($basePath . 'definition.sql'));
+        $this->database->exec(file_get_contents($basePath . 'test-data.sql'));
     }
 
 
@@ -63,25 +23,20 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
     public function testConnectFail()
     {
         $database = new \Mwyatt\Core\Database\Pdo;
-        $config = include (string) (__DIR__ . '/../') . 'config.php';
-        $config['database.password'] = 'notThePassword';
         $database->connect(
-            $config['database.host'],
-            $config['database.basename'],
-            $config['database.username'],
-            $config['database.password']
+            'fail',
+            'fail',
+            'fail',
+            'fail'
         );
     }
 
 
     public function testPrepareExecuteRowCount()
     {
-        $this->assertInstanceOf('\PDOStatement', $this->database->prepare("insert into user (email, password, timeCreated, nameFirst, nameLast) values ('martin.wyatt@gmail.com', '123123123', '123123123', 'Martin', 'Wyatt');"));
-
+        $this->database->prepare("insert into user (email, password, timeCreated, nameFirst, nameLast) values ('joe.blogs@gmail.com', 'hash', '99999999', 'Joe', 'Blogs')");
         $this->assertTrue($this->database->execute());
-
         $this->assertEquals(1, $this->database->getRowCount());
-
         $this->assertGreaterThan(0, $this->database->getLastInsertId());
     }
 
@@ -100,19 +55,14 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 
     public function testUpdate()
     {
-        $this->database->prepare('select * from user;');
-        $this->database->execute();
+        $this->database->query('select * from user;');
         $user = $this->database->fetch();
-
-        $this->database->prepare("update user set nameFirst = 'Dr Doom' where id = " . $user['id']);
-        $this->database->execute();
-
-        $this->database->prepare('select * from user where id = ' . $user['id']);
-        $this->database->execute();
+        $this->database->query("update user set nameFirst = 'Dr Doom' where id = '" . $user['id'] . "'");
+        $amountUpdated = $this->database->getRowCount();
+        $this->database->query("select * from user where id = '" . $user['id'] . "'");
         $user = $this->database->fetch();
-                
         $this->assertEquals('Dr Doom', $user['nameFirst']);
-        $this->assertEquals($this->database->getRowCount(), 1);
+        $this->assertTrue($amountUpdated == 1);
     }
 
 
@@ -120,7 +70,7 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
     {
         $this->database->prepare("delete from user");
         $this->database->execute();
-        $this->assertEquals($this->database->getRowCount(), 1);
+        $this->assertTrue($this->database->getRowCount() > 0);
     }
 
 
