@@ -17,18 +17,12 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new \Pimple\Container;
-        $container['ConfigLocal'] = function ($container) {
-            return include (string) (__DIR__ . '/../') . 'config.php';
-        };
+        $container['ProjectPath'] = (string) (__DIR__ . '/../');
         $container['Database'] = function ($container) {
-            $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect(
-                $config['database.host'],
-                $config['database.basename'],
-                $config['database.username'],
-                $config['database.password']
-            );
+            $database->connect();
+            $database->exec(file_get_contents($container['ProjectPath'] . 'definition.sql'));
+            $database->exec(file_get_contents($container['ProjectPath'] . 'test-data.sql'));
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
@@ -65,7 +59,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            $this->assertTrue(0);
         }
 
         $this->assertTrue($user->get('id') > 0);
@@ -97,22 +91,22 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         $database->beginTransaction();
 
         $users = $userRepo->findAll();
-        $user = $users->current();
+        $user = $users->getFirst();
         $newUserNameFirst = $user->get('nameFirst') . 'append';
-
         try {
             $user->setNameFirst($newUserNameFirst);
             foreach ($users as $user) {
                 $rowCount += $userRepo->persist($user);
             }
-            $this->assertTrue($rowCount === 1);
+            $this->assertTrue($rowCount > 0);
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            $this->assertTrue(0);
         }
 
-        $user = $userRepo->findById($user->get('id'));
+        $users = $userRepo->findAll();
+        $user = $users->getFirst();
         $this->assertTrue($user->get('nameFirst') === $newUserNameFirst);
     }
 
@@ -134,7 +128,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            $this->assertTrue(0);
         }
         $users = $userRepo->findAll();
         $userRepo->findLogs($users);
@@ -143,12 +137,8 @@ class MapperTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($userLog->get('id') > 0);
             }
         }
-    }
 
-
-    public function testFindLog()
-    {
-        $userRepo = $this->controller->getRepository('User');
+        // testFindLog
         $users = $userRepo->findAll();
         $userRepo->findLogs($users);
         foreach ($users as $user) {
@@ -169,7 +159,7 @@ class MapperTest extends \PHPUnit_Framework_TestCase
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
-            exit($e->getMessage());
+            $this->assertTrue(0);
         }
     }
 }

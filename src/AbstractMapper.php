@@ -16,8 +16,8 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         \Mwyatt\Core\DatabaseInterface $adapter,
         \Mwyatt\Core\Factory\Model $modelFactory,
         \Mwyatt\Core\Factory\Iterator $iteratorFactory
-    ) {
-    
+    )
+    {
         $this->adapter = $adapter;
         $this->modelFactory = $modelFactory;
         $this->iteratorFactory = $iteratorFactory;

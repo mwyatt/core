@@ -17,18 +17,12 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new \Pimple\Container;
-        $container['ConfigLocal'] = function ($container) {
-            return include (string) (__DIR__ . '/../') . 'config.php';
-        };
+        $container['ProjectPath'] = (string) (__DIR__ . '/../');
         $container['Database'] = function ($container) {
-            $config = $container['ConfigLocal'];
             $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect(
-                $config['database.host'],
-                $config['database.basename'],
-                $config['database.username'],
-                $config['database.password']
-            );
+            $database->connect();
+            $database->exec(file_get_contents($container['ProjectPath'] . 'definition.sql'));
+            $database->exec(file_get_contents($container['ProjectPath'] . 'test-data.sql'));
             return $database;
         };
         $container['ModelFactory'] = function ($container) {
@@ -144,11 +138,8 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($userLog->get('id') > 0);
             }
         }
-    }
-
-
-    public function testFindLog()
-    {
+        
+        // testFindLog
         $userRepo = $this->controller->getRepository('User');
         $users = $userRepo->findAll();
         $userRepo->findLogs($users);
