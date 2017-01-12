@@ -2,7 +2,6 @@
 
 namespace Mwyatt\Core;
 
-
 /**
  * currently not sure how to test this as you need config and travis
  * does not like
