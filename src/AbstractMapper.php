@@ -26,6 +26,9 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     public function persist(\Mwyatt\Core\ModelInterface $model)
     {
+        if (strpos(get_class($model), $this->getRelativeClassName()) === false) {
+            throw new \Exception('Incorrect model class name.');
+        }
         $isUpdate = $model->get('id');
         $method = $isUpdate ? 'getUpdateGenericSql' : 'getInsertGenericSql';
         $this->adapter->prepare($this->$method(array_keys($this->publicCols)));
