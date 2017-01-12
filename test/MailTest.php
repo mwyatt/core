@@ -2,6 +2,11 @@
 
 namespace Mwyatt\Core;
 
+
+/**
+ * currently not sure how to test this as you need config and travis
+ * does not like
+ */
 class MailTest extends \PHPUnit_Framework_TestCase
 {
     public $container;
