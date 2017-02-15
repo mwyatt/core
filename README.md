@@ -1,2 +1,2 @@
-# core
-tools and utilities commonly needed across multiple projects
+# Core
+Abstract structure for repositories, mappers and models.
