@@ -19,7 +19,7 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
-    protected function getModel($name = null)
+    public function getModel($name = null)
     {
         $mapper = $this->getMapper($name);
         return $mapper->getModel($name);
