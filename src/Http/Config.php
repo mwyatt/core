@@ -7,12 +7,21 @@ class Config
     protected $data = [
         'projectBaseNamespace' => 'Mwyatt\\Core\\',
         'controllerErrorClass' => \Mwyatt\Core\Controller\Error::class,
+        'core.routes.path' => 'routes.php',
     ];
     
 
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
-        $this->data = $data;
+        $this->setSettings($data);
+    }
+
+
+    private function setSettings(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->setSetting($key, $value);
+        }
     }
 
 
@@ -23,7 +32,7 @@ class Config
         }
     }
 
-
+    
     public function setSetting($key, $value)
     {
         $this->data[$key] = $value;
