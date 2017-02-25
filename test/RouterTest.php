@@ -26,20 +26,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $container = new \Pimple\Container;
-        $container['PuxMux'] = function ($container) {
+        $services = new \Pimple\Container;
+        $services['PuxMux'] = function ($services) {
             return new \Pux\Mux;
         };
-        $container['Router'] = function ($container) {
-            return new \Mwyatt\Core\Router($container['PuxMux']);
+        $services['Router'] = function ($services) {
+            return new \Mwyatt\Core\Router($services['PuxMux']);
         };
-        $container['Request'] = function ($container) {
+        $services['Request'] = function ($services) {
             $cookie = new \Mwyatt\Core\Cookie;
             $session = new \Mwyatt\Core\Session;
             return new \Mwyatt\Core\Request($session, $cookie);
         };
-        $this->request = $container['Request'];
-        $this->router = $container['Router'];
+        $this->request = $services['Request'];
+        $this->router = $services['Router'];
         $this->router->appendRoutes($this->routes);
     }
 

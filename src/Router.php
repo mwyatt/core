@@ -18,15 +18,10 @@ class Router implements \Mwyatt\Core\RouterInterface
      * numerical keys
      * @param  array  $routes
      */
-    public function appendRoutes(array $routes)
+    public function appendRoutes(\Mwyatt\Core\IteratorInterface $routes)
     {
         foreach ($routes as $route) {
-            $requestType = $route[0];
-            $urlPath = $route[1];
-            $controller = $route[2];
-            $method = $route[3];
-            $options = empty($route[4]) ? [] : $route[4];
-            $this->mux->$requestType($urlPath, [$controller, $method], $options);
+            $this->mux->{$route->type}($route->path, [$route->controller, $route->method], $route->options);
         }
     }
 

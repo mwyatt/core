@@ -21,9 +21,10 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     }
 
 
-    public function setRoutes(array $routes)
+    // unused now as it is set in essential services automatically
+    public function setRoutes(array $routes = [])
     {
-        $this->services['Routes'] = $routes;
+
     }
 
 
@@ -156,8 +157,25 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
 
     public function setServicesEssential()
     {
+
         $this->services['Config'] = function ($services) {
             return new \Mwyatt\Core\Http\Config(include $services['ProjectPath'] . 'config.php');
+        };
+
+        $this->services['Routes'] = function ($services) {
+            $routeOs = [];
+            $projectPath = $services['ProjectPath'];
+            $routes = include $projectPath . $config->getSetting('core.routes.path');
+            foreach ($routes as $route) {
+                $routeO = new \Mwyatt\Core\Route;
+                $routeO->type = $route[0];
+                $routeO->path = $route[1];
+                $routeO->controller = $route[2];
+                $routeO->method = $route[3];
+                $routeO->options = isset($route[4]) ? $route[4] : [];
+                $routeOs[] = $routeO;
+            }
+            return new \Mwyatt\Core\Iterator\Model\Route($routeOs);
         };
 
         $this->services['Router'] = function ($services) {
@@ -195,12 +213,11 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
             $url = new \Mwyatt\Core\Url(
                 $request->getServer('HTTP_HOST'),
                 $request->getServer('REQUEST_URI'),
-                $config->getSetting('core.installDirectory')
+                $config->getSetting('core.installDirectory'),
+                $routes
             );
-            $url->setRoutes($routes);
             return $url;
         };
-        
 
         $this->services['View'] = function ($services) {
             $view = new \Mwyatt\Core\View($services['ProjectPath'] . 'template/');

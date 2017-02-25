@@ -25,7 +25,6 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         $installPathQuery,
         $install = ''
     ) {
-    
         $installPathQueryParts = explode('?', $installPathQuery);
         $host .= '/';
         $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';
@@ -53,27 +52,6 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     {
         parse_str($this->query, $queryArray);
         return $queryArray;
-    }
-
-    
-    /**
-     * store routes as id => route/:foo/
-     * some routes wont have an id as they are post or something
-     * these do not need to be stored as they wont need generating
-     * @param array $routes
-     */
-    public function setRoutes(array $routes)
-    {
-        foreach ($routes as $route) {
-            $requestType = $route[0];
-            $urlPath = $route[1];
-            $controller = $route[2];
-            $method = $route[3];
-            $options = empty($route[4]) ? [] : $route[4];
-            if (!empty($options['id'])) {
-                $this->routes[$options['id']] = $urlPath;
-            }
-        }
     }
 
 
@@ -127,7 +105,24 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 
     private function getRoute($key)
     {
-        return empty($this->routes[$key]) ? null : $this->routes[$key];
+        return isset($this->routes[$key]) ? $this->routes[$key] : null;
+    }
+
+
+    /**
+     * store routes as id => route/:foo/
+     * some routes wont have an id as they are post or something
+     * these do not need to be stored as they wont need generating
+     * @param array $routes
+     */
+    public function setRoutes(\Mwyatt\Core\IteratorInterface $routes)
+    {
+        foreach ($routes as $route) {
+            $id = $route->getOption('id');
+            if ($id) {
+                $this->routes[$id] = $route->path;
+            }
+        }
     }
 
 
