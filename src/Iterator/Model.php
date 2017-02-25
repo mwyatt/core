@@ -25,7 +25,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function getIds()
     {
-        return $this->extractProperty('id');
+        return $this->extractPropertyUnique('id');
     }
 
     
