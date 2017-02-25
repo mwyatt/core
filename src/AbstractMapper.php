@@ -41,6 +41,9 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         $this->adapter->execute();
         if (!$isUpdate) {
             $model->setId($this->adapter->getLastInsertId());
+            if (!$this->adapter->getRowCount()) {
+                throw new \Exception('Unexpected rowCount after insert.');
+            }
         }
         return $this->adapter->getRowCount();
     }
