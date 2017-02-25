@@ -109,6 +109,12 @@ class Response implements \Mwyatt\Core\ResponseInterface
     }
 
 
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+
     /**
      * @return int
      */
