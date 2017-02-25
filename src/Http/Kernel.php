@@ -42,87 +42,100 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     }
 
 
-    public function setServicesOptional()
+    public function setServicesOptional(array $keys = [])
     {
-        $this->services['ErrorHandler'] = function ($services) {
-            $config = $services['Config'];
-            $projectPath = $services['ProjectPath'];
-            $log = new \Monolog\Logger('error');
-            $lineFormatter = new \Monolog\Formatter\LineFormatter;
-            if ($config->getSetting('core.displayErrors')) {
-                // ini_set('display_errors', 1);
-                // ini_set('display_startup_errors', 1);
-                // error_reporting(E_ALL);
-                $log->pushHandler(new \Monolog\Handler\BrowserConsoleHandler);
-            }
-            $files = new \Monolog\Handler\RotatingFileHandler(
-                $projectPath . 'cache/log/error.log',
-                30
-            );
-            $lineFormatter->includeStacktraces();
-            $files->setFormatter($lineFormatter);
-            $log->pushHandler($files);
-            return $log;
-        };
+        if (!$keys || in_array('ErrorHandler', $keys)) {
+            $this->services['ErrorHandler'] = function ($services) {
+                $config = $services['Config'];
+                $projectPath = $services['ProjectPath'];
+                $log = new \Monolog\Logger('error');
+                $lineFormatter = new \Monolog\Formatter\LineFormatter;
+                if ($config->getSetting('core.displayErrors')) {
+                    // ini_set('display_errors', 1);
+                    // ini_set('display_startup_errors', 1);
+                    // error_reporting(E_ALL);
+                    $log->pushHandler(new \Monolog\Handler\BrowserConsoleHandler);
+                }
+                $files = new \Monolog\Handler\RotatingFileHandler(
+                    $projectPath . 'cache/log/error.log',
+                    30
+                );
+                $lineFormatter->includeStacktraces();
+                $files->setFormatter($lineFormatter);
+                $log->pushHandler($files);
+                return $log;
+            };
+            \Monolog\ErrorHandler::register($this->services['ErrorHandler']);
+        }
 
-        \Monolog\ErrorHandler::register($this->services['ErrorHandler']);
+        if (!$keys || in_array('ModelFactory', $keys)) {
+            $this->services['ModelFactory'] = function ($services) {
+                $config = $services['Config'];
+                $modelFactory = new \Mwyatt\Core\Factory\Model;
+                $modelFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Model\\');
+                return $modelFactory;
+            };
+        }
 
-        $this->services['ModelFactory'] = function ($services) {
-            $config = $services['Config'];
-            $modelFactory = new \Mwyatt\Core\Factory\Model;
-            $modelFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Model\\');
-            return $modelFactory;
-        };
+        if (!$keys || in_array('IteratorFactory', $keys)) {
+            $this->services['IteratorFactory'] = function ($services) {
+                $config = $services['Config'];
+                $iteratorFactory = new \Mwyatt\Core\Factory\Iterator;
+                $iteratorFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Iterator\\');
+                return $iteratorFactory;
+            };
+        }
 
-        $this->services['IteratorFactory'] = function ($services) {
-            $config = $services['Config'];
-            $iteratorFactory = new \Mwyatt\Core\Factory\Iterator;
-            $iteratorFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Iterator\\');
-            return $iteratorFactory;
-        };
+        if (!$keys || in_array('MapperFactory', $keys)) {
+            $this->services['MapperFactory'] = function ($services) {
+                $config = $services['Config'];
+                $mapperFactory = new \Mwyatt\Core\Factory\Mapper(
+                    $services['Database'],
+                    $services['ModelFactory'],
+                    $services['IteratorFactory']
+                );
+                $mapperFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Mapper\\');
+                return $mapperFactory;
+            };
+        }
 
-        $this->services['MapperFactory'] = function ($services) {
-            $config = $services['Config'];
-            $mapperFactory = new \Mwyatt\Core\Factory\Mapper(
-                $services['Database'],
-                $services['ModelFactory'],
-                $services['IteratorFactory']
-            );
-            $mapperFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Mapper\\');
-            return $mapperFactory;
-        };
+        if (!$keys || in_array('RepositoryFactory', $keys)) {
+            $this->services['RepositoryFactory'] = function ($services) {
+                $config = $services['Config'];
+                $repositoryFactory = new \Mwyatt\Core\Factory\Repository($services['MapperFactory']);
+                $repositoryFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Repository\\');
+                return $repositoryFactory;
+            };
+        }
 
-        $this->services['RepositoryFactory'] = function ($services) {
-            $config = $services['Config'];
-            $repositoryFactory = new \Mwyatt\Core\Factory\Repository($services['MapperFactory']);
-            $repositoryFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Repository\\');
-            return $repositoryFactory;
-        };
+        if (!$keys || in_array('Mail', $keys)) {
+            $this->services['Mail'] = function ($services) {
+                $config = $services['Config'];
+                $transport = \Swift_SmtpTransport::newInstance(
+                    $config->getSetting('mail.host'),
+                    $config->getSetting('mail.port'),
+                    $config->getSetting('mail.security')
+                );
+                $transport->setUsername($config->getSetting('mail.username'));
+                $transport->setPassword($config->getSetting('mail.appPassword'));
+                $swiftMailer = \Swift_Mailer::newInstance($transport);
+                return new \Mwyatt\Core\Mail($swiftMailer);
+            };
+        }
 
-        $this->services['Mail'] = function ($services) {
-            $config = $services['Config'];
-            $transport = \Swift_SmtpTransport::newInstance(
-                $config->getSetting('mail.host'),
-                $config->getSetting('mail.port'),
-                $config->getSetting('mail.security')
-            );
-            $transport->setUsername($config->getSetting('mail.username'));
-            $transport->setPassword($config->getSetting('mail.appPassword'));
-            $swiftMailer = \Swift_Mailer::newInstance($transport);
-            return new \Mwyatt\Core\Mail($swiftMailer);
-        };
-
-        $this->services['Database'] = function ($services) {
-            $config = $services['Config'];
-            $database = new \Mwyatt\Core\Database\Pdo;
-            $database->connect(
-                $config->getSetting('database.host'),
-                $config->getSetting('database.basename'),
-                $config->getSetting('database.username'),
-                $config->getSetting('database.password')
-            );
-            return $database;
-        };
+        if (!$keys || in_array('Database', $keys)) {
+            $this->services['Database'] = function ($services) {
+                $config = $services['Config'];
+                $database = new \Mwyatt\Core\Database\Pdo;
+                $database->connect(
+                    $config->getSetting('database.host'),
+                    $config->getSetting('database.basename'),
+                    $config->getSetting('database.username'),
+                    $config->getSetting('database.password')
+                );
+                return $database;
+            };
+        }
     }
 
 
