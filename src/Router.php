@@ -46,4 +46,11 @@ class Router implements \Mwyatt\Core\RouterInterface
     {
         return isset($route[2][1]) ? $route[2][1] : '';
     }
+
+
+    public function redirect($url, $statusCode = 302)
+    {
+        header('location:' . $url, true, $statusCode);
+        exit;
+    }
 }
