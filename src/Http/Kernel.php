@@ -21,16 +21,15 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     }
 
 
-    // unused now as it is set in essential services automatically
-    public function setRoutes(array $routes = [])
+    public function setMiddleware(array $config)
     {
-
+        $this->middleware = $config;
     }
 
 
-    public function setMiddleware($config)
+    public function setMiddlewarePost(array $config)
     {
-        $this->middleware = $config;
+        $this->middlewarePost = $config;
     }
 
 
@@ -52,9 +51,9 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
                 $log = new \Monolog\Logger('error');
                 $lineFormatter = new \Monolog\Formatter\LineFormatter;
                 if ($config->getSetting('core.displayErrors')) {
-                    // ini_set('display_errors', 1);
-                    // ini_set('display_startup_errors', 1);
-                    // error_reporting(E_ALL);
+                    ini_set('display_errors', 1);
+                    ini_set('display_startup_errors', 1);
+                    error_reporting(E_ALL);
                     $log->pushHandler(new \Monolog\Handler\BrowserConsoleHandler);
                 }
                 $files = new \Monolog\Handler\RotatingFileHandler(
@@ -162,25 +161,14 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
             return new \Mwyatt\Core\Http\Config(include $services['ProjectPath'] . 'config.php');
         };
 
-        $this->services['Routes'] = function ($services) {
-            $routeOs = [];
+        $this->services['Router'] = function ($services) {
+            $config = $services['Config'];
             $projectPath = $services['ProjectPath'];
             $routes = include $projectPath . $config->getSetting('core.routes.path');
-            foreach ($routes as $route) {
-                $routeO = new \Mwyatt\Core\Route;
-                $routeO->type = $route[0];
-                $routeO->path = $route[1];
-                $routeO->controller = $route[2];
-                $routeO->method = $route[3];
-                $routeO->options = isset($route[4]) ? $route[4] : [];
-                $routeOs[] = $routeO;
-            }
-            return new \Mwyatt\Core\Iterator\Model\Route($routeOs);
-        };
-
-        $this->services['Router'] = function ($services) {
-            $router = new \Mwyatt\Core\Router(new \Pux\Mux);
-            $router->appendRoutes($services['Routes']);
+            $router = new \Mwyatt\Core\Router(
+                new \Pux\Mux,
+                $routes
+            );
             return $router;
         };
 
@@ -192,12 +180,6 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
             return $template;
         };
 
-        $this->services['Route'] = function ($services) {
-            $router = $services['Router'];
-            $url = $services['Url'];
-            return $router->getMatch('/' . $url->getPath());
-        };
-
         $this->services['Request'] = function ($services) {
             $request = new \Mwyatt\Core\Request(
                 new \Mwyatt\Core\Session,
@@ -207,14 +189,14 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
         };
 
         $this->services['Url'] = function ($services) {
-            $routes = $services['Routes'];
+            $router = $services['Router'];
             $request = $services['Request'];
             $config = $services['Config'];
             $url = new \Mwyatt\Core\Url(
+                $router,
                 $request->getServer('HTTP_HOST'),
                 $request->getServer('REQUEST_URI'),
-                $config->getSetting('core.installDirectory'),
-                $routes
+                $config->getSetting('core.installDirectory')
             );
             return $url;
         };
@@ -266,50 +248,48 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
         if (!headers_sent()) {
             session_start();
         }
-
         $config = $this->services['Config'];
-        $routes = $this->services['Routes'];
         $url = $this->services['Url'];
         $request = $this->services['Request'];
         $router = $this->services['Router'];
-        $route = $this->services['Route'];
+        $template = $this->services['Template'];
         $view = $this->services['View'];
+        $view->offsetSet('config', $config);
+        $view->offsetSet('url', $url);
+        $view->offsetSet('template', $template);
         $controllerErrorClass = $config->getSetting('controllerErrorClass');
         $controllerError = new $controllerErrorClass(
             $this->services,
             $view
         );
         $response = false;
+        $route = $router->getMatch($url->getPathWithTrail());
 
-        $view->offsetSet('config', $config);
-        $view->offsetSet('url', $url);
-        $view->offsetSet('template', $this->services['Template']);
-
-        if ($config->getSetting('core.maintenance') || !$routes) {
+        if ($config->getSetting('core.maintenance') || !$router->getRoutes()) {
             $response = $controllerError->maintenance($request);
         } elseif ($route) {
             try {
                 $request->setMuxUrlVars($route);
-
-                if (!empty($route[3]['middleware'])) {
-                    $this->runMiddleware($route[3]['middleware']);
+                if ($middleware = $route->getOption('middleware')) {
+                    $this->runMiddleware($middleware);
                 }
 
-                $controllerName = $router->getRouteControllerName($route);
-                if (!class_exists($controllerName)) {
-                    throw new \Exception("Controller '$controllerName' does not exist.");
+                if (!class_exists($route->controller)) {
+                    throw new \Exception("Controller '{$route->controller}' does not exist.");
                     ;
                 }
-                $controllerMethod = $router->getRouteControllerMethod($route);
-                $controller = new $controllerName(
+                $controller = new $route->controller(
                     $this->services,
                     $view
                 );
-                if (!method_exists($controller, $controllerMethod)) {
-                    throw new \Exception("Controller method '$controllerMethod' does not exist.");
+                if (!method_exists($controller, $route->method)) {
+                    throw new \Exception("Controller method '{$route->method}' does not exist.");
                     ;
                 }
-                $response = $controller->$controllerMethod($request);
+                $response = $controller->{$route->method}($request);
+                if ($middlewarePost = $route->getOption('middlewarePost')) {
+                    $this->runMiddlewarePost($middlewarePost);
+                }
             } catch (\Exception $e) {
                 if ($config->getSetting('core.displayErrors')) {
                     $message = $e->getMessage();
@@ -321,10 +301,7 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
         } else {
             $response = $controllerError->e404();
         }
-
         http_response_code($response->getStatusCode());
-        echo $response->getContent();
-
-        $this->runMiddlewarePost();
+        return $response->getContent();
     }
 }

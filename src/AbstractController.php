@@ -67,9 +67,10 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
      */
     public function redirect($key, $config = [], $statusCode = 302)
     {
+        $router = $this->getService('Router');
         $url = $this->getService('Url');
         $urlNew = $url->generate($key, $config);
-        $this->redirectAbs($urlNew, $statusCode);
+        $router->redirect($urlNew, $statusCode);
     }
 
 
@@ -80,7 +81,8 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
      */
     public function redirectAbs($url, $statusCode = 302)
     {
-        header('location:' . $url, true, $statusCode);
+        $router = $this->getService('Router');
+        $router->redirect($url, $statusCode);
         exit;
     }
 

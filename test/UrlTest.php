@@ -21,19 +21,24 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         ],
         [
             'post', '/foo/bar/',
-            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+            ['id' => 'test.post']
         ]
     ];
 
 
     public function setUp()
     {
-        $container = new \Pimple\Container;
-        $container['Url'] = function ($container) {
-            return new \Mwyatt\Core\Url($this->host, $this->path, $this->pathInstall);
-        };
-        $this->url = $container['Url'];
-        $this->url->setRoutes($this->routes);
+        $router = new \Mwyatt\Core\Router(
+            new \Pux\Mux,
+            $this->routes
+        );
+        $this->url = new \Mwyatt\Core\Url(
+            $router,
+            $this->host,
+            $this->path,
+            $this->pathInstall
+        );
     }
 
 

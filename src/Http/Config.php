@@ -8,6 +8,7 @@ class Config
         'projectBaseNamespace' => 'Mwyatt\\Core\\',
         'controllerErrorClass' => \Mwyatt\Core\Controller\Error::class,
         'core.routes.path' => 'routes.php',
+        'core.displayErrors' => false,
     ];
     
 

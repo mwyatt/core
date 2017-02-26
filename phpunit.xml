@@ -25,9 +25,9 @@
 			<!-- travis no permissions -->
 			<!-- <file>test/CacheTest.php</file> -->
 
-			<!-- issue with config.php -->
-			<!-- <file>test/KernelTest.php</file> -->
+			<!-- issue with config.php in travis? -->
 			<!-- <file>test/MailTest.php</file> -->
+			<!-- <file>test/KernelTest.php</file> -->
 
 			<!-- env issue -->
 			<!-- <file>test/CookieTest.php</file> -->

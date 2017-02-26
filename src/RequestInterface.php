@@ -15,7 +15,7 @@ interface RequestInterface
     public function getServer($key, $default = null);
     public function getUrlVar($key, $default = null);
     public function setUrlVar($key, $value);
-    public function setMuxUrlVars(array $route = []);
+    public function setMuxUrlVars(\Mwyatt\Core\Route $route);
     public function getSession($key, $default = null);
     public function setSession($key, $value);
     public function pullSession($key, $default = null);

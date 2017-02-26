@@ -12,7 +12,7 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     protected $base;
     protected $path;
     protected $query;
-    protected $routes = [];
+    protected $router;
 
 
     /**
@@ -21,10 +21,12 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
      * @param string $install           foo/bar/
      */
     public function __construct(
+        \Mwyatt\Core\RouterInterface $router,
         $host,
         $installPathQuery,
         $install = ''
     ) {
+        $this->router = $router;
         $installPathQueryParts = explode('?', $installPathQuery);
         $host .= '/';
         $query = count($installPathQueryParts) > 1 ? end($installPathQueryParts) : '';
@@ -41,6 +43,12 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
     public function getPath()
     {
         return $this->path;
+    }
+
+
+    public function getPathWithTrail()
+    {
+        return '/' . $this->path;
     }
 
 
@@ -65,14 +73,16 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
      */
     public function generate($key = '', $config = [], array $query = [])
     {
+        $routes = $this->router->getRoutes();
         $queryString = '';
         if (!$key) {
             return $this->protocol . $this->base;
         }
-        if (!$route = $this->getRoute($key)) {
+        $routes = $routes->getByOptionKeyValue('id', $key);
+        if (!$route = $routes->getFirst()) {
             throw new \Exception("route '$key' cannot be generated");
         }
-        $path = ltrim($route, '/');
+        $path = ltrim($route->path, '/');
         foreach ($config as $key => $value) {
             $path = str_replace(':' . $key, $value, $path);
         }
@@ -100,29 +110,6 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 
         // return url to asset with modified time as query var
         return $this->generate() . $pathAppend . '?' . $timeModified;
-    }
-
-
-    private function getRoute($key)
-    {
-        return isset($this->routes[$key]) ? $this->routes[$key] : null;
-    }
-
-
-    /**
-     * store routes as id => route/:foo/
-     * some routes wont have an id as they are post or something
-     * these do not need to be stored as they wont need generating
-     * @param array $routes
-     */
-    public function setRoutes(\Mwyatt\Core\IteratorInterface $routes)
-    {
-        foreach ($routes as $route) {
-            $id = $route->getOption('id');
-            if ($id) {
-                $this->routes[$id] = $route->path;
-            }
-        }
     }
 
 
@@ -159,7 +146,7 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         return [
             'base' => $this->base,
             'path' => $this->path,
-            'routes' => $this->routes,
+            'routes' => $this->router->getRoutes(),
             'protocol' => $this->protocol
         ];
     }

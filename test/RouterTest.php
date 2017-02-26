@@ -16,8 +16,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             ['id' => 'test.params']
         ],
         [
-            'post', '/foo/bar/',
-            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple'
+            'any', '/foo/bar/',
+            '\\Mwyatt\\Core\\Controller\\Test', 'testSimple',
+            ['id' => 'test.simple.submit']
         ]
     ];
     private $router;
@@ -26,21 +27,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $services = new \Pimple\Container;
-        $services['PuxMux'] = function ($services) {
-            return new \Pux\Mux;
-        };
-        $services['Router'] = function ($services) {
-            return new \Mwyatt\Core\Router($services['PuxMux']);
-        };
-        $services['Request'] = function ($services) {
-            $cookie = new \Mwyatt\Core\Cookie;
-            $session = new \Mwyatt\Core\Session;
-            return new \Mwyatt\Core\Request($session, $cookie);
-        };
-        $this->request = $services['Request'];
-        $this->router = $services['Router'];
-        $this->router->appendRoutes($this->routes);
+        $this->router = new \Mwyatt\Core\Router(
+            new \Pux\Mux,
+            $this->routes
+        );
+        $cookie = new \Mwyatt\Core\Cookie;
+        $session = new \Mwyatt\Core\Session;
+        $this->request = new \Mwyatt\Core\Request($session, $cookie);
     }
 
 
@@ -49,15 +42,23 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $this->router->getMatch('/flob/');
         $this->assertTrue(is_null($route));
         $route = $this->router->getMatch('/');
-        $this->assertTrue(is_array($route));
+        $this->assertTrue(is_object($route));
+    }
+
+
+    public function testGetRoutes()
+    {
+        $routes = $this->router->getRoutes();
+        $this->assertTrue(is_object($routes));
     }
 
 
     public function testGetDetails()
     {
         $route = $this->router->getMatch('/');
-        $this->assertTrue($this->router->getRouteControllerName($route) === '\Mwyatt\Core\Controller\Test');
-        $this->assertTrue($this->router->getRouteControllerMethod($route) === 'testSimple');
+        $this->assertTrue($route->controller === '\Mwyatt\Core\Controller\Test');
+        $this->assertTrue($route->method === 'testSimple');
+        $this->assertTrue($route->getOption('id') === 'test.simple');
     }
 
 
