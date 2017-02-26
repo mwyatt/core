@@ -24,12 +24,11 @@
 
 			<!-- travis no permissions -->
 			<!-- <file>test/CacheTest.php</file> -->
-
 			<!-- issue with config.php in travis? -->
 			<!-- <file>test/MailTest.php</file> -->
 			<!-- <file>test/KernelTest.php</file> -->
 
-			<!-- env issue -->
+			<!-- env issue in travis -->
 			<!-- <file>test/CookieTest.php</file> -->
 			<!-- <file>test/FileSystemTest.php</file> -->
 	</testsuites>

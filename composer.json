@@ -1,6 +1,6 @@
 {
     "name": "mwyatt/core",
-    "description": "core classes and methods for common patterns when creating a project",
+    "description": "Abstract structure for repositories, mappers and models.",
     "authors": [
         {
             "name": "Martin Wyatt",
