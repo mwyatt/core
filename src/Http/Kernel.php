@@ -233,7 +233,7 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     {
         $config = $this->services['Config'];
         try {
-            $this->doRoute();
+            return $this->doRoute();
         } catch (\Exception $e) {
             echo 'Kernel Error';
             if ($config->getSetting('core.displayErrors')) {
