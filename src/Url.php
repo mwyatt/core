@@ -143,10 +143,14 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
+        $routes = [];
+        foreach ($this->router->getRoutes() as $route) {
+            $routes[$route->getOption('id')] = $route->path;
+        }
         return [
             'base' => $this->base,
             'path' => $this->path,
-            'routes' => $this->router->getRoutes(),
+            'routes' => $routes,
             'protocol' => $this->protocol
         ];
     }
