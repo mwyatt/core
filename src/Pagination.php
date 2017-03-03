@@ -48,7 +48,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
 
     /**
      * configurable from outside
-     * @param int $value 
+     * @param int $value
      */
     public function setMaxPerPage($value)
     {
@@ -74,7 +74,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
     /**
      * get a limit array usable in an sql query
      * @param  boolean $end ?
-     * @return array|int       
+     * @return array|int
      */
     public function getLimit($end = false)
     {
@@ -94,7 +94,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
 
     /**
      * build the pagination array
-     * @return array 
+     * @return array
      */
     public function generate($pageCurrent, $totalRows)
     {
@@ -148,7 +148,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
 
     /**
      * little text summary 'page 1 of 20'
-     * @return string 
+     * @return string
      */
     public function getSummaryText()
     {
@@ -159,7 +159,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
     /**
      * add the page to the query string
      * create an absolute url
-     * @param  int $page 
+     * @param  int $page
      * @return string       absolute url
      */
     protected function urlBuildPageLink($page)
@@ -174,7 +174,7 @@ class Pagination implements \Mwyatt\Core\PaginationInterface
         
     /**
      * page is set within the constraints of lowest and highest value
-     * @param int $page 
+     * @param int $page
      */
     protected function setPageCurrent($page)
     {
