@@ -42,7 +42,7 @@ class Cache implements \Mwyatt\Core\CacheInterface
 
     public function setPathBase($path)
     {
-        $this->isWritable($path);
+        $this->mkdirIsWritable($path);
         $this->pathBase = $path;
     }
 
@@ -53,8 +53,13 @@ class Cache implements \Mwyatt\Core\CacheInterface
     }
 
 
-    protected function isWritable($path)
+    protected function mkdirIsWritable($path)
     {
+        if (!file_exists($path)) {
+            if (!mkdir($path)) {
+                throw new \Exception("Unable to make cache directory '$path'.");
+            }
+        }
         if (!is_writable($path)) {
             throw new \Exception("Cache path '$path' is not writable.");
         }
