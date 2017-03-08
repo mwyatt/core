@@ -7,7 +7,7 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     protected $mapperFactory;
 
 
-    public function __construct(\Mwyatt\Core\Factory\Mapper $mapperFactory)
+    public function __construct(\Mwyatt\Core\FactoryInterface $mapperFactory)
     {
         $this->mapperFactory = $mapperFactory;
     }
