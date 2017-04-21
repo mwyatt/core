@@ -64,6 +64,14 @@ abstract class AbstractRepository implements \Mwyatt\Core\RepositoryInterface
     }
 
 
+    public function findByColValues($col, array $values)
+    {
+        $mapper = $this->getMapper();
+        $modelIterator = $mapper->findByColValues($col, $values);
+        return $modelIterator;
+    }
+
+
     public function persist(\Mwyatt\Core\ModelInterface $model)
     {
         if ($errors = $model->validate()) {

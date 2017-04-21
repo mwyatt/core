@@ -189,4 +189,33 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         $this->adapter->execute();
         return $this->adapter->getRowCount();
     }
+
+
+    public function findByColValues($col, array $values)
+    {
+        if (!array_key_exists($col, $this->publicCols) && $col != 'id') {
+            throw new \Exception("Column '$col' does not exist in this mapper");
+        }
+        $models = [];
+        $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `$col` = ?");
+        foreach ($values as $value) {
+            if (is_int($value)) {
+                $dataType = $this->adapter->getParamInt();
+            } elseif (is_string($value)) {
+                $dataType = $this->adapter->getParamStr();
+            } elseif (is_bool($value)) {
+                $dataType = $this->adapter->getParamBool();
+            } elseif (is_null($value)) {
+                $dataType = $this->adapter->getParamNull();
+            } else {
+                throw new \Exception("Unknown data type for value '$value'.");
+            }
+            $this->adapter->bindParam(1, $value, $dataType);
+            $this->adapter->execute();
+            while ($model = $this->adapter->fetch($this->adapter->getFetchTypeClass(), $this->getModelClassAbs())) {
+                $models[] = $model;
+            }
+        }
+        return $this->getIterator($models);
+    }
 }

@@ -147,6 +147,19 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testFindByColValues()
+    {
+        $database = $this->controller->getService('Database');
+        $userRepo = $this->controller->getRepository('User');
+        $nameFirst = 'Billy';
+
+        $users = $userRepo->findByColValues('nameFirst', [$nameFirst]);
+        $this->assertTrue($users->count() > 0);
+        $user = $users->getFirst();
+        $this->assertTrue($user->nameFirst === $nameFirst);
+    }
+
+
     public function testDelete()
     {
         $database = $this->controller->getService('Database');
