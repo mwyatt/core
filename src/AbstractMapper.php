@@ -146,7 +146,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
      */
     public function getInsertGenericSql(array $cols)
     {
-        $sql = ['insert into', $this->getTableNameLazy(), '('];
+        $sql = ['insert into', "`{$this->getTableNameLazy()}`", '('];
         $sqlCols = [];
         foreach ($cols as $col) {
             $sqlCols[] = "`$col`";
@@ -170,7 +170,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
      */
     public function getUpdateGenericSql(array $cols)
     {
-        $sql = ['update', $this->getTableNameLazy(), 'set'];
+        $sql = ['update', "`{$this->getTableNameLazy()}`", 'set'];
         $sqlCols = [];
         foreach ($cols as $col) {
             $sqlCols[] = "`$col` = :$col";
