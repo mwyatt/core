@@ -1,32 +1,32 @@
 <phpunit bootstrap="vendor/autoload.php">
 	<testsuites>
 		<testsuite name="core">
-			<file>test/DatabaseTest.php</file>
-			<file>test/ControllerTest.php</file>
-			<file>test/FactoryTest.php</file>
-			<file>test/HelperTest.php</file>
-			<file>test/ModelTest.php</file>
-			<file>test/IteratorModelTest.php</file>
-			<file>test/IteratorTest.php</file>
-			<file>test/MapperTest.php</file>
-			<file>test/MonologTest.php</file>
-			<file>test/PaginationTest.php</file>
-			<file>test/FileSystemTest.php</file>
-			<file>test/RepositoryTest.php</file>
-			<file>test/RequestTest.php</file>
-			<file>test/ResponseTest.php</file>
-			<file>test/RouterTest.php</file>
-			<file>test/SessionTest.php</file>
-			<file>test/UrlTest.php</file>
-			<file>test/ViewTest.php</file>
-			<file>test/FactoryIteratorTest.php</file>
-		</testsuite>
+			<file>test/KernelTest.php</file>
+            <file>test/DatabaseTest.php</file>
+            <file>test/ControllerTest.php</file>
+            <file>test/FactoryTest.php</file>
+            <file>test/HelperTest.php</file>
+            <file>test/ModelTest.php</file>
+            <file>test/IteratorModelTest.php</file>
+            <file>test/IteratorTest.php</file>
+            <file>test/MapperTest.php</file>
+            <file>test/MonologTest.php</file>
+            <file>test/PaginationTest.php</file>
+            <file>test/FileSystemTest.php</file>
+            <file>test/RepositoryTest.php</file>
+            <file>test/RequestTest.php</file>
+            <file>test/ResponseTest.php</file>
+            <file>test/RouterTest.php</file>
+            <file>test/SessionTest.php</file>
+            <file>test/UrlTest.php</file>
+            <file>test/ViewTest.php</file>
+            <file>test/FactoryIteratorTest.php</file>
+        </testsuite>
 
-			<!-- travis no permissions -->
-			<!-- <file>test/CacheTest.php</file> -->
-			<!-- issue with config.php in travis? -->
-			<!-- <file>test/MailTest.php</file> -->
-			<!-- <file>test/KernelTest.php</file> -->
+            <!-- travis no permissions -->
+            <!-- <file>test/CacheTest.php</file> -->
+            <!-- issue with config.php in travis? -->
+            <!-- <file>test/MailTest.php</file> -->
 
 			<!-- env issue in travis -->
 			<!-- <file>test/CookieTest.php</file> -->

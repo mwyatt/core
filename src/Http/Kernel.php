@@ -154,11 +154,21 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     }
 
 
+    public function setConfigData($configData = [])
+    {
+        $this->services['ConfigData'] = $configData;
+    }
+
+
     public function setServicesEssential()
     {
-
         $this->services['Config'] = function ($services) {
-            return new \Mwyatt\Core\Http\Config(include $services['ProjectPath'] . 'config.php');
+            if (isset($this->services['ConfigData'])) {
+                $configData = $this->services['ConfigData'];
+            } else {
+                $configData = include $services['ProjectPath'] . 'config.php';
+            }
+            return new \Mwyatt\Core\Http\Config($configData);
         };
 
         $this->services['Router'] = function ($services) {
