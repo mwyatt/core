@@ -25,4 +25,17 @@ class User extends \Mwyatt\Core\AbstractMapper
             throw new \Exception('User validation errors: ' . implode(' ', $errors));
         }
     }
+
+
+    public function findAllFromDatabase2()
+    {
+        $adapter = $this->getAdapter('Database2');
+        $models = [];
+        $adapter->prepare("select * from `{$this->getTableNameLazy()}`");
+        $adapter->execute();
+        while ($model = $adapter->fetch($adapter->getFetchTypeClass(), $this->getModelClassAbs())) {
+            $models[] = $model;
+        }
+        return $this->getIterator($models);
+    }
 }

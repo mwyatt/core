@@ -4,23 +4,32 @@ namespace Mwyatt\Core;
 
 abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
+    protected $pimpleContainer;
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
+    
     protected $tableName;
     protected $protectedCols = ['id'];
     protected $publicCols = [];
+    protected $adapterDefaultKey = 'Database';
 
 
     public function __construct(
-        \Mwyatt\Core\DatabaseInterface $adapter,
+        \Pimple\Container $pimpleContainer,
         \Mwyatt\Core\Factory\Model $modelFactory,
         \Mwyatt\Core\Factory\Iterator $iteratorFactory
     ) {
-    
-        $this->adapter = $adapter;
+        $this->pimpleContainer = $pimpleContainer;
+        $this->adapter = $this->getAdapter($this->adapterDefaultKey);
         $this->modelFactory = $modelFactory;
         $this->iteratorFactory = $iteratorFactory;
+    }
+
+
+    protected function getAdapter($key)
+    {
+        return $this->pimpleContainer[$key];
     }
 
 

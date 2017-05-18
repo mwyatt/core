@@ -90,7 +90,7 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
             $this->services['MapperFactory'] = function ($services) {
                 $config = $services['Config'];
                 $mapperFactory = new \Mwyatt\Core\Factory\Mapper(
-                    $services['Database'],
+                    $services,
                     $services['ModelFactory'],
                     $services['IteratorFactory']
                 );
