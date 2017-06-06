@@ -51,7 +51,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
     {
         $collection = [];
         foreach ($this as $model) {
-            $collection[] = $model->get($property);
+            $collection[] = $model->$property;
         }
         return $collection;
     }
@@ -88,7 +88,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
         $models = [];
         foreach ($this as $model) {
             foreach ($values as $value) {
-                if ($model->get($property) == $value) {
+                if ($model->$property == $value) {
                     $models[] = $model;
                 }
             }
@@ -107,7 +107,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
     {
         $keyed = [];
         foreach ($this as $model) {
-            $keyed[$model->get($property)] = $model;
+            $keyed[$model->$property] = $model;
         }
         return $keyed;
     }
@@ -123,10 +123,10 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
     {
         $keyed = [];
         foreach ($this as $model) {
-            if (empty($keyed[$model->get($property)])) {
-                $keyed[$model->get($property)] = [];
+            if (empty($keyed[$model->$property])) {
+                $keyed[$model->$property] = [];
             }
-            $keyed[$model->get($property)][] = $model;
+            $keyed[$model->$property][] = $model;
         }
         return $keyed;
     }
