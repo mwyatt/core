@@ -125,7 +125,7 @@ class IteratorCollectionTest extends \PHPUnit_Framework_TestCase
     public function testSort()
     {
         $users = $this->users->sort();
-        $users = $this->users->sort(function($a, $b) {
+        $users = $this->users->sort(function ($a, $b) {
             return strcasecmp($a->nameLast, $b->nameLast);
         });
         $this->assertTrue($users->current()->nameLast === 'Appleby');
@@ -140,7 +140,7 @@ class IteratorCollectionTest extends \PHPUnit_Framework_TestCase
 
     public function testMap()
     {
-        $users = $this->users->map(function($item) {
+        $users = $this->users->map(function ($item) {
             return $item->id + 10;
         });
         $this->assertTrue($users->current() === 11);
@@ -170,7 +170,7 @@ class IteratorCollectionTest extends \PHPUnit_Framework_TestCase
         $users = $users->filter();
         $this->assertTrue($users->count() === 3);
 
-        $users = $users->filter(function($item) {
+        $users = $users->filter(function ($item) {
             return $item->nameFirst === 'Martin';
         });
         $this->assertTrue($users->count() === 1);
