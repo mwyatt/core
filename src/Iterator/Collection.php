@@ -138,7 +138,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
 
 
     /**
-     * how does this work?
+     * allows you to iterate over and modify each item via callback
      */
     public function map(callable $callback)
     {
@@ -195,5 +195,11 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     public function jsonSerialize()
     {
         return $this->getArrayCopy();
+    }
+
+
+    public function getJson()
+    {
+        return json_encode($this);
     }
 }

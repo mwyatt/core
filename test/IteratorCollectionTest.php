@@ -178,15 +178,19 @@ class IteratorCollectionTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testJsonEncode()
+    public function testJsonSerialize()
     {
-        $json = json_encode($this->users);
+        $json = $this->users->getJson();
         $this->assertTrue($json === '[{"nameFirst":"Martin","nameLast":"Wyatt","email":"example@exmple.com"},{"nameFirst":"Steve","nameLast":"Smith","email":"example@exmple.coms"},{"nameFirst":"Alan","nameLast":"Appleby","email":"example@exmple.comss"}]');
     }
 
 
     public function testOffsetAppend()
     {
-        // $this->
+        $this->numbers->offsetSet('array', []);
+        $this->numbers->offsetAppend('array', 1);
+        $this->numbers->offsetAppend('array', 2);
+        $this->numbers->offsetAppend('array', 3);
+        $this->assertTrue($this->numbers->count() === 6);
     }
 }
