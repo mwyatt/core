@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-abstract class AbstractModel implements \Mwyatt\Core\ModelInterface,  \ArrayAccess, \JsonSerializable
+abstract class AbstractModel implements \Mwyatt\Core\ModelInterface, \ArrayAccess, \JsonSerializable
 {
     protected $errors = [];
 
