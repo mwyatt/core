@@ -24,7 +24,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function getIds()
     {
-        return $this->pluckUnique('id');
+        return $this->pluckUnique('id')->getArrayCopy();
     }
 
     
@@ -48,7 +48,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function extractProperty($property)
     {
-        return $this->pluck($property);
+        return $this->pluck($property)->getArrayCopy();
     }
 
 
@@ -59,7 +59,13 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function extractPropertyUnique($property)
     {
-        return $this->pluckUnique($property);
+        return $this->pluckUnique($property)->getArrayCopy();
+    }
+
+
+    public function getKeyedByProperty($property)
+    {
+        return parent::getKeyedByProperty($property)->getArrayCopy();
     }
 
 
