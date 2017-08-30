@@ -19,7 +19,7 @@ class KernelTest extends \PHPUnit_Framework_TestCase
     public function testSetGetService()
     {
         $kernel = new \Mwyatt\Core\Http\Kernel;
-        $kernel->setService('example', function() {
+        $kernel->setService('example', function () {
             return 'hello';
         });
         $this->assertTrue($kernel->getService('example') == 'hello');
