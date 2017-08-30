@@ -148,6 +148,18 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
+    public function getInSql($count)
+    {
+        $in = '';
+        for ($index = 0; $index < $count; $index++) {
+            $in .= '?, ';
+        } 
+        $in = rtrim($in, ', ');
+        $in = " in($in) ";
+        return $in;
+    }
+
+
     /**
      * builds insert statement using cols provided
      * @param  array  $cols 'name', 'another'
