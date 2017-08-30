@@ -14,8 +14,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function getFirst()
     {
-        $this->rewind();
-        return $this->current();
+        return parent::getFirst();
     }
 
 
@@ -25,7 +24,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function getIds()
     {
-        return $this->extractPropertyUnique('id');
+        return $this->pluckUnique('id')->getArrayCopy();
     }
 
     
@@ -49,11 +48,7 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function extractProperty($property)
     {
-        $collection = [];
-        foreach ($this as $model) {
-            $collection[] = $model->$property;
-        }
-        return $collection;
+        return $this->pluck($property)->getArrayCopy();
     }
 
 
@@ -64,52 +59,13 @@ class Model extends \Mwyatt\Core\AbstractIterator implements \Mwyatt\Core\Iterat
      */
     public function extractPropertyUnique($property)
     {
-        $collection = [];
-        $uniqueRecord = [];
-        foreach ($this as $model) {
-            $propertyVal = $model->$property;
-            if (!in_array($propertyVal, $uniqueRecord)) {
-                $collection[] = $propertyVal;
-            }
-            $uniqueRecord[] = $propertyVal;
-        }
-        return $collection;
+        return $this->pluckUnique($property)->getArrayCopy();
     }
 
 
-    /**
-     * get the models which match the property values
-     * @param  string $property
-     * @param  mixed $value
-     * @return object ModelIterator
-     */
-    public function getByPropertyValues($property, array $values)
-    {
-        $models = [];
-        foreach ($this as $model) {
-            foreach ($values as $value) {
-                if ($model->$property == $value) {
-                    $models[] = $model;
-                }
-            }
-        }
-        return new $this($models);
-    }
-
-
-    /**
-     * key the iterator by the specified property
-     * only 1 level deep
-     * @param  string $property
-     * @return array
-     */
     public function getKeyedByProperty($property)
     {
-        $keyed = [];
-        foreach ($this as $model) {
-            $keyed[$model->$property] = $model;
-        }
-        return $keyed;
+        return parent::getKeyedByProperty($property)->getArrayCopy();
     }
 
 

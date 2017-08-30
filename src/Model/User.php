@@ -143,6 +143,10 @@ class User extends \Mwyatt\Core\AbstractModel implements \Mwyatt\Core\ModelInter
     public function jsonSerialize()
     {
         $this->password = null;
-        return $this;
+        return [
+            'nameFirst' => $this->nameFirst,
+            'nameLast' => $this->nameLast,
+            'email' => $this->email,
+        ];
     }
 }
