@@ -153,7 +153,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
         $in = '';
         for ($index = 0; $index < $count; $index++) {
             $in .= '?, ';
-        } 
+        }
         $in = rtrim($in, ', ');
         $in = " in($in) ";
         return $in;
