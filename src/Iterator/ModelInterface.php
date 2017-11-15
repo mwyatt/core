@@ -9,7 +9,7 @@ interface ModelInterface
     public function getById($id);
     public function extractProperty($property);
     public function extractPropertyUnique($property);
-    public function getByPropertyValues($property, array $values);
+    public function getByPropertyValues($property, $values);
     public function getKeyedByProperty($property);
     public function getKeyedByPropertyMulti($property);
 }

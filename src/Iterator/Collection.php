@@ -40,7 +40,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     /**
      * get a collection of values from property
      * @param  string $property
-     * @return array
+     * @return Object
      */
     public function pluck($key, $unique = false)
     {
@@ -61,7 +61,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     /**
      * get a collection of values from property unique
      * @param  string $property
-     * @return array
+     * @return Object
      */
     public function pluckUnique($key)
     {
@@ -76,7 +76,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
      * @param  mixed $value
      * @return object ModelIterator
      */
-    public function getByPropertyValues($property, array $values, $strict = false)
+    public function getByPropertyValues($property, $values, $strict = false)
     {
         $results = [];
         foreach ($this as $item) {
@@ -96,7 +96,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     }
 
 
-    public function getByPropertyValuesStrict($property, array $values)
+    public function getByPropertyValuesStrict($property, $values)
     {
         return $this->getByPropertyValues($property, $values, true);
     }
@@ -105,7 +105,7 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     /**
      * key the iterator by the specified property
      * @param  string $property
-     * @return array
+     * @return Object
      */
     public function getKeyedByProperty($property)
     {
@@ -117,6 +117,10 @@ class Collection extends \ArrayIterator implements \JsonSerializable
     }
 
 
+    /**
+     * get collection of keys
+     * @return Object
+     */
     public function keys()
     {
         return new static(array_keys($this->getArrayCopy()));
