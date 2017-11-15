@@ -133,7 +133,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function findByIds(array $ids)
+    public function findByIds($ids)
     {
         $models = [];
         $this->adapter->prepare("select * from `{$this->getTableNameLazy()}` where `id` = ?");
