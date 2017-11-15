@@ -212,7 +212,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
     }
 
 
-    public function findByColValues($col, array $values)
+    public function findByColValues($col, $values)
     {
         if (!array_key_exists($col, $this->publicCols) && $col != 'id') {
             throw new \Exception("Column '$col' does not exist in this mapper");
