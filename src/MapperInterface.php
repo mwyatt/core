@@ -14,7 +14,7 @@ interface MapperInterface
     public function getModelClassAbs($name = null);
     public function getIterator($models = [], $requestedClassPath = '');
     public function findAll();
-    public function findByIds(array $ids);
+    public function findByIds($ids);
     public function getInsertGenericSql(array $cols);
     public function getUpdateGenericSql(array $cols);
     public function deleteById(\Mwyatt\Core\ModelInterface $model);
