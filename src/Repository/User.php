@@ -1,8 +1,8 @@
 <?php
 
-namespace Mwyatt\Core\Repository;
+namespace Mwyatt\Core\Service;
 
-class User extends \Mwyatt\Core\AbstractRepository
+class User extends \Mwyatt\Core\AbstractService
 {
 
 

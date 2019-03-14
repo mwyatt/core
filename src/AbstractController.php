@@ -36,13 +36,6 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     }
 
 
-    public function getRepository($name)
-    {
-        $repositoryFactory = $this->getService('RepositoryFactory');
-        return $repositoryFactory->get($name);
-    }
-
-
     public function getView($name)
     {
         $viewFactory = $this->getService('ViewFactory');
