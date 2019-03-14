@@ -1,6 +1,6 @@
 {
     "name": "mwyatt/core",
-    "description": "Abstract structure for repositories, mappers and models.",
+    "description": "Abstract structure for controllers, services, mappers and models.",
     "authors": [
         {
             "name": "Martin Wyatt",
@@ -8,15 +8,15 @@
         }
     ],
     "require": {
-        "corneltek/pux": "~1.5",
-        "swiftmailer/swiftmailer": "5.3.*@dev",
-        "tijsverkoyen/css-to-inline-styles": "^1.5",
-        "pimple/pimple": "^3.0",
-        "monolog/monolog": "^1.21"
+        "corneltek/pux": "1.6.1",
+        "swiftmailer/swiftmailer": "5.4.12",
+        "tijsverkoyen/css-to-inline-styles": "2.2.1",
+        "pimple/pimple": "3.2.3",
+        "monolog/monolog": "1.24.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.3",
-        "phpunit/phpunit": "4.8"
+        "squizlabs/php_codesniffer": "3.4.0",
+        "phpunit/phpunit": "4.8.36"
     },
     "scripts": {
         "post-install-cmd": [
