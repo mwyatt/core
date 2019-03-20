@@ -4,7 +4,6 @@ namespace Mwyatt\Core;
 
 class MapperTest extends \PHPUnit_Framework_TestCase
 {
-    protected $container;
     protected $controller;
     protected $userModelData = [
         'email' => 'martin.wyatt@gmail.com',
