@@ -4,13 +4,21 @@ namespace Mwyatt\Core;
 
 abstract class AbstractService
 {
+    protected $pimpleContainer;
     protected $mapperFactory;
 
 
     public function __construct(
-        \Mwyatt\Core\FactoryInterface $mapperFactory
+        \Pimple\Container $pimpleContainer
     ) {
-        $this->mapperFactory = $mapperFactory;
+        $this->pimpleContainer = $pimpleContainer;
+        $this->mapperFactory = $this->getService('MapperFactory');
+    }
+
+
+    public function getService($name)
+    {
+        return $this->pimpleContainer[$name];
     }
 
 

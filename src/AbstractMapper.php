@@ -4,7 +4,6 @@ namespace Mwyatt\Core;
 
 abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 {
-    protected $pimpleContainer;
     protected $adapter;
     protected $modelFactory;
     protected $iteratorFactory;
@@ -16,9 +15,9 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
 
     public function __construct(
-        \Pimple\Container $pimpleContainer,
         \Mwyatt\Core\Factory\Model $modelFactory,
-        \Mwyatt\Core\Factory\Iterator $iteratorFactory
+        \Mwyatt\Core\Factory\Iterator $iteratorFactory,
+        \Mwyatt\Core\Iterator $adapters
     ) {
         $this->pimpleContainer = $pimpleContainer;
         $this->adapter = $this->getAdapter($this->adapterDefaultKey);

@@ -32,9 +32,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             );
         };
         $container['User'] = function ($container) {
-            return new \Mwyatt\Core\Service\User(
-                $container['MapperFactory']
-            );
+            return new \Mwyatt\Core\Service\User($container);
         };
         $container['View'] = function ($container) {
             return new \Mwyatt\Core\View((string) __DIR__ . '/../' . 'template/');
