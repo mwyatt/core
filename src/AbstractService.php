@@ -4,11 +4,18 @@ namespace Mwyatt\Core;
 
 abstract class AbstractService
 {
+    protected $mapperFactory;
 
 
-    protected function getMapper($name)
+    public function __construct(
+        \Mwyatt\Core\FactoryInterface $mapperFactory
+    ) {
+        $this->mapperFactory = $mapperFactory;
+    }
+
+
+    public function getMapper($name)
     {
-        $mapperFactory = $this->getService('MapperFactory');
-        return $mapperFactory->get($name);
+        return $this->mapperFactory->get($name);
     }
 }

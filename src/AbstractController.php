@@ -29,7 +29,7 @@ abstract class AbstractController implements \Mwyatt\Core\ControllerInterface
     }
 
 
-    protected function getMapper($name)
+    public function getMapper($name)
     {
         $mapperFactory = $this->getService('MapperFactory');
         return $mapperFactory->get($name);

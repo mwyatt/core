@@ -2,7 +2,7 @@
 
 namespace Mwyatt\Core;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     protected $container;
     protected $controller;
@@ -38,8 +38,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
                 $container['IteratorFactory']
             );
         };
-        $container['RepositoryFactory'] = function ($container) {
-            return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
+        $container['User'] = function ($container) {
+            return new \Mwyatt\Core\Service\User(
+                $container['MapperFactory']
+            );
         };
         $container['View'] = function ($container) {
             return new \Mwyatt\Core\View((string) __DIR__ . '/../' . 'template/');
@@ -50,12 +52,12 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $userRepo = $this->controller->getRepository('User');
+        $userService = $this->controller->getService('User');
         $database = $this->controller->getService('Database');
         $database->beginTransaction();
 
         try {
-            $user = $userRepo->register(
+            $user = $userService->register(
                 $this->userModelData['email'],
                 $this->userModelData['password']
             );
@@ -70,35 +72,39 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $userRepo = $this->controller->getRepository('User');
-        $users = $userRepo->findAll();
+        $userService = $this->controller->getService('User');
+        $userMapper = $this->controller->getMapper('User');
+
+        $users = $userMapper->findAll();
         
         $usersCountPrimary = $users->count();
         $this->assertTrue($users->count() > 0);
 
         $user = $users->current();
-        $users = $userRepo->findByIds($users->getIds());
+        $users = $userMapper->findByIds($users->getIds());
         $this->assertTrue($users->count() === $usersCountPrimary);
 
         $user = $users->current();
-        $userSingle = $userRepo->findById($user->get('id'));
+        $userSingle = $userMapper->findByIds([$user->get('id')])->getFirst();
         $this->assertTrue($user->get('id') === $userSingle->get('id'));
     }
 
 
     public function testUpdate()
     {
-        $userRepo = $this->controller->getRepository('User');
+        $userService = $this->controller->getService('User');
+        $userMapper = $this->controller->getMapper('User');
+
         $database = $this->controller->getService('Database');
         $database->beginTransaction();
 
-        $users = $userRepo->findAll();
+        $users = $userMapper->findAll();
         $user = $users->current();
         $newUserNameFirst = $user->get('nameFirst') . 'append';
         try {
             foreach ($users as $user) {
                 $user->setNameFirst($newUserNameFirst);
-                $rowCount = $userRepo->persist($user);
+                $rowCount = $userMapper->persist($user);
                 $this->assertTrue($rowCount === 1);
             }
             $database->commit();
@@ -107,7 +113,7 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             exit('testUpdate ' . $e->getMessage());
         }
 
-        $user = $userRepo->findById($user->get('id'));
+        $user = $userMapper->findByIds([$user->get('id')])->getFirst();
         $this->assertTrue($user->get('nameFirst') === $newUserNameFirst);
     }
 
@@ -119,20 +125,22 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function testInsertLog()
     {
         $database = $this->controller->getService('Database');
-        $userRepo = $this->controller->getRepository('User');
-        $users = $userRepo->findAll();
+        $userService = $this->controller->getService('User');
+        $userMapper = $this->controller->getMapper('User');
+
+        $users = $userMapper->findAll();
         try {
             $database->beginTransaction();
             foreach ($users as $user) {
-                $log = $userRepo->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
+                $log = $userService->insertLog(['userId' => $user->get('id'), 'content' => 'Content for log for user ' . $user->get('nameFirst')]);
             }
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();
             exit('testInsertLog ' . $e->getMessage());
         }
-        $users = $userRepo->findAll();
-        $userRepo->findLogs($users);
+        $users = $userMapper->findAll();
+        $userService->findLogs($users);
         foreach ($users as $user) {
             foreach ($user->logs as $userLog) {
                 $this->assertTrue($userLog->get('id') > 0);
@@ -140,9 +148,9 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         }
         
         // testFindLog
-        $userRepo = $this->controller->getRepository('User');
-        $users = $userRepo->findAll();
-        $userRepo->findLogs($users);
+        $userService = $this->controller->getService('User');
+        $users = $userMapper->findAll();
+        $userService->findLogs($users);
         foreach ($users as $user) {
             $this->assertTrue($user->logs->count() > 0);
         }
@@ -152,12 +160,13 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $database = $this->controller->getService('Database');
-        $userRepo = $this->controller->getRepository('User');
+        $userService = $this->controller->getService('User');
+        $userMapper = $this->controller->getMapper('User');
 
         try {
             $database->beginTransaction();
-            $users = $userRepo->findAll();
-            $userRepo->delete($users);
+            $users = $userMapper->findAll();
+            $userService->delete($users);
             $database->commit();
         } catch (\Exception $e) {
             $database->rollback();

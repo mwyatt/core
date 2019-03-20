@@ -30,8 +30,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
                 $container['IteratorFactory']
             );
         };
-        $container['RepositoryFactory'] = function ($container) {
-            return new \Mwyatt\Core\Factory\Repository($container['MapperFactory']);
+        $container['User'] = function ($container) {
+            return new \Mwyatt\Core\Service\User(
+                $container['MapperFactory']
+            );
         };
         $container['ViewFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\View($container['DefaultTemplateDirectory']);
@@ -51,13 +53,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     {
         $config = $this->controller->getService('DefaultTemplateDirectory');
         $this->assertTrue(is_string($config));
-    }
 
-
-    public function testGetRepository()
-    {
-        $repository = $this->controller->getRepository('User');
-        $this->assertTrue(get_class($repository) === 'Mwyatt\Core\Repository\User');
+        $service = $this->controller->getService('User');
+        $this->assertTrue(get_class($service) === 'Mwyatt\Core\Service\User');
     }
 
 
