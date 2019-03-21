@@ -5,13 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.0.0] - 21-03-2019
 ### Added
 ### Changed
-- in all controllers replace 'getRepository' with 'getService'
-- watch out for index needing to 'setAdapters' should not need to
-- no longer a 'RepositoryFactory' entry, find and remove all these
-- hopefully can override the AbstractService construct to bring in exactly what needed
-- all Repository now need to be Service - watch out for naming clashes in services.php
-- when converting Repository to Service look at all '$this->' and change to new properties
-- all Repository (now Service) need to be defined in services.php - hard code all dependencies in the constructor
+- In all controllers replace 'getRepository' with 'getService'
+- Watch out for index needing to 'setAdapters' should not need to
+- No longer a 'RepositoryFactory' entry, find and remove all these
+- Hopefully can override the AbstractService construct to bring in exactly what needed
+- All Repository now need to be Service - watch out for naming clashes in services.php
+- When converting Repository to Service look at all '$this->' and change to new properties
+- All Repository (now Service) need to be defined in services.php - hard code all dependencies in the constructor
 
 ### Fixed
 ### Deprecated
