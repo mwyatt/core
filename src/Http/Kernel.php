@@ -7,6 +7,7 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     private $services;
     private $middleware = [];
     private $middlewarePost = [];
+    private $adapters = [];
 
     
     public function __construct()
@@ -36,6 +37,12 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
     public function setMiddlewarePost(array $config)
     {
         $this->middlewarePost = $config;
+    }
+
+
+    public function setAdapters(array $config)
+    {
+        $this->adapters = $config;
     }
 
 
@@ -93,24 +100,16 @@ class Kernel implements \Mwyatt\Core\Http\KernelInterface
         }
 
         if (!$keys || in_array('MapperFactory', $keys)) {
+            $this->services['MapperAdapters'] = $this->adapters ? $this->adapters : [$this->services['Database']];
             $this->services['MapperFactory'] = function ($services) {
                 $config = $services['Config'];
                 $mapperFactory = new \Mwyatt\Core\Factory\Mapper(
-                    $services,
+                    $services['MapperAdapters'],
                     $services['ModelFactory'],
                     $services['IteratorFactory']
                 );
                 $mapperFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Mapper\\');
                 return $mapperFactory;
-            };
-        }
-
-        if (!$keys || in_array('RepositoryFactory', $keys)) {
-            $this->services['RepositoryFactory'] = function ($services) {
-                $config = $services['Config'];
-                $repositoryFactory = new \Mwyatt\Core\Factory\Repository($services['MapperFactory']);
-                $repositoryFactory->setDefaultNamespace($config->getSetting('projectBaseNamespace') . 'Repository\\');
-                return $repositoryFactory;
             };
         }
 
