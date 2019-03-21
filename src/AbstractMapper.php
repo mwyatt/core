@@ -15,11 +15,11 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
 
     public function __construct(
+        array $adapters,
         \Mwyatt\Core\Factory\Model $modelFactory,
-        \Mwyatt\Core\Factory\Iterator $iteratorFactory,
-        \Mwyatt\Core\Iterator $adapters
+        \Mwyatt\Core\Factory\Iterator $iteratorFactory
     ) {
-        $this->pimpleContainer = $pimpleContainer;
+        $this->adapters = $adapters;
         $this->adapter = $this->getAdapter($this->adapterDefaultKey);
         $this->modelFactory = $modelFactory;
         $this->iteratorFactory = $iteratorFactory;
@@ -28,7 +28,7 @@ abstract class AbstractMapper implements \Mwyatt\Core\MapperInterface
 
     protected function getAdapter($key)
     {
-        return $this->pimpleContainer[$key];
+        return $this->adapters[$key];
     }
 
 

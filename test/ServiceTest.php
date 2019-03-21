@@ -26,7 +26,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         };
         $container['MapperFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Mapper(
-                $container,
+                ['Database' => $container['Database']],
                 $container['ModelFactory'],
                 $container['IteratorFactory']
             );

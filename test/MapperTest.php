@@ -32,14 +32,14 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         };
         $container['MapperFactory'] = function ($container) {
             return new \Mwyatt\Core\Factory\Mapper(
-                $container,
+                ['Database' => $container['Database']],
                 $container['ModelFactory'],
                 $container['IteratorFactory']
             );
         };
         $container['User'] = function ($container) {
             return new \Mwyatt\Core\Service\User(
-                $container['MapperFactory']
+                $container
             );
         };
         $container['View'] = function ($container) {
