@@ -33,7 +33,7 @@ class Url implements \Mwyatt\Core\UrlInterface, \JsonSerializable
         $installPath = reset($installPathQueryParts);
         $path = str_replace($install, '', ltrim($installPath, '/'));
         $base = $host . $install;
-        $this->base = $base;
+        $this->base = '/';
         $this->path = $path;
         $this->query = $query;
         $this->protocol = $this->getProtocol();
